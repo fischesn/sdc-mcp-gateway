@@ -2,11 +2,19 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 dist/
 build/
 *.egg-info/
-data/logs/
-data/experiment_runs/
 
-# Local lab-specific configuration; do not commit.
+# Runtime output; keep directory placeholders, not generated logs/results.
+data/logs/*.jsonl
+data/experiment_runs/*
+!data/experiment_runs/.gitkeep
+!data/logs/.gitkeep
+
+# Local lab-specific configuration. This may contain VPN interface IPs,
+# device/provider identifiers, or institution-specific testbed details.
+# Commit the templates in config/, but never this local instance.
 config/gateway.local.yaml

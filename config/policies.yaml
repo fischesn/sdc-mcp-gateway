@@ -1,7 +1,7 @@
 version: "0.1-placeholder"
 mode: "read-only"
 
-# v0.1 exports no MCP tools and executes no SDC operations.
+# v0.2.1 exports no MCP tools and executes no SDC operations.
 # This file is included now to stabilize the repository layout for v0.4/v0.5.
 policies:
   default:

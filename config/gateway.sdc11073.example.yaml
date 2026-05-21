@@ -1,0 +1,31 @@
+# Real-SDC lab template for v0.2.
+#
+# Usage:
+#   cp config/gateway.sdc11073.example.yaml config/gateway.local.yaml
+#   # then edit config/gateway.local.yaml only
+#
+# Do not commit config/gateway.local.yaml. It may contain VPN interface IPs,
+# real provider identifiers, or institution-specific testbed details.
+
+gateway:
+  name: "sdc-to-mcp-gateway"
+  mode: "read-only"
+  log_file: "data/logs/gateway-sdc11073.jsonl"
+  expose_raw_mdib: true
+  allow_tools: false
+  allow_write_operations: false
+
+sdc:
+  adapter: "sdc11073"
+  discovery_timeout_s: 5
+  # Set this to the IPv4 address of the local interface on which this gateway runs.
+  # In an SDC VPN, this is normally your own VPN adapter address, not a device address.
+  local_ip: "YOUR_LOCAL_SDC_VPN_OR_LAB_INTERFACE_IPV4"
+  max_devices: 1
+  # Optional: add provider EPR fragments, full urn:uuid values, or other identifiers
+  # once the lab setup is known. Leave empty for the first discovery test.
+  provider_whitelist: []
+
+mcp:
+  server_name: "sdc-mcp-gateway"
+  transport: "stdio"

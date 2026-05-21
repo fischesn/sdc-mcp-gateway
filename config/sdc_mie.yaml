@@ -1,4 +1,4 @@
-version: "0.1-example"
+version: "0.2-example"
 description: "Example SDC-MIE mapping for the read-only prototype. Replace codes with real SDC nomenclature handles from the testbed."
 
 mappings:
@@ -27,4 +27,4 @@ mappings:
     min_value: 21
     max_value: 100
     requires_human_approval: true
-    description: "Current oxygen concentration configured on a ventilator. v0.1 exposes this value read-only."
+    description: "Current oxygen concentration configured on a ventilator. v0.2 exposes this value read-only."

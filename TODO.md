@@ -14,14 +14,14 @@
 - [x] Add JSONL recorder for resource-read audit events.
 - [x] Add unit tests for mapping, resources, and read-only policy.
 
-## v0.2-real-sdc-snapshot
+## v0.2-real-sdc-snapshot - completed in this scaffold
 
-- [ ] Implement provider discovery with `sdc11073`.
-- [ ] Extract real MDIB snapshots into `DeviceSnapshot`.
-- [ ] Add configuration for network interface / adapter IP.
-- [ ] Add provider whitelist enforcement.
+- [x] Implement provider discovery with `sdc11073`.
+- [x] Extract real MDIB snapshots into `DeviceSnapshot` using a defensive extractor.
+- [x] Add configuration for network interface / adapter IP.
+- [x] Add provider whitelist enforcement.
 - [ ] Add integration test with a simulated or lab SDC provider.
-- [ ] Record discovery time and initial MDIB synchronization time.
+- [x] Record discovery time and initial MDIB synchronization time.
 
 ## v0.3-event-streaming
 

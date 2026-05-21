@@ -20,6 +20,8 @@ class SdcSection(BaseModel):
     adapter: str = "dummy"
     discovery_timeout_s: int = 5
     provider_whitelist: list[str] = Field(default_factory=list)
+    local_ip: str = "127.0.0.1"
+    max_devices: int | None = None
 
 
 class McpSection(BaseModel):

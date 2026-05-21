@@ -10,10 +10,10 @@ class PolicyDecision:
 
 
 class ReadOnlyPolicyEngine:
-    """v0.1 policy engine: all write/tool operations are denied."""
+    """Read-only policy engine: all write/tool operations are denied."""
 
     def check_tool_allowed(self, tool_name: str) -> PolicyDecision:
         return PolicyDecision(
             allowed=False,
-            reason=f"Tool '{tool_name}' is denied: v0.1 is read-only and exports no MCP tools.",
+            reason=f"Tool '{tool_name}' is denied: this prototype is read-only and exports no MCP tools.",
         )

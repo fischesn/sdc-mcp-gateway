@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sdc-mcp-gateway"
-version = "0.1.0"
+version = "0.2.1"
 description = "Read-only research prototype for mapping IEEE 11073 SDC state to MCP resources."
 readme = "README.md"
 requires-python = ">=3.11,<3.15"

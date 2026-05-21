@@ -11,7 +11,7 @@ class MissingMcpDependency(RuntimeError):
 
 
 def create_mcp_server(registry: ResourceRegistry, server_name: str = "sdc-mcp-gateway") -> Any:
-    """Create a FastMCP server exposing the v0.1 read-only resource surface.
+    """Create a FastMCP server exposing the read-only resource surface.
 
     This function imports the MCP SDK lazily so that unit tests and snapshot mode work
     without the optional `mcp` dependency installed.

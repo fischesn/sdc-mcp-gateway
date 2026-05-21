@@ -9,8 +9,10 @@ gateway:
 sdc:
   adapter: "dummy"        # dummy | sdc11073
   discovery_timeout_s: 5
-  provider_whitelist: []  # empty means no whitelist in v0.1 dummy mode
+  local_ip: "127.0.0.1"   # replace with the IPv4 address of the lab network interface for real SDC discovery
+  max_devices: 1           # null means: no limit
+  provider_whitelist: []   # empty means: accept all discovered providers
 
 mcp:
   server_name: "sdc-mcp-gateway"
-  transport: "stdio"     # stdio is the normal local MCP transport
+  transport: "stdio"      # stdio is the normal local MCP transport

@@ -1,17 +1,17 @@
-# Installation Guide for the SDC-to-MCP Gateway v0.1
+# Installation Guide for the SDC-to-MCP Gateway v0.2.1
 
 This document describes how to set up a local Python virtual environment and install all dependencies required for the current read-only research prototype.
 
-Version v0.1 is intentionally limited to dummy/read-only operation. It does not yet connect to real SDC-capable medical devices. The real `sdc11073` adapter is prepared as a stub and will be implemented in v0.2.
+Version v0.2.1 is still strictly read-only, but it can optionally use `sdc11073` to discover real SDC providers and capture one-shot MDIB snapshots in an isolated lab network. It does not execute SDC operations and exports no MCP tools.
 
 ## 1. Prerequisites
 
-Use Python 3.11, 3.12, 3.13, or 3.14. For the planned v0.2 SDC adapter, Python 3.14 is acceptable because the current `sdc11073` package declares support for Python `>=3.10,<3.15` and lists Python 3.14 among its supported classifiers.
+Use Python 3.11, 3.12, 3.13, or 3.14. Python 3.14 is acceptable for this prototype because the current `sdc11073` package line used here supports Python `>=3.10,<3.15`.
 
 Recommended tools:
 
 - Python 3.14 if this is already installed on your system; otherwise Python 3.11 or newer
-- Git, optional but recommended
+- Git, strongly recommended
 - A terminal: PowerShell on Windows, Terminal on macOS/Linux
 
 Check your Python version:
@@ -32,7 +32,7 @@ python3.14 --version
 If you received the ZIP archive, unpack it and enter the project directory:
 
 ```bash
-cd sdc-mcp-gateway
+cd sdc-mcp-gateway-v0.2.1
 ```
 
 All commands below assume that you are in the repository root, i.e., the directory containing `pyproject.toml`.
@@ -86,9 +86,9 @@ For older, but still supported, installations replace `3.14` with `3.13`, `3.12`
 
 ## 4. Install the package
 
-### Minimal development installation for v0.1
+### Minimal development installation
 
-This is the recommended installation for the current read-only prototype:
+This is the recommended installation for dummy-mode development and unit tests:
 
 ```bash
 python -m pip install -e ".[dev]"
@@ -104,15 +104,15 @@ Use this when you want to run the MCP server interface rather than only the loca
 python -m pip install -e ".[mcp,dev]"
 ```
 
-### Installation with future SDC dependencies
+### Installation with real SDC snapshot support
 
-The real SDC adapter is scheduled for v0.2. You can already install the optional SDC dependency, but v0.1 will still not perform real device discovery:
+Use this if you want to test provider discovery and one-shot MDIB snapshots with `sdc11073`:
 
 ```bash
 python -m pip install -e ".[sdc,dev]"
 ```
 
-This installs `sdc11073>=2.4.1,<3.0`. The upper bound is intentional for now: v0.2 will initially target the stable 2.x API, not the 3.0 alpha/pre-release line.
+This installs `sdc11073>=2.4.1,<3.0`. The upper bound is intentional for now: v0.2 targets the stable 2.x API, not a future incompatible major release.
 
 ### Full installation
 
@@ -132,10 +132,10 @@ Run the test suite:
 pytest -q
 ```
 
-Expected result for v0.1:
+Expected result for v0.2.1:
 
 ```text
-6 passed
+8 passed
 ```
 
 Show the command-line help:
@@ -147,13 +147,13 @@ sdc-mcp-gateway --help
 Print the read-only dummy resource snapshot:
 
 ```bash
-sdc-mcp-gateway snapshot
+sdc-mcp-gateway snapshot --config config/gateway.yaml --mie config/sdc_mie.yaml
 ```
 
 Alternative without relying on the installed console script:
 
 ```bash
-python -m sdc_mcp_gateway snapshot
+python -m sdc_mcp_gateway snapshot --config config/gateway.yaml --mie config/sdc_mie.yaml
 ```
 
 Run the example script:
@@ -168,32 +168,99 @@ Verify the optional SDC dependency if installed:
 python -c "import sdc11073; print('sdc11073 import ok')"
 ```
 
-## 6. Important configuration files
+## 6. Configuration files
 
-The default configuration files are:
+The repository contains configuration templates and defaults. These files should stay in Git:
 
 ```text
 config/gateway.yaml
+config/gateway.sdc11073.example.yaml
 config/sdc_mie.yaml
 config/policies.yaml
+config/README.md
 ```
 
 Their roles are:
 
-- `gateway.yaml`: gateway mode, logging path, SDC adapter selection, MCP transport settings
+- `gateway.yaml`: default read-only dummy configuration for local development and tests
+- `gateway.sdc11073.example.yaml`: template for real SDC discovery and snapshot tests
 - `sdc_mie.yaml`: semantic mappings from SDC/BICEPS/nomenclature elements to agent-readable names
-- `policies.yaml`: read-only safety policy for v0.1; all write/tool operations are denied
+- `policies.yaml`: read-only safety policy; all write/tool operations remain denied in v0.2
+- `config/README.md`: short explanation of the configuration workflow
 
-For v0.1, the default SDC adapter should remain:
+The following file is intentionally not included and must not be committed:
+
+```text
+config/gateway.local.yaml
+```
+
+It may contain your local VPN IP address, provider identifiers, device filters, or other lab-specific details. It is listed in `.gitignore`.
+
+## 7. Real SDC discovery and snapshot test
+
+After installing with `.[sdc,dev]` or `.[all]`, create a local configuration from the template.
+
+Linux/macOS:
+
+```bash
+cp config/gateway.sdc11073.example.yaml config/gateway.local.yaml
+```
+
+Windows PowerShell:
+
+```powershell
+Copy-Item config/gateway.sdc11073.example.yaml config/gateway.local.yaml
+```
+
+Then edit `config/gateway.local.yaml`:
 
 ```yaml
 sdc:
-  adapter: dummy
+  adapter: "sdc11073"
+  local_ip: "YOUR_LOCAL_SDC_VPN_OR_LAB_INTERFACE_IPV4"
+  max_devices: 1
+  provider_whitelist: []
 ```
 
-Do not switch to `sdc11073` yet unless you are deliberately testing the not-yet-implemented v0.2 adapter stub.
+`local_ip` is the IPv4 address of the network interface on which the gateway process runs. In a Dräger-provided SDC VPN, this is normally your own VPN adapter address, not the address of a medical device.
 
-## 7. Deactivation and cleanup
+Run discovery:
+
+```bash
+sdc-mcp-gateway discover --config config/gateway.local.yaml
+```
+
+Capture a read-only snapshot:
+
+```bash
+sdc-mcp-gateway snapshot --config config/gateway.local.yaml --mie config/sdc_mie.yaml
+```
+
+The adapter only reads provider metadata and MDIB state. It does not execute Service Control Object operations.
+
+## 8. Git workflow and avoiding accidental local-config commits
+
+Before committing, inspect the status:
+
+```bash
+git status
+```
+
+You should see the template files under `config/`, but not `config/gateway.local.yaml`.
+
+If `gateway.local.yaml` was accidentally added, unstage it:
+
+```bash
+git rm --cached config/gateway.local.yaml
+```
+
+Do not use a broad `.gitignore` entry such as `config/*.yaml`; that would hide the important templates from Git. The intended rule is precise:
+
+```gitignore
+config/gateway.local.yaml
+```
+
+## 9. Deactivation and cleanup
 
 Deactivate the virtual environment:
 
@@ -213,7 +280,7 @@ On Windows PowerShell:
 Remove-Item -Recurse -Force .venv
 ```
 
-## 8. Troubleshooting
+## 10. Troubleshooting
 
 ### `python` points to the wrong version
 
@@ -249,7 +316,7 @@ First upgrade the packaging tools:
 python -m pip install --upgrade pip setuptools wheel
 ```
 
-Then retry the installation. If the failure concerns `sdc11073`, use the v0.1 minimal installation instead:
+Then retry the installation. If the failure concerns `sdc11073`, use the minimal installation first:
 
 ```bash
 python -m pip install -e ".[dev]"
@@ -265,6 +332,6 @@ python -m sdc_mcp_gateway --help
 
 If that works, the package is installed but the console-script path is not visible in your shell. Reactivate the virtual environment.
 
-## 9. Safety note
+## 11. Safety note
 
-This repository is a research prototype. v0.1 is read-only and uses a dummy SDC consumer. It must not be used for clinical operation, patient treatment, clinical decision-making, or uncontrolled access to real medical devices.
+This repository is a research prototype. v0.2.1 is read-only. It must not be used for clinical operation, patient treatment, clinical decision-making, clinical studies, or uncontrolled access to real medical devices.
