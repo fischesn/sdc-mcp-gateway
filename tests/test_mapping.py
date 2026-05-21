@@ -7,7 +7,7 @@ from sdc_mcp_gateway.sdc.consumer import DummySdcConsumer
 
 def test_load_mapping() -> None:
     mapping = load_mapping(Path("config/sdc_mie.yaml"))
-    assert mapping.version == "0.2-example"
+    assert mapping.version == "0.3-example"
     assert "150456" in mapping.by_code()
 
 

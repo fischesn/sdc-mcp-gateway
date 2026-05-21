@@ -2,9 +2,10 @@
 
 Research prototype for exposing IEEE 11073 SDC device state as Model Context Protocol (MCP) resources.
 
-This repository currently contains **v0.2.1-real-sdc-snapshot**. It remains deliberately limited to read-only access:
+This repository currently contains **v0.3.0-simulated-sdc-provider-testbed**. It remains deliberately limited to read-only access:
 
 - A deterministic dummy SDC consumer is included for local development and tests.
+- A reproducible in-process simulated SDC-like provider testbed is included for patient monitor and ventilator scenarios.
 - A real `sdc11073` adapter can discover providers and capture one-shot MDIB snapshots.
 - MCP resources expose devices, metrics, alarms, context, raw MDIB summaries, and the SDC-MIE mapping.
 - No SDC operation is executed.
@@ -32,6 +33,10 @@ Committed files:
 ```text
 config/gateway.yaml                    # default dummy/read-only configuration
 config/gateway.sdc11073.example.yaml   # template for real SDC lab tests
+config/gateway.simulated.example.yaml  # template for in-process simulated device scenarios
+config/sim.patient-monitor.yaml        # simulated patient monitor scenario
+config/sim.ventilator.yaml             # simulated ventilator scenario
+config/sim.combined.yaml               # combined multi-device simulation scenario
 config/sdc_mie.yaml                    # example semantic mapping
 config/policies.yaml                   # read-only example policy
 config/README.md                       # configuration workflow explanation
@@ -96,6 +101,24 @@ See `INSTALLATION.md` for a full Python 3.14-oriented installation guide.
 sdc-mcp-gateway snapshot --config config/gateway.yaml --mie config/sdc_mie.yaml
 ```
 
+
+## Run a simulated SDC-like snapshot
+
+The v0.3.0 simulator does **not** open a real IEEE 11073 SDC network endpoint. It generates normalized SDC-like device snapshots in-process so that mapping, MCP resources, and logging can be developed without real devices.
+
+Direct scenario snapshot:
+
+```bash
+sdc-mcp-gateway simulate-snapshot --scenario config/sim.combined.yaml --elapsed-s 10 --mie config/sdc_mie.yaml
+```
+
+Through the regular gateway adapter path:
+
+```bash
+sdc-mcp-gateway discover --config config/gateway.simulated.example.yaml
+sdc-mcp-gateway snapshot --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+```
+
 ## Discover real SDC providers
 
 Create and edit the local config first:
@@ -131,10 +154,10 @@ This requires the Python MCP SDK. If it is not installed, the package will expla
 pytest -q
 ```
 
-Expected result for v0.2.1:
+Expected result for v0.3.0:
 
 ```text
-8 passed
+12 passed
 ```
 
 ## Recommended Git workflow
@@ -145,8 +168,8 @@ For a clean version history:
 git init
 git branch -M main
 git add .
-git commit -m "Initial read-only SDC-to-MCP gateway prototype v0.2.1"
-git tag -a v0.2.1 -m "v0.2.1 real SDC snapshot prototype with documented local config workflow"
+git commit -m "Add simulated SDC-like provider testbed v0.3.0"
+git tag -a v0.3.0 -m "v0.3.0 simulated SDC-like provider testbed"
 ```
 
 Before committing, check that `config/gateway.local.yaml` is not staged:

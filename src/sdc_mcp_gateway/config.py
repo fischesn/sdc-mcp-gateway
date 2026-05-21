@@ -22,6 +22,8 @@ class SdcSection(BaseModel):
     provider_whitelist: list[str] = Field(default_factory=list)
     local_ip: str = "127.0.0.1"
     max_devices: int | None = None
+    simulation_config: str | None = None
+    simulation_elapsed_s: float = 0.0
 
 
 class McpSection(BaseModel):

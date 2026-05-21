@@ -7,6 +7,7 @@ from typing import Any
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
 from sdc_mcp_gateway.models import AlarmState, AuditRecord, ContextState, DeviceSnapshot, MetricState
 from sdc_mcp_gateway.sdc.extractor import MdibSnapshotExtractor
+from sdc_mcp_gateway.simulation.scenarios import SimulationEngine, SimulationScenario
 
 
 class SdcConsumer(ABC):
@@ -29,7 +30,7 @@ class DummySdcConsumer(SdcConsumer):
             device_id="dummy-monitor-1",
             display_name="Dummy ICU Monitor",
             manufacturer="Research Prototype",
-            model="DummySDC-v0.2",
+            model="DummySDC-v0.3",
             metrics=[
                 MetricState(handle="metric.hr", code="150456", value=72, unit="beats/min", validity="valid"),
                 MetricState(handle="metric.spo2", code="150452", value=98, unit="%", validity="valid"),
@@ -62,6 +63,55 @@ class DummySdcConsumer(SdcConsumer):
         return [self._device]
 
 
+class SimulatedSdcConsumer(SdcConsumer):
+    """In-process simulated SDC-like consumer for reproducible gateway development.
+
+    This adapter does not perform real IEEE 11073 SDC networking. It returns
+    normalized DeviceSnapshot objects generated from a YAML scenario. It is
+    useful for testing mapping, MCP resources, logging, and evaluation scripts
+    while no real SDC network is available.
+    """
+
+    def __init__(
+        self,
+        scenario_path: str,
+        elapsed_s: float = 0.0,
+        recorder: JsonlRecorder | None = None,
+    ) -> None:
+        self.scenario_path = scenario_path
+        self.elapsed_s = elapsed_s
+        self.recorder = recorder
+        self.scenario = SimulationScenario.from_file(scenario_path)
+        self.engine = SimulationEngine(self.scenario)
+
+    def discover(self) -> list[str]:
+        devices = [device.device_id for device in self.scenario.devices]
+        self._record(
+            "simulation_discovery",
+            "ok",
+            {"scenario": self.scenario_path, "device_count": len(devices), "devices": devices},
+        )
+        return devices
+
+    def get_snapshots(self) -> list[DeviceSnapshot]:
+        snapshots = self.engine.snapshot(elapsed_s=self.elapsed_s)
+        self._record(
+            "simulation_snapshot",
+            "ok",
+            {
+                "scenario": self.scenario_path,
+                "elapsed_s": self.elapsed_s,
+                "device_count": len(snapshots),
+            },
+        )
+        return snapshots
+
+    def _record(self, event_type: str, status: str, details: dict[str, Any]) -> None:
+        if self.recorder is None:
+            return
+        self.recorder.write(AuditRecord(event_type=event_type, status=status, details=details))
+
+
 class MissingSdc11073Dependency(RuntimeError):
     """Raised when the optional sdc11073 dependency is not installed."""
 
@@ -69,9 +119,9 @@ class MissingSdc11073Dependency(RuntimeError):
 class Sdc11073Consumer(SdcConsumer):
     """Read-only sdc11073 adapter for provider discovery and MDIB snapshots.
 
-    v0.2 connects to SDC providers, initializes a ConsumerMdib, extracts a normalized
+    The real SDC adapter connects to SDC providers, initializes a ConsumerMdib, extracts a normalized
     read-only snapshot, and then disconnects again. It deliberately does not subscribe
-    to events and does not execute SDC operations. Event streaming is scheduled for v0.3.
+    to events and does not execute SDC operations. Event streaming is scheduled for a later version.
     """
 
     def __init__(

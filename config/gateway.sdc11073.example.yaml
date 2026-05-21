@@ -1,4 +1,4 @@
-# Real-SDC lab template for v0.2.
+# Real-SDC lab template for v0.3.0.
 #
 # Usage:
 #   cp config/gateway.sdc11073.example.yaml config/gateway.local.yaml

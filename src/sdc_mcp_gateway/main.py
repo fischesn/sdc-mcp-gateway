@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 
 import typer
-from rich import print
 
 from sdc_mcp_gateway.config import GatewayConfig
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
@@ -16,6 +15,7 @@ from sdc_mcp_gateway.sdc.consumer import (
     MissingSdc11073Dependency,
     Sdc11073Consumer,
     SdcConsumer,
+    SimulatedSdcConsumer,
 )
 
 app = typer.Typer(help="SDC-to-MCP Gateway research prototype")
@@ -28,6 +28,14 @@ def _make_recorder(config: GatewayConfig) -> JsonlRecorder:
 def _make_consumer(config: GatewayConfig, recorder: JsonlRecorder | None = None) -> SdcConsumer:
     if config.sdc.adapter == "dummy":
         return DummySdcConsumer()
+    if config.sdc.adapter == "simulated":
+        if not config.sdc.simulation_config:
+            raise typer.BadParameter("sdc.simulation_config must be set when adapter is simulated")
+        return SimulatedSdcConsumer(
+            scenario_path=config.sdc.simulation_config,
+            elapsed_s=config.sdc.simulation_elapsed_s,
+            recorder=recorder,
+        )
     if config.sdc.adapter == "sdc11073":
         return Sdc11073Consumer(
             discovery_timeout_s=config.sdc.discovery_timeout_s,
@@ -61,7 +69,7 @@ def discover(
         providers = consumer.discover()
     except MissingSdc11073Dependency as exc:
         raise typer.Exit(str(exc)) from exc
-    print(json.dumps({"providers": providers}, ensure_ascii=False, indent=2, sort_keys=True))
+    typer.echo(json.dumps({"providers": providers}, ensure_ascii=False, indent=2, sort_keys=True))
 
 
 @app.command()
@@ -76,7 +84,25 @@ def snapshot(
     except MissingSdc11073Dependency as exc:
         raise typer.Exit(str(exc)) from exc
     payloads = {uri: registry.read(uri).model_dump() for uri in registry.list_resource_uris()}
-    print(json.dumps(payloads, ensure_ascii=False, indent=2, sort_keys=True))
+    typer.echo(json.dumps(payloads, ensure_ascii=False, indent=2, sort_keys=True))
+
+
+@app.command("simulate-snapshot")
+def simulate_snapshot(
+    scenario: Path = typer.Option(Path("config/sim.patient-monitor.yaml"), help="Simulation scenario YAML file."),
+    elapsed_s: float = typer.Option(0.0, help="Scenario time in seconds."),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+) -> None:
+    """Generate a mapped snapshot from a simulation scenario without SDC networking."""
+
+    from sdc_mcp_gateway.simulation.scenarios import SimulationEngine, SimulationScenario
+
+    mapping = load_mapping(mie)
+    scenario_doc = SimulationScenario.from_file(scenario)
+    devices = SimulationEngine(scenario_doc).snapshot(elapsed_s=elapsed_s)
+    registry = ResourceRegistry(devices=devices, mapping=mapping, recorder=None)
+    payloads = {uri: registry.read(uri).model_dump() for uri in registry.list_resource_uris()}
+    typer.echo(json.dumps(payloads, ensure_ascii=False, indent=2, sort_keys=True))
 
 
 @app.command()

@@ -1,8 +1,8 @@
-# Installation Guide for the SDC-to-MCP Gateway v0.2.1
+# Installation Guide for the SDC-to-MCP Gateway v0.3.0
 
 This document describes how to set up a local Python virtual environment and install all dependencies required for the current read-only research prototype.
 
-Version v0.2.1 is still strictly read-only, but it can optionally use `sdc11073` to discover real SDC providers and capture one-shot MDIB snapshots in an isolated lab network. It does not execute SDC operations and exports no MCP tools.
+Version v0.3.0 is still strictly read-only. It adds an in-process simulated SDC-like provider testbed for reproducible patient-monitor and ventilator scenarios, and it can optionally use `sdc11073` to discover real SDC providers and capture one-shot MDIB snapshots in an isolated lab network. It does not execute SDC operations and exports no MCP tools.
 
 ## 1. Prerequisites
 
@@ -32,7 +32,7 @@ python3.14 --version
 If you received the ZIP archive, unpack it and enter the project directory:
 
 ```bash
-cd sdc-mcp-gateway-v0.2.1
+cd sdc-mcp-gateway-v0.3.0
 ```
 
 All commands below assume that you are in the repository root, i.e., the directory containing `pyproject.toml`.
@@ -112,7 +112,7 @@ Use this if you want to test provider discovery and one-shot MDIB snapshots with
 python -m pip install -e ".[sdc,dev]"
 ```
 
-This installs `sdc11073>=2.4.1,<3.0`. The upper bound is intentional for now: v0.2 targets the stable 2.x API, not a future incompatible major release.
+This installs `sdc11073>=2.4.1,<3.0`. The upper bound is intentional for now: the real-SDC adapter targets the stable 2.x API, not a future incompatible major release.
 
 ### Full installation
 
@@ -132,10 +132,10 @@ Run the test suite:
 pytest -q
 ```
 
-Expected result for v0.2.1:
+Expected result for v0.3.0:
 
 ```text
-8 passed
+12 passed
 ```
 
 Show the command-line help:
@@ -154,6 +154,20 @@ Alternative without relying on the installed console script:
 
 ```bash
 python -m sdc_mcp_gateway snapshot --config config/gateway.yaml --mie config/sdc_mie.yaml
+```
+
+
+Print a simulated multi-device snapshot without SDC networking:
+
+```bash
+sdc-mcp-gateway simulate-snapshot --scenario config/sim.combined.yaml --elapsed-s 10 --mie config/sdc_mie.yaml
+```
+
+Exercise the regular gateway path with the simulated adapter:
+
+```bash
+sdc-mcp-gateway discover --config config/gateway.simulated.example.yaml
+sdc-mcp-gateway snapshot --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
 ```
 
 Run the example script:
@@ -175,6 +189,10 @@ The repository contains configuration templates and defaults. These files should
 ```text
 config/gateway.yaml
 config/gateway.sdc11073.example.yaml
+config/gateway.simulated.example.yaml
+config/sim.patient-monitor.yaml
+config/sim.ventilator.yaml
+config/sim.combined.yaml
 config/sdc_mie.yaml
 config/policies.yaml
 config/README.md
@@ -184,8 +202,10 @@ Their roles are:
 
 - `gateway.yaml`: default read-only dummy configuration for local development and tests
 - `gateway.sdc11073.example.yaml`: template for real SDC discovery and snapshot tests
+- `gateway.simulated.example.yaml`: template for in-process simulated device scenarios
+- `sim.*.yaml`: reproducible simulated patient-monitor and ventilator scenarios
 - `sdc_mie.yaml`: semantic mappings from SDC/BICEPS/nomenclature elements to agent-readable names
-- `policies.yaml`: read-only safety policy; all write/tool operations remain denied in v0.2
+- `policies.yaml`: read-only safety policy; all write/tool operations remain denied in v0.3.0
 - `config/README.md`: short explanation of the configuration workflow
 
 The following file is intentionally not included and must not be committed:
@@ -196,7 +216,42 @@ config/gateway.local.yaml
 
 It may contain your local VPN IP address, provider identifiers, device filters, or other lab-specific details. It is listed in `.gitignore`.
 
-## 7. Real SDC discovery and snapshot test
+
+## 7. Simulated device tests without a real SDC network
+
+The v0.3.0 simulator is useful while no real SDC network is available. It is not a networked IEEE 11073 SDC Provider. It generates normalized SDC-like snapshots in-process and therefore tests the mapping, resource, logging, and later agent-facing parts of the gateway.
+
+Direct scenario run:
+
+```bash
+sdc-mcp-gateway simulate-snapshot --scenario config/sim.patient-monitor.yaml --elapsed-s 0 --mie config/sdc_mie.yaml
+sdc-mcp-gateway simulate-snapshot --scenario config/sim.ventilator.yaml --elapsed-s 30 --mie config/sdc_mie.yaml
+sdc-mcp-gateway simulate-snapshot --scenario config/sim.combined.yaml --elapsed-s 60 --mie config/sdc_mie.yaml
+```
+
+Regular gateway path using the simulated adapter:
+
+```bash
+sdc-mcp-gateway discover --config config/gateway.simulated.example.yaml
+sdc-mcp-gateway snapshot --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+```
+
+For local experiments you may copy the simulated template as a local configuration:
+
+```bash
+cp config/gateway.simulated.example.yaml config/gateway.local.yaml
+```
+
+Windows PowerShell:
+
+```powershell
+Copy-Item config/gateway.simulated.example.yaml config/gateway.local.yaml
+```
+
+Then edit `config/gateway.local.yaml`, for example to switch between `sim.patient-monitor.yaml`, `sim.ventilator.yaml`, and `sim.combined.yaml`.
+
+## 8. Real SDC discovery and snapshot test
+
 
 After installing with `.[sdc,dev]` or `.[all]`, create a local configuration from the template.
 
@@ -238,7 +293,7 @@ sdc-mcp-gateway snapshot --config config/gateway.local.yaml --mie config/sdc_mie
 
 The adapter only reads provider metadata and MDIB state. It does not execute Service Control Object operations.
 
-## 8. Git workflow and avoiding accidental local-config commits
+## 9. Git workflow and avoiding accidental local-config commits
 
 Before committing, inspect the status:
 
@@ -260,7 +315,7 @@ Do not use a broad `.gitignore` entry such as `config/*.yaml`; that would hide t
 config/gateway.local.yaml
 ```
 
-## 9. Deactivation and cleanup
+## 10. Deactivation and cleanup
 
 Deactivate the virtual environment:
 
@@ -280,7 +335,7 @@ On Windows PowerShell:
 Remove-Item -Recurse -Force .venv
 ```
 
-## 10. Troubleshooting
+## 11. Troubleshooting
 
 ### `python` points to the wrong version
 
@@ -332,6 +387,6 @@ python -m sdc_mcp_gateway --help
 
 If that works, the package is installed but the console-script path is not visible in your shell. Reactivate the virtual environment.
 
-## 11. Safety note
+## 12. Safety note
 
-This repository is a research prototype. v0.2.1 is read-only. It must not be used for clinical operation, patient treatment, clinical decision-making, clinical studies, or uncontrolled access to real medical devices.
+This repository is a research prototype. v0.3.0 is read-only. It must not be used for clinical operation, patient treatment, clinical decision-making, clinical studies, or uncontrolled access to real medical devices.

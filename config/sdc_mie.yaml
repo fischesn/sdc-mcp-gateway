@@ -1,5 +1,5 @@
-version: "0.2-example"
-description: "Example SDC-MIE mapping for the read-only prototype. Replace codes with real SDC nomenclature handles from the testbed."
+version: "0.3-example"
+description: "Example SDC-MIE mapping for the read-only prototype and simulated SDC-like scenarios. Replace codes with real SDC nomenclature handles from the testbed."
 
 mappings:
   - code: "150456"
@@ -18,7 +18,15 @@ mappings:
     safety_class: "informational"
     description: "Peripheral oxygen saturation reported by a patient monitor."
 
-  - code: "vent_fio2"
+  - code: "151562"
+    semantic_name: "respiratory_rate"
+    label: "Respiratory rate"
+    unit: "1/min"
+    access: "read-only"
+    safety_class: "informational"
+    description: "Respiratory rate reported by a patient monitor."
+
+  - code: "oxygen_concentration"
     semantic_name: "fio2"
     label: "Fraction of inspired oxygen"
     unit: "%"
@@ -27,4 +35,23 @@ mappings:
     min_value: 21
     max_value: 100
     requires_human_approval: true
-    description: "Current oxygen concentration configured on a ventilator. v0.2 exposes this value read-only."
+    description: "Current oxygen concentration configured on a ventilator. The prototype exposes this value read-only."
+
+  - code: "peep"
+    semantic_name: "peep"
+    label: "Positive end-expiratory pressure"
+    unit: "cmH2O"
+    access: "read-only"
+    safety_class: "controlled"
+    min_value: 0
+    max_value: 25
+    requires_human_approval: true
+    description: "Current PEEP value reported by a ventilator. The prototype exposes this value read-only."
+
+  - code: "airway_pressure"
+    semantic_name: "airway_pressure"
+    label: "Airway pressure"
+    unit: "cmH2O"
+    access: "read-only"
+    safety_class: "informational"
+    description: "Current airway pressure reported by a ventilator."

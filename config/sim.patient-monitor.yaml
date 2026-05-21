@@ -1,0 +1,51 @@
+version: "0.3"
+description: "Reproducible simulated patient monitor scenario for SDC-to-MCP gateway tests."
+random_seed: 11073
+devices:
+  - device_id: "sim-monitor-1"
+    display_name: "Simulated Patient Monitor"
+    manufacturer: "Research Prototype"
+    model: "SimMonitor-v0.3"
+    location_ref: "simulation-bed-1"
+    patient_ref: "simulated-patient-redacted"
+    metrics:
+      - handle: "metric.hr"
+        code: "150456"
+        unit: "beats/min"
+        baseline: 72
+        amplitude: 8
+        period_s: 45
+        noise: 1.5
+        min_value: 35
+        max_value: 180
+      - handle: "metric.spo2"
+        code: "150452"
+        unit: "%"
+        baseline: 97
+        amplitude: 1.0
+        period_s: 75
+        noise: 0.4
+        min_value: 70
+        max_value: 100
+      - handle: "metric.resp_rate"
+        code: "151562"
+        unit: "1/min"
+        baseline: 16
+        amplitude: 2.0
+        period_s: 60
+        noise: 0.7
+        min_value: 5
+        max_value: 45
+    alarms:
+      - handle: "alarm.hr.high"
+        code: "alarm.hr.high"
+        metric_handle: "metric.hr"
+        high_threshold: 120
+        priority: "medium"
+        kind: "physiological"
+      - handle: "alarm.spo2.low"
+        code: "alarm.spo2.low"
+        metric_handle: "metric.spo2"
+        low_threshold: 90
+        priority: "high"
+        kind: "physiological"
