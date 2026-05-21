@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sdc-mcp-gateway"
-version = "0.9.3"
+version = "0.9.4"
 description = "Read-only research prototype exposing IEEE 11073 SDC state and simulated SDC-like devices as MCP resources with repeatable benchmarks, benchmark aggregation, and scenario-based simulation support and agent-facing task evaluation and optional LLM-backed agent experiments."
 readme = "README.md"
 requires-python = ">=3.11,<3.15"

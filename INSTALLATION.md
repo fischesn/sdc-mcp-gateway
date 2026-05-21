@@ -545,3 +545,13 @@ sdc-mcp-gateway evaluate-agent-tasks `
   --output-dir data/agent_eval `
   --elapsed-s 100
 ```
+
+## v0.9.4 Agent-evaluation aggregation
+
+Use `summarize-agent-evaluations` to aggregate multiple oracle or LLM-backed agent-evaluation JSON reports:
+
+```powershell
+sdc-mcp-gateway summarize-agent-evaluations --input-dir data/agent_eval --label gemini-v093-summary --pattern "agent-eval-*.json"
+```
+
+The command writes an `.aggregate.json` and `.aggregate.csv` file with task-pass counts, wrong URI counts, false alarm counts, unsafe-summary counts, and read-only safety-boundary status.

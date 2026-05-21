@@ -9,6 +9,7 @@ from sdc_mcp_gateway.config import GatewayConfig
 from sdc_mcp_gateway.experiments.benchmark import BenchmarkConfig, run_benchmark
 from sdc_mcp_gateway.experiments.summarize import BenchmarkSummaryConfig, summarize_benchmarks
 from sdc_mcp_gateway.agent_eval.harness import AgentEvalConfig, run_agent_evaluation
+from sdc_mcp_gateway.agent_eval.summarize import AgentEvalSummaryConfig, summarize_agent_evaluations
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
 from sdc_mcp_gateway.mapping.mie_loader import load_mapping
 from sdc_mcp_gateway.mcp.client_smoke import (
@@ -421,6 +422,35 @@ def evaluate_agent_tasks(
 
     typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
     if report.get("status") != "ok":
+        raise typer.Exit(code=1)
+
+
+@app.command("summarize-agent-evaluations")
+def summarize_agent_evaluation_results(
+    input_dir: Path = typer.Option(Path("data/agent_eval"), help="Directory containing agent evaluation JSON files."),
+    output_dir: Path | None = typer.Option(None, help="Directory for aggregate JSON/CSV output. Defaults to input-dir."),
+    label: str = typer.Option("agent-eval-summary", help="Prefix for generated aggregate result files."),
+    pattern: str = typer.Option("agent-eval-*.json", help="Glob pattern for agent evaluation JSON files."),
+) -> None:
+    """Aggregate multiple agent-evaluation JSON files into JSON and CSV outputs."""
+
+    try:
+        report = summarize_agent_evaluations(
+            AgentEvalSummaryConfig(input_dir=input_dir, output_dir=output_dir, label=label, pattern=pattern)
+        )
+    except Exception as exc:  # pragma: no cover - defensive user-facing command
+        typer.echo(
+            json.dumps(
+                {"status": "failed", "error": str(exc), "input_dir": str(input_dir), "pattern": pattern},
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if report.get("status") not in {"ok", "warning"}:
         raise typer.Exit(code=1)
 
 

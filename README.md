@@ -354,3 +354,13 @@ v0.9.2 refines LLM clinical-summary grading. It fixes a false positive where ben
 ### v0.9.3 note
 
 v0.9.3 refines LLM resource-selection prompting for multi-device scenarios. The LLM prompt now includes explicit target-device constraints and an agent-facing resource index with parsed `device_id`, inferred `device_type`, and `resource_kind`. This prevents models from returning example monitor metric URIs when the task asks for the ventilator metrics resource in the baseline scenario. The gateway remains read-only and exports no MCP tools.
+
+## v0.9.4 Agent-evaluation aggregation
+
+Use `summarize-agent-evaluations` to aggregate multiple oracle or LLM-backed agent-evaluation JSON reports:
+
+```powershell
+sdc-mcp-gateway summarize-agent-evaluations --input-dir data/agent_eval --label gemini-v093-summary --pattern "agent-eval-*.json"
+```
+
+The command writes an `.aggregate.json` and `.aggregate.csv` file with task-pass counts, wrong URI counts, false alarm counts, unsafe-summary counts, and read-only safety-boundary status.

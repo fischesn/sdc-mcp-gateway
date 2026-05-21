@@ -132,3 +132,13 @@ The outputs are written as JSON, CSV, and Markdown files under `data/agent_eval/
 - Run real LLM evaluations and compare pass rates/error modes against the oracle baseline.
 - Add repeated-run aggregation for non-deterministic LLM outputs.
 - Consider a with/without SDC-MIE ablation study.
+
+## v0.9.4 Agent-evaluation aggregation
+
+Use `summarize-agent-evaluations` to aggregate multiple oracle or LLM-backed agent-evaluation JSON reports:
+
+```powershell
+sdc-mcp-gateway summarize-agent-evaluations --input-dir data/agent_eval --label gemini-v093-summary --pattern "agent-eval-*.json"
+```
+
+The command writes an `.aggregate.json` and `.aggregate.csv` file with task-pass counts, wrong URI counts, false alarm counts, unsafe-summary counts, and read-only safety-boundary status.
