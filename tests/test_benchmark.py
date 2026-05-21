@@ -26,6 +26,8 @@ def test_run_benchmark_writes_outputs(tmp_path: Path) -> None:
     assert report["iterations"] == 2
     assert report["warmup"] == 1
     assert report["resource_count"] == 12
+    assert "active_alarm_count_max" in report
+    assert "active_alarm_seen_any" in report
     assert report["safety_boundary"]["all_read_only"] is True
     assert report["safety_boundary"]["tools_exported_any"] is False
     assert Path(str(report["output_jsonl"])).exists()

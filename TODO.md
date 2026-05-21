@@ -84,14 +84,19 @@
 - [ ] Run experiments with real SDC-capable devices.
 
 
-## v0.7.0 completed
+## v0.7.1 completed
 
 - Added `summarize-benchmarks` for aggregating multiple benchmark summary files.
 - Added aggregate JSON and CSV output for paper-oriented evaluation tables.
 
-## After v0.7.0
+## After v0.7.1
 
 - Add scenario comparison utilities for alarm activation timelines.
 - Add agent-facing prompts for interpreting scenario resources.
 - Add plotting support for benchmark and scenario CSV files.
 - Compare scenario-based simulation results with real SDC devices once the lab VPN is available.
+
+
+### v0.7.1 alarm-observation update
+
+Version v0.7.1 corrects the high-airway-pressure scenario so that the simulated airway-pressure alarm remains active at the end of standard benchmark runs. Benchmark summaries also include `active_alarm_count_max` and `active_alarm_seen_any`, which are useful when evaluating transient or pulse-like alarm scenarios.

@@ -1,6 +1,6 @@
 # Scenario-based simulation
 
-Version 0.7.0 adds scenario-based simulation for repeatable semantic and alarm-oriented experiments. The simulator remains an in-process, SDC-like generator of normalized gateway snapshots. It is not a real IEEE 11073 SDC provider and does not open network endpoints.
+Version 0.7.1 adds scenario-based simulation for repeatable semantic and alarm-oriented experiments. The simulator remains an in-process, SDC-like generator of normalized gateway snapshots. It is not a real IEEE 11073 SDC provider and does not open network endpoints.
 
 ## Included scenarios
 
@@ -176,3 +176,8 @@ Use `high_threshold` for high-value alarms and `low_threshold` for low-value ala
 9. Run `benchmark` and inspect `active_alarms_count` in the CSV/JSONL output.
 
 Keep scenario files free of real patient data. Use synthetic identifiers such as `simulated-patient-redacted`.
+
+
+### v0.7.1 alarm-observation update
+
+Version v0.7.1 corrects the high-airway-pressure scenario so that the simulated airway-pressure alarm remains active at the end of standard benchmark runs. Benchmark summaries also include `active_alarm_count_max` and `active_alarm_seen_any`, which are useful when evaluating transient or pulse-like alarm scenarios.

@@ -41,7 +41,7 @@ The simulation scenarios are not real IEEE 11073 SDC providers. They generate no
 
 ## Scenario-based simulation files
 
-Version 0.7.0 includes three event-based scenario files:
+Version 0.7.1 includes three event-based scenario files:
 
 ```text
 sim.tachycardia.yaml

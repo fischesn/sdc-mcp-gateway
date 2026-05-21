@@ -196,6 +196,8 @@ def run_benchmark(config: BenchmarkConfig) -> dict[str, Any]:
         "metrics_count": measurement_rows[-1]["metrics_count"] if measurement_rows else None,
         "alarms_count": measurement_rows[-1]["alarms_count"] if measurement_rows else None,
         "active_alarm_count_last": measurement_rows[-1]["active_alarms_count"] if measurement_rows else None,
+        "active_alarm_count_max": max((int(row["active_alarms_count"]) for row in measurement_rows), default=None),
+        "active_alarm_seen_any": any(int(row["active_alarms_count"]) > 0 for row in measurement_rows),
         "read_error_count_total": sum(int(row["read_error_count"]) for row in measurement_rows),
         "latency": {
             "snapshot_build": _summary([float(row["snapshot_build_ms"]) for row in measurement_rows]),

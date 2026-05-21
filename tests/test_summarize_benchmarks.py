@@ -22,6 +22,8 @@ def _summary(run_id: str, median_total: float, p95_total: float) -> dict:
         "metrics_count": 6,
         "alarms_count": 3,
         "active_alarm_count_last": 0,
+        "active_alarm_count_max": 1,
+        "active_alarm_seen_any": True,
         "read_error_count_total": 0,
         "latency": {
             "snapshot_build": {"min_ms": 1.0, "median_ms": 2.0, "mean_ms": 2.5, "p95_ms": 4.0, "max_ms": 5.0},
@@ -51,6 +53,8 @@ def test_summarize_benchmarks_writes_aggregate_outputs(tmp_path: Path) -> None:
     assert report["read_error_count_total"] == 0
     assert report["safety_boundary_ok"] is True
     assert report["latency_aggregate"]["total"]["median_ms"]["mean"] == 25.0
+    assert report["active_alarm_count_max_values"] == [1]
+    assert report["active_alarm_seen_any"] is True
     assert Path(report["output_json"]).exists()
     assert Path(report["output_csv"]).exists()
 

@@ -1,11 +1,11 @@
-version: "0.7"
+version: "0.7.1"
 description: "High-airway-pressure scenario: ventilator airway pressure rises above the high alarm threshold."
 random_seed: 7003
 devices:
   - device_id: "sim-ventilator-1"
     display_name: "Simulated Ventilator - High Airway Pressure"
     manufacturer: "Research Prototype"
-    model: "SimVentilator-v0.7"
+    model: "SimVentilator-v0.7.1"
     location_ref: "simulation-bed-1"
     patient_ref: "simulated-patient-redacted"
     metrics:
@@ -37,11 +37,10 @@ devices:
         min_value: 0
         max_value: 70
         events:
-          - kind: "pulse"
+          - kind: "step"
             start_s: 30
-            end_s: 90
             target: 46
-            description: "Sustained high airway pressure episode above threshold."
+            description: "Sustained high airway pressure episode above threshold; remains active after onset."
     alarms:
       - handle: "alarm.airway_pressure.high"
         code: "alarm.airway_pressure.high"

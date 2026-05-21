@@ -2,7 +2,7 @@
 
 Research prototype for exposing IEEE 11073 SDC device state as Model Context Protocol (MCP) resources.
 
-This repository currently contains **v0.7.0-repeatable-benchmark-and-experiment-logging**. It remains deliberately limited to read-only access:
+This repository currently contains **v0.7.1-scenario-based-simulation-and-benchmarking**. It remains deliberately limited to read-only access:
 
 - A deterministic dummy SDC consumer is included for local development and tests.
 - A reproducible in-process simulated SDC-like provider testbed is included for patient monitor and ventilator scenarios.
@@ -111,7 +111,7 @@ sdc-mcp-gateway snapshot --config config/gateway.yaml --mie config/sdc_mie.yaml
 
 ## Run a simulated SDC-like snapshot
 
-The v0.7.0 simulator does **not** open a real IEEE 11073 SDC network endpoint. It generates normalized SDC-like device snapshots in-process so that mapping, MCP resources, and logging can be developed without real devices.
+The v0.7.1 simulator does **not** open a real IEEE 11073 SDC network endpoint. It generates normalized SDC-like device snapshots in-process so that mapping, MCP resources, and logging can be developed without real devices.
 
 Direct scenario snapshot:
 
@@ -161,7 +161,7 @@ This requires the Python MCP SDK. If it is not installed, the package will expla
 pytest -q
 ```
 
-Expected result for v0.7.0:
+Expected result for v0.7.1:
 
 ```text
 20 passed
@@ -175,8 +175,8 @@ For a clean version history:
 git init
 git branch -M main
 git add .
-git commit -m "Add repeatable benchmark and experiment logging v0.7.0"
-git tag -a v0.7.0 -m "v0.7.0 repeatable benchmark and experiment logging"
+git commit -m "Add repeatable benchmark and experiment logging v0.7.1"
+git tag -a v0.7.1 -m "v0.7.1 repeatable benchmark and experiment logging"
 ```
 
 Before committing, check that `config/gateway.local.yaml` is not staged:
@@ -244,7 +244,7 @@ Expected result: `status: ok`, 12 listed resources for the simulated two-device
 scenario, readable health/devices/metrics resources, and zero exported MCP tools.
 
 
-## Benchmark aggregation (v0.7.0)
+## Benchmark aggregation (v0.7.1)
 
 After producing multiple benchmark runs, aggregate their summary files with:
 
@@ -256,7 +256,7 @@ This writes an `.aggregate.json` file and an `.aggregate.csv` file with one row 
 
 ## Scenario-based simulation experiments
 
-Version 0.7.0 adds explicit clinical-style simulation scenarios. The built-in examples are:
+Version 0.7.1 adds explicit clinical-style simulation scenarios. The built-in examples are:
 
 ```text
 config/sim.tachycardia.yaml
@@ -285,3 +285,8 @@ sdc-mcp-gateway benchmark --config config/gateway.simulated.tachycardia.example.
 ```
 
 See `docs/scenarios.md` for a detailed guide to writing custom scenario YAML files.
+
+
+### v0.7.1 alarm-observation update
+
+Version v0.7.1 corrects the high-airway-pressure scenario so that the simulated airway-pressure alarm remains active at the end of standard benchmark runs. Benchmark summaries also include `active_alarm_count_max` and `active_alarm_seen_any`, which are useful when evaluating transient or pulse-like alarm scenarios.
