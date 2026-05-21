@@ -2,9 +2,21 @@ from __future__ import annotations
 
 from typing import Any
 
+from pydantic import BaseModel
+
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
 from sdc_mcp_gateway.mapping.mapper import SdcMieMapper
 from sdc_mcp_gateway.models import AuditRecord, DeviceSnapshot, MappingDocument, ResourcePayload
+
+
+class ResourceDescriptor(BaseModel):
+    """Machine-readable description of one read-only MCP resource."""
+
+    uri: str
+    name: str
+    description: str
+    mime_type: str = "application/json"
+    read_only: bool = True
 
 
 class ResourceRegistry:
@@ -22,17 +34,61 @@ class ResourceRegistry:
         self.recorder = recorder
 
     def list_resource_uris(self) -> list[str]:
-        uris = ["sdc://health", "sdc://devices", "sdc://mapping"]
-        for device_id in sorted(self.devices):
-            uris.extend(
+        return [descriptor.uri for descriptor in self.list_resource_descriptors()]
+
+    def list_resource_descriptors(self) -> list[ResourceDescriptor]:
+        descriptors = [
+            ResourceDescriptor(
+                uri="sdc://health",
+                name="Gateway health",
+                description="Read-only health and safety status of the SDC-to-MCP gateway.",
+            ),
+            ResourceDescriptor(
+                uri="sdc://resources",
+                name="Resource catalogue",
+                description="Machine-readable catalogue of all currently exposed SDC MCP resources.",
+            ),
+            ResourceDescriptor(
+                uri="sdc://devices",
+                name="Device list",
+                description="List of currently known SDC providers exposed by the gateway.",
+            ),
+            ResourceDescriptor(
+                uri="sdc://mapping",
+                name="SDC-MIE mapping",
+                description="Semantic mapping document used to translate SDC/BICEPS codes into agent-readable labels.",
+            ),
+        ]
+        for device_id, device in sorted(self.devices.items()):
+            label = device.display_name or device_id
+            descriptors.extend(
                 [
-                    f"sdc://devices/{device_id}/metrics",
-                    f"sdc://devices/{device_id}/alarms",
-                    f"sdc://devices/{device_id}/context",
-                    f"sdc://devices/{device_id}/mdib/raw",
+                    ResourceDescriptor(
+                        uri=f"sdc://devices/{device_id}/metrics",
+                        name=f"Metrics for {label}",
+                        description="Mapped read-only metric states for this SDC provider.",
+                    ),
+                    ResourceDescriptor(
+                        uri=f"sdc://devices/{device_id}/alarms",
+                        name=f"Alarms for {label}",
+                        description="Read-only alarm states for this SDC provider.",
+                    ),
+                    ResourceDescriptor(
+                        uri=f"sdc://devices/{device_id}/context",
+                        name=f"Context for {label}",
+                        description="Read-only patient, location, operator, and workflow context references.",
+                    ),
+                    ResourceDescriptor(
+                        uri=f"sdc://devices/{device_id}/mdib/raw",
+                        name=f"Raw MDIB-like snapshot for {label}",
+                        description=(
+                            "Raw or normalized MDIB snapshot payload. For simulated providers this is not a real "
+                            "IEEE 11073 SDC MDIB."
+                        ),
+                    ),
                 ]
             )
-        return uris
+        return descriptors
 
     def read(self, uri: str) -> ResourcePayload:
         try:
@@ -52,9 +108,15 @@ class ResourceRegistry:
                     "mode": "read-only",
                     "device_count": len(self.devices),
                     "mapping_version": self.mapping.version,
+                    "resource_count": len(self.list_resource_descriptors()),
                     "tools_exported": False,
                     "write_operations_allowed": False,
                 },
+            )
+        if uri == "sdc://resources":
+            return self._payload(
+                uri,
+                [descriptor.model_dump() for descriptor in self.list_resource_descriptors()],
             )
         if uri == "sdc://devices":
             return self._payload(

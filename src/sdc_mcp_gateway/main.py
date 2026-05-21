@@ -105,6 +105,39 @@ def simulate_snapshot(
     typer.echo(json.dumps(payloads, ensure_ascii=False, indent=2, sort_keys=True))
 
 
+@app.command("list-resources")
+def list_resources(
+    config: Path = typer.Option(Path("config/gateway.yaml"), help="Gateway YAML configuration."),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+) -> None:
+    """List the read-only MCP resources exposed by the gateway."""
+
+    try:
+        registry = _make_registry(config, mie)
+    except MissingSdc11073Dependency as exc:
+        raise typer.Exit(str(exc)) from exc
+    descriptors = [descriptor.model_dump() for descriptor in registry.list_resource_descriptors()]
+    typer.echo(json.dumps({"resources": descriptors}, ensure_ascii=False, indent=2, sort_keys=True))
+
+
+@app.command("read-resource")
+def read_resource(
+    uri: str = typer.Argument(..., help="Resource URI, for example sdc://health."),
+    config: Path = typer.Option(Path("config/gateway.yaml"), help="Gateway YAML configuration."),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+) -> None:
+    """Read one gateway resource without starting an external MCP client."""
+
+    try:
+        registry = _make_registry(config, mie)
+        payload = registry.read(uri)
+    except MissingSdc11073Dependency as exc:
+        raise typer.Exit(str(exc)) from exc
+    except KeyError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    typer.echo(json.dumps(payload.model_dump(), ensure_ascii=False, indent=2, sort_keys=True))
+
+
 @app.command()
 def serve(
     config: Path = typer.Option(Path("config/gateway.yaml"), help="Gateway YAML configuration."),

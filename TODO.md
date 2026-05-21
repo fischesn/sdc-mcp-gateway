@@ -60,3 +60,11 @@
 - [ ] Enable explicitly whitelisted write operations in isolated lab mode only.
 - [ ] Add hard kill switch for all write operations.
 - [ ] Run experiments with real SDC-capable devices.
+
+
+## After v0.4.0
+
+- Test `serve` with a real MCP client.
+- Add automated MCP client integration tests when the MCP SDK is available in CI.
+- Add dynamic refresh for long-running server mode.
+- Define v0.5 dry-run MCP tools, still without SDC write execution.

@@ -2,7 +2,7 @@
 
 Research prototype for exposing IEEE 11073 SDC device state as Model Context Protocol (MCP) resources.
 
-This repository currently contains **v0.3.0-simulated-sdc-provider-testbed**. It remains deliberately limited to read-only access:
+This repository currently contains **v0.4.0-simulated-sdc-provider-testbed**. It remains deliberately limited to read-only access:
 
 - A deterministic dummy SDC consumer is included for local development and tests.
 - A reproducible in-process simulated SDC-like provider testbed is included for patient monitor and ventilator scenarios.
@@ -104,7 +104,7 @@ sdc-mcp-gateway snapshot --config config/gateway.yaml --mie config/sdc_mie.yaml
 
 ## Run a simulated SDC-like snapshot
 
-The v0.3.0 simulator does **not** open a real IEEE 11073 SDC network endpoint. It generates normalized SDC-like device snapshots in-process so that mapping, MCP resources, and logging can be developed without real devices.
+The v0.4.0 simulator does **not** open a real IEEE 11073 SDC network endpoint. It generates normalized SDC-like device snapshots in-process so that mapping, MCP resources, and logging can be developed without real devices.
 
 Direct scenario snapshot:
 
@@ -154,7 +154,7 @@ This requires the Python MCP SDK. If it is not installed, the package will expla
 pytest -q
 ```
 
-Expected result for v0.3.0:
+Expected result for v0.4.0:
 
 ```text
 12 passed
@@ -168,8 +168,8 @@ For a clean version history:
 git init
 git branch -M main
 git add .
-git commit -m "Add simulated SDC-like provider testbed v0.3.0"
-git tag -a v0.3.0 -m "v0.3.0 simulated SDC-like provider testbed"
+git commit -m "Add simulated SDC-like provider testbed v0.4.0"
+git tag -a v0.4.0 -m "v0.4.0 simulated SDC-like provider testbed"
 ```
 
 Before committing, check that `config/gateway.local.yaml` is not staged:
@@ -187,3 +187,31 @@ git rm --cached config/gateway.local.yaml
 ## Safety status
 
 This prototype is a research scaffold only. It is not a medical device, not a clinical decision support system, and not suitable for clinical operation. It must only be used in isolated laboratory and demonstration environments.
+
+
+## v0.4: Read-only MCP resource server
+
+Version v0.4 exposes the gateway state as an MCP resource surface while keeping
+the prototype strictly read-only. No MCP tools are exported and no write
+operations are allowed.
+
+Inspect the resource catalogue without an MCP client:
+
+```bash
+sdc-mcp-gateway list-resources --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+```
+
+Read one resource:
+
+```bash
+sdc-mcp-gateway read-resource sdc://health --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+```
+
+Start the MCP server after installing the optional MCP dependency:
+
+```bash
+python -m pip install -e ".[mcp]"
+sdc-mcp-gateway serve --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+```
+
+See `docs/v0.4-spec.md` and `docs/mcp-server.md` for details.

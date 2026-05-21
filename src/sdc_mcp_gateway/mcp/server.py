@@ -30,6 +30,10 @@ def create_mcp_server(registry: ResourceRegistry, server_name: str = "sdc-mcp-ga
     def health() -> str:
         return _json(registry.read("sdc://health").model_dump())
 
+    @mcp.resource("sdc://resources")
+    def resources() -> str:
+        return _json(registry.read("sdc://resources").model_dump())
+
     @mcp.resource("sdc://devices")
     def devices() -> str:
         return _json(registry.read("sdc://devices").model_dump())
