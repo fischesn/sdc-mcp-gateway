@@ -58,3 +58,29 @@ sdc-mcp-gateway serve --config config/gateway.local.yaml --mie config/sdc_mie.ya
 
 `gateway.local.yaml` must remain local and must not be committed. The current
 prototype should still be run in read-only mode when connected to real devices.
+
+## MCP smoke test
+
+Version v0.4.1 adds a smoke-test command that exercises the same read-only
+resource surface used by the MCP server without opening a long-running stdio
+session:
+
+```bash
+sdc-mcp-gateway mcp-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+```
+
+The command checks that:
+
+- the registry can be built from the selected adapter,
+- all advertised resources can be read,
+- `sdc://health` reports read-only mode,
+- the health resource count matches the catalogue,
+- the resource catalogue is readable,
+- a FastMCP server can be constructed when the optional MCP SDK is installed.
+
+If the MCP SDK is not installed, the command still succeeds by default but reports
+`mcp_sdk_available: false`. To make the MCP SDK mandatory, use:
+
+```bash
+sdc-mcp-gateway mcp-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml --require-mcp-sdk
+```

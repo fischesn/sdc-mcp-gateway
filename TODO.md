@@ -33,7 +33,17 @@
 - [x] Add tests for simulation loading, snapshot generation, and simulated consumer behavior.
 - [x] Document that this is an in-process SDC-like simulator, not a real networked SDC Provider.
 
-## v0.4-event-streaming
+## v0.4-read-only-mcp-resource-server - completed
+
+- [x] Add read-only MCP resource server wrapper.
+- [x] Add `sdc://resources` machine-readable resource catalogue.
+- [x] Add `list-resources` CLI command.
+- [x] Add `read-resource` CLI command.
+- [x] Add `mcp-smoke-test` CLI command.
+- [x] Verify that all advertised resources are readable.
+- [x] Verify read-only safety boundary in `sdc://health`.
+
+## v0.5-event-streaming
 
 - [ ] Subscribe to real metric and alarm events through `sdc11073`.
 - [ ] Add a continuously updated local state cache.
@@ -41,30 +51,30 @@
 - [ ] Add time-series simulation mode for repeated snapshots.
 - [ ] Export experiment CSV/JSONL summaries.
 
-## v0.5-dry-run-tools
+## v0.6-dry-run-tools
 
 - [ ] Extract SCO descriptors from the MDIB.
 - [ ] Generate MCP tool definitions and JSON schemas.
 - [ ] Validate tool arguments without executing SDC operations.
 - [ ] Add dry-run audit records.
 
-## v0.6-policy-hitl
+## v0.7-policy-hitl
 
 - [ ] Implement policy whitelist.
 - [ ] Add role and approval metadata.
 - [ ] Add CLI or web-based human-in-the-loop approval.
 - [ ] Add negative tests for unsafe tool calls.
 
-## v0.7-controlled-lab-execution
+## v0.8-controlled-lab-execution
 
 - [ ] Enable explicitly whitelisted write operations in isolated lab mode only.
 - [ ] Add hard kill switch for all write operations.
 - [ ] Run experiments with real SDC-capable devices.
 
 
-## After v0.4.0
+## After v0.4.1
 
 - Test `serve` with a real MCP client.
 - Add automated MCP client integration tests when the MCP SDK is available in CI.
 - Add dynamic refresh for long-running server mode.
-- Define v0.5 dry-run MCP tools, still without SDC write execution.
+- Define v0.6 dry-run MCP tools, still without SDC write execution.

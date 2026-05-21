@@ -69,3 +69,20 @@ def test_cli_read_single_resource() -> None:
     assert result.exit_code == 0, result.output
     assert '"status": "ok"' in result.output
     assert '"write_operations_allowed": false' in result.output
+
+
+def test_cli_mcp_smoke_test_simulated_config() -> None:
+    result = runner.invoke(
+        app,
+        [
+            "mcp-smoke-test",
+            "--config",
+            "config/gateway.simulated.example.yaml",
+            "--mie",
+            "config/sdc_mie.yaml",
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    assert '"status": "ok"' in result.output
+    assert '"all_advertised_resources_readable"' in result.output
+    assert '"read_only_safety_boundary"' in result.output
