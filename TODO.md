@@ -119,3 +119,16 @@ Run all default scenarios:
 ```
 
 The outputs are written as JSON, CSV, and Markdown files under `data/agent_eval/`.
+
+## v0.9 completed
+
+- Added optional LLM-backed agent evaluation.
+- Added mock, Ollama, and OpenAI-compatible backends.
+- Reused v0.8 tasks, ground truth, and graders.
+- Preserved read-only safety boundary.
+
+## Next
+
+- Run real LLM evaluations and compare pass rates/error modes against the oracle baseline.
+- Add repeated-run aggregation for non-deterministic LLM outputs.
+- Consider a with/without SDC-MIE ablation study.

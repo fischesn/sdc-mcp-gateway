@@ -1,8 +1,9 @@
-version: "0.8"
+version: "0.9.3"
 description: >
-  Agent-facing evaluation tasks for read-only SDC-to-MCP scenarios. The v0.8
-  harness uses a deterministic oracle agent to validate task definitions,
-  ground truth, and graders before LLM-based agents are added.
+  Agent-facing evaluation tasks for read-only SDC-to-MCP scenarios. The task
+  set supports deterministic oracle evaluation and optional LLM-backed agents.
+  Resource-selection tasks include explicit target-device constraints to avoid
+  ambiguous example-style URI selection in multi-device scenarios.
 
 tasks:
   - id: device_inventory
@@ -62,7 +63,10 @@ tasks:
 
   - id: metrics_resource_selection
     kind: resource_selection
-    prompt: "Which MCP resource URI would you read to inspect the relevant device metrics?"
+    prompt: >
+      Select the exact MCP resource URI for the target device's metrics.
+      Return exactly one existing URI in selected_uri. Do not provide an example
+      URI for another device.
     expected:
       baseline:
         device_id: "sim-ventilator-1"

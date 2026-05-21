@@ -1,8 +1,8 @@
-# Installation Guide for the SDC-to-MCP Gateway v0.7.1
+# Installation Guide for the SDC-to-MCP Gateway v0.9.3
 
 This document describes how to set up a local Python virtual environment and install all dependencies required for the current read-only research prototype.
 
-Version v0.7.1 is still strictly read-only. It includes the simulated SDC-like provider testbed, optional `sdc11073` discovery/snapshot support, MCP resource exposure, MCP client smoke tests, and repeatable benchmark logging. It does not execute SDC operations and exports no MCP tools.
+Version v0.9.3 is still strictly read-only. It includes the simulated SDC-like provider testbed, optional `sdc11073` discovery/snapshot support, MCP resource exposure, MCP client smoke tests, repeatable benchmark logging, deterministic oracle-agent evaluation, and optional LLM-backed agent evaluation. It does not execute SDC operations and exports no MCP tools.
 
 ## 1. Prerequisites
 
@@ -32,7 +32,7 @@ python3.14 --version
 If you received the ZIP archive, unpack it and enter the project directory:
 
 ```bash
-cd sdc-mcp-gateway-v0.7.1
+cd sdc-mcp-gateway-v0.9.3
 ```
 
 All commands below assume that you are in the repository root, i.e., the directory containing `pyproject.toml`.
@@ -485,3 +485,63 @@ Run all default scenarios:
 ```
 
 The outputs are written as JSON, CSV, and Markdown files under `data/agent_eval/`.
+
+## v0.9 LLM-backed agent evaluation
+
+Version v0.9.3 adds optional LLM-backed task evaluation. The deterministic oracle agent remains available and should be used as the reference baseline. The mock LLM backend validates the prompt/parsing/grading path without external services:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks `
+  --config config/gateway.simulated.tachycardia.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tasks config/agent_eval.tasks.yaml `
+  --scenario tachycardia `
+  --agent llm-mock `
+  --output-dir data/agent_eval `
+  --elapsed-s 100
+```
+
+For local Ollama-based testing, use:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks `
+  --config config/gateway.simulated.tachycardia.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tasks config/agent_eval.tasks.yaml `
+  --scenario tachycardia `
+  --agent llm-ollama `
+  --llm-model llama3.1 `
+  --output-dir data/agent_eval `
+  --elapsed-s 100
+```
+
+For OpenAI-compatible endpoints, keep API keys in environment variables and never commit them. The LLM receives read-only MCP resource context only. No MCP tools are exported and no write operations are enabled.
+
+
+## Optional Gemini backend
+
+For Gemini-backed agent evaluation, install the optional dependency:
+
+```powershell
+python -m pip install -e ".[gemini]"
+```
+
+Set an API key before running Gemini experiments:
+
+```powershell
+$env:GEMINI_API_KEY = "YOUR_KEY"
+```
+
+Example:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks `
+  --config config/gateway.simulated.tachycardia.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tasks config/agent_eval.tasks.yaml `
+  --scenario tachycardia `
+  --agent llm-gemini `
+  --llm-model gemini-2.5-flash `
+  --output-dir data/agent_eval `
+  --elapsed-s 100
+```

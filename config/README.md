@@ -71,3 +71,9 @@ Run all default scenarios:
 ```
 
 The outputs are written as JSON, CSV, and Markdown files under `data/agent_eval/`.
+
+## v0.9 LLM agent options
+
+LLM agent evaluation is configured primarily through CLI options. No API keys should be written into YAML files. Use environment variables for external services.
+
+Supported agent values: `oracle`, `llm-mock`, `llm-ollama`, and `llm-openai-compatible`.

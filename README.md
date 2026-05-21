@@ -2,13 +2,14 @@
 
 Research prototype for exposing IEEE 11073 SDC device state as Model Context Protocol (MCP) resources.
 
-This repository currently contains **v0.7.1-scenario-based-simulation-and-benchmarking**. It remains deliberately limited to read-only access:
+This repository currently contains **v0.9.3-stricter-resource-selection-prompting**. It remains deliberately limited to read-only access:
 
 - A deterministic dummy SDC consumer is included for local development and tests.
 - A reproducible in-process simulated SDC-like provider testbed is included for patient monitor and ventilator scenarios.
 - A real `sdc11073` adapter can discover providers and capture one-shot MDIB snapshots.
 - MCP resources expose devices, metrics, alarms, context, raw MDIB summaries, and the SDC-MIE mapping.
 - Repeatable benchmarks write JSONL, CSV, and summary artifacts for paper-oriented experiments.
+- Agent-facing evaluations cover deterministic oracle agents and optional LLM-backed agents.
 - No SDC operation is executed.
 - No MCP tool is exported.
 - No clinical use is intended or permitted.
@@ -309,3 +310,47 @@ Run all default scenarios:
 ```
 
 The outputs are written as JSON, CSV, and Markdown files under `data/agent_eval/`.
+
+## Agent-facing LLM evaluation (v0.9)
+
+v0.9 extends the deterministic v0.8 oracle-agent evaluation with optional LLM-backed agents. The same task definitions, scenario ground truth, and graders are reused. This keeps the evaluation comparable across deterministic and non-deterministic agents.
+
+The safest local smoke test uses the mock LLM backend, which exercises the LLM prompt/JSON/grading path without calling an external model:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks `
+  --config config/gateway.simulated.tachycardia.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tasks config/agent_eval.tasks.yaml `
+  --scenario tachycardia `
+  --agent llm-mock `
+  --output-dir data/agent_eval `
+  --elapsed-s 100
+```
+
+A local Ollama model can be used with:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks `
+  --config config/gateway.simulated.tachycardia.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tasks config/agent_eval.tasks.yaml `
+  --scenario tachycardia `
+  --agent llm-ollama `
+  --llm-model llama3.1 `
+  --output-dir data/agent_eval `
+  --elapsed-s 100
+```
+
+OpenAI-compatible chat-completion endpoints are supported through `--agent llm-openai-compatible`. Keep API keys in environment variables and never commit them. The gateway remains read-only in all LLM modes: no MCP tools are exported and write operations remain disabled.
+
+Gemini is supported through `--agent llm-gemini` after installing the optional `gemini` extra and setting `GEMINI_API_KEY` or `GOOGLE_API_KEY`. Example: `python -m pip install -e ".[gemini]"`, then run with `--llm-model gemini-2.5-flash`.
+
+### v0.9.2 note
+
+v0.9.2 refines LLM clinical-summary grading. It fixes a false positive where benign wording such as "set high threshold" was interpreted as an unsafe device-control recommendation. Unsafe detection now focuses on action-oriented recommendations such as setting FiO2/PEEP, changing ventilator settings, administering medication, or silencing alarms.
+
+
+### v0.9.3 note
+
+v0.9.3 refines LLM resource-selection prompting for multi-device scenarios. The LLM prompt now includes explicit target-device constraints and an agent-facing resource index with parsed `device_id`, inferred `device_type`, and `resource_kind`. This prevents models from returning example monitor metric URIs when the task asks for the ventilator metrics resource in the baseline scenario. The gateway remains read-only and exports no MCP tools.

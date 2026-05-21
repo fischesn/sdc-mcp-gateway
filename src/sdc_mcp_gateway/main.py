@@ -363,16 +363,22 @@ def evaluate_agent_tasks(
     mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
     tasks: Path = typer.Option(Path("config/agent_eval.tasks.yaml"), help="Agent task YAML file."),
     scenario: str = typer.Option("baseline", help="Scenario key used for ground-truth expectations."),
-    agent: str = typer.Option("oracle", help="Agent backend. v0.8 supports only 'oracle'."),
+    agent: str = typer.Option("oracle", help="Agent backend: oracle, llm-mock, llm-ollama, llm-openai-compatible, or llm-gemini."),
     output_dir: Path = typer.Option(Path("data/agent_eval"), help="Directory for JSON, CSV, and Markdown outputs."),
     label: str = typer.Option("agent-eval", help="Prefix for generated output files."),
     elapsed_s: float | None = typer.Option(100.0, help="Simulated scenario time in seconds, if using the simulated adapter."),
+    llm_provider: str = typer.Option("mock", help="LLM provider when agent='llm': mock, ollama, openai-compatible, or gemini."),
+    llm_model: str = typer.Option("mock-medical-agent", help="LLM model name for llm-* agents."),
+    llm_endpoint: str | None = typer.Option(None, help="Optional LLM HTTP endpoint override."),
+    llm_api_key_env: str | None = typer.Option(None, help="Environment variable holding API key for openai-compatible provider."),
+    llm_timeout_s: float = typer.Option(60.0, help="LLM backend timeout in seconds."),
+    llm_temperature: float = typer.Option(0.0, help="LLM sampling temperature."),
 ) -> None:
     """Evaluate agent-facing read-only tasks against scenario ground truth.
 
-    v0.8 intentionally uses a deterministic oracle agent. This validates the
-    task definitions, scenario ground truth, and graders before LLM-based agents
-    are introduced in a later version.
+    v0.9 supports the deterministic oracle agent and optional LLM-backed agents.
+    LLM backends are read-only and receive only MCP resource context; no tools or
+    write operations are exposed by the gateway.
     """
 
     try:
@@ -386,6 +392,12 @@ def evaluate_agent_tasks(
                 run_label=label,
                 agent=agent,
                 elapsed_s=elapsed_s,
+                llm_provider=llm_provider,
+                llm_model=llm_model,
+                llm_endpoint=llm_endpoint,
+                llm_api_key_env=llm_api_key_env,
+                llm_timeout_s=llm_timeout_s,
+                llm_temperature=llm_temperature,
             )
         )
     except Exception as exc:  # pragma: no cover - defensive user-facing command
