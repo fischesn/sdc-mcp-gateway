@@ -430,3 +430,14 @@ sdc-mcp-gateway mcp-client-smoke-test --config config/gateway.simulated.example.
 
 The expected result is a JSON report with `"status": "ok"`, listed MCP resources,
 readable sample resources, and `"tool_count": 0`.
+
+
+## Aggregating benchmark results
+
+After running several benchmarks, use:
+
+```powershell
+sdc-mcp-gateway summarize-benchmarks --input-dir data/experiment_runs --label simulated-v06-summary
+```
+
+The command reads `*.summary.json` files and writes aggregate JSON/CSV files in the same directory unless `--output-dir` is specified.

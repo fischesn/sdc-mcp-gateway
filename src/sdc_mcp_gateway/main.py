@@ -7,6 +7,7 @@ import typer
 
 from sdc_mcp_gateway.config import GatewayConfig
 from sdc_mcp_gateway.experiments.benchmark import BenchmarkConfig, run_benchmark
+from sdc_mcp_gateway.experiments.summarize import BenchmarkSummaryConfig, summarize_benchmarks
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
 from sdc_mcp_gateway.mapping.mie_loader import load_mapping
 from sdc_mcp_gateway.mcp.client_smoke import (
@@ -352,6 +353,35 @@ def benchmark(
 
     typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
     if report.get("status") != "ok":
+        raise typer.Exit(code=1)
+
+
+@app.command("summarize-benchmarks")
+def summarize_benchmark_results(
+    input_dir: Path = typer.Option(Path("data/experiment_runs"), help="Directory containing *.summary.json benchmark files."),
+    output_dir: Path | None = typer.Option(None, help="Directory for aggregate JSON/CSV output. Defaults to input-dir."),
+    label: str = typer.Option("benchmark-summary", help="Prefix for generated aggregate result files."),
+    pattern: str = typer.Option("*.summary.json", help="Glob pattern for benchmark summary files."),
+) -> None:
+    """Aggregate multiple benchmark summary JSON files into JSON and CSV outputs."""
+
+    try:
+        report = summarize_benchmarks(
+            BenchmarkSummaryConfig(input_dir=input_dir, output_dir=output_dir, label=label, pattern=pattern)
+        )
+    except Exception as exc:  # pragma: no cover - defensive user-facing command
+        typer.echo(
+            json.dumps(
+                {"status": "failed", "error": str(exc), "input_dir": str(input_dir), "pattern": pattern},
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if report.get("status") not in {"ok", "warning"}:
         raise typer.Exit(code=1)
 
 

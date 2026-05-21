@@ -82,3 +82,9 @@
 - [ ] Enable explicitly whitelisted write operations in isolated lab mode only.
 - [ ] Add hard kill switch for all write operations.
 - [ ] Run experiments with real SDC-capable devices.
+
+
+## v0.6.1 completed
+
+- Added `summarize-benchmarks` for aggregating multiple benchmark summary files.
+- Added aggregate JSON and CSV output for paper-oriented evaluation tables.

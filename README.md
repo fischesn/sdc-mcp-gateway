@@ -236,3 +236,14 @@ sdc-mcp-gateway mcp-client-smoke-test --config config/gateway.simulated.example.
 
 Expected result: `status: ok`, 12 listed resources for the simulated two-device
 scenario, readable health/devices/metrics resources, and zero exported MCP tools.
+
+
+## Benchmark aggregation (v0.6.1)
+
+After producing multiple benchmark runs, aggregate their summary files with:
+
+```powershell
+sdc-mcp-gateway summarize-benchmarks --input-dir data/experiment_runs --label simulated-v06-summary
+```
+
+This writes an `.aggregate.json` file and an `.aggregate.csv` file with one row per benchmark summary and aggregate latency statistics across runs.
