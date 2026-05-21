@@ -1,0 +1,30 @@
+version: "0.1-example"
+description: "Example SDC-MIE mapping for the read-only prototype. Replace codes with real SDC nomenclature handles from the testbed."
+
+mappings:
+  - code: "150456"
+    semantic_name: "heart_rate"
+    label: "Heart rate"
+    unit: "beats/min"
+    access: "read-only"
+    safety_class: "informational"
+    description: "Current heart rate reported by a patient monitor."
+
+  - code: "150452"
+    semantic_name: "spo2"
+    label: "Peripheral oxygen saturation"
+    unit: "%"
+    access: "read-only"
+    safety_class: "informational"
+    description: "Peripheral oxygen saturation reported by a patient monitor."
+
+  - code: "vent_fio2"
+    semantic_name: "fio2"
+    label: "Fraction of inspired oxygen"
+    unit: "%"
+    access: "read-only"
+    safety_class: "controlled"
+    min_value: 21
+    max_value: 100
+    requires_human_approval: true
+    description: "Current oxygen concentration configured on a ventilator. v0.1 exposes this value read-only."

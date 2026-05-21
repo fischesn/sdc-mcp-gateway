@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+data/logs/
+data/experiment_runs/
+
+# Local lab-specific configuration; do not commit.
+config/gateway.local.yaml

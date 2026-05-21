@@ -1,0 +1,9 @@
+version: "0.1-placeholder"
+mode: "read-only"
+
+# v0.1 exports no MCP tools and executes no SDC operations.
+# This file is included now to stabilize the repository layout for v0.4/v0.5.
+policies:
+  default:
+    allow_write_operations: false
+    require_human_approval_for_all_tools: true
