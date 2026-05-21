@@ -2,7 +2,7 @@
 
 Research prototype for exposing IEEE 11073 SDC device state as Model Context Protocol (MCP) resources.
 
-This repository currently contains **v0.6.0-repeatable-benchmark-and-experiment-logging**. It remains deliberately limited to read-only access:
+This repository currently contains **v0.7.0-repeatable-benchmark-and-experiment-logging**. It remains deliberately limited to read-only access:
 
 - A deterministic dummy SDC consumer is included for local development and tests.
 - A reproducible in-process simulated SDC-like provider testbed is included for patient monitor and ventilator scenarios.
@@ -34,10 +34,16 @@ Committed files:
 ```text
 config/gateway.yaml                    # default dummy/read-only configuration
 config/gateway.sdc11073.example.yaml   # template for real SDC lab tests
-config/gateway.simulated.example.yaml  # template for in-process simulated device scenarios
+config/gateway.simulated.example.yaml  # template for in-process simulated baseline scenarios
+config/gateway.simulated.tachycardia.example.yaml
+config/gateway.simulated.spo2-drop.example.yaml
+config/gateway.simulated.high-airway-pressure.example.yaml
 config/sim.patient-monitor.yaml        # simulated patient monitor scenario
 config/sim.ventilator.yaml             # simulated ventilator scenario
-config/sim.combined.yaml               # combined multi-device simulation scenario
+config/sim.combined.yaml               # combined multi-device baseline simulation scenario
+config/sim.tachycardia.yaml           # event-based tachycardia scenario
+config/sim.spo2-drop.yaml             # event-based oxygen desaturation scenario
+config/sim.high-airway-pressure.yaml  # event-based ventilator pressure scenario
 config/sdc_mie.yaml                    # example semantic mapping
 config/policies.yaml                   # read-only example policy
 config/README.md                       # configuration workflow explanation
@@ -105,7 +111,7 @@ sdc-mcp-gateway snapshot --config config/gateway.yaml --mie config/sdc_mie.yaml
 
 ## Run a simulated SDC-like snapshot
 
-The v0.6.0 simulator does **not** open a real IEEE 11073 SDC network endpoint. It generates normalized SDC-like device snapshots in-process so that mapping, MCP resources, and logging can be developed without real devices.
+The v0.7.0 simulator does **not** open a real IEEE 11073 SDC network endpoint. It generates normalized SDC-like device snapshots in-process so that mapping, MCP resources, and logging can be developed without real devices.
 
 Direct scenario snapshot:
 
@@ -155,7 +161,7 @@ This requires the Python MCP SDK. If it is not installed, the package will expla
 pytest -q
 ```
 
-Expected result for v0.6.0:
+Expected result for v0.7.0:
 
 ```text
 20 passed
@@ -169,8 +175,8 @@ For a clean version history:
 git init
 git branch -M main
 git add .
-git commit -m "Add repeatable benchmark and experiment logging v0.6.0"
-git tag -a v0.6.0 -m "v0.6.0 repeatable benchmark and experiment logging"
+git commit -m "Add repeatable benchmark and experiment logging v0.7.0"
+git tag -a v0.7.0 -m "v0.7.0 repeatable benchmark and experiment logging"
 ```
 
 Before committing, check that `config/gateway.local.yaml` is not staged:
@@ -238,7 +244,7 @@ Expected result: `status: ok`, 12 listed resources for the simulated two-device
 scenario, readable health/devices/metrics resources, and zero exported MCP tools.
 
 
-## Benchmark aggregation (v0.6.1)
+## Benchmark aggregation (v0.7.0)
 
 After producing multiple benchmark runs, aggregate their summary files with:
 
@@ -247,3 +253,35 @@ sdc-mcp-gateway summarize-benchmarks --input-dir data/experiment_runs --label si
 ```
 
 This writes an `.aggregate.json` file and an `.aggregate.csv` file with one row per benchmark summary and aggregate latency statistics across runs.
+
+## Scenario-based simulation experiments
+
+Version 0.7.0 adds explicit clinical-style simulation scenarios. The built-in examples are:
+
+```text
+config/sim.tachycardia.yaml
+config/sim.spo2-drop.yaml
+config/sim.high-airway-pressure.yaml
+```
+
+Each scenario has a matching gateway template:
+
+```text
+config/gateway.simulated.tachycardia.example.yaml
+config/gateway.simulated.spo2-drop.example.yaml
+config/gateway.simulated.high-airway-pressure.example.yaml
+```
+
+Example snapshot:
+
+```bash
+sdc-mcp-gateway simulate-snapshot --scenario config/sim.tachycardia.yaml --elapsed-s 60 --mie config/sdc_mie.yaml
+```
+
+Example benchmark:
+
+```bash
+sdc-mcp-gateway benchmark --config config/gateway.simulated.tachycardia.example.yaml --mie config/sdc_mie.yaml --iterations 100 --warmup 10 --label tachycardia-v07
+```
+
+See `docs/scenarios.md` for a detailed guide to writing custom scenario YAML files.

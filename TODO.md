@@ -84,7 +84,14 @@
 - [ ] Run experiments with real SDC-capable devices.
 
 
-## v0.6.1 completed
+## v0.7.0 completed
 
 - Added `summarize-benchmarks` for aggregating multiple benchmark summary files.
 - Added aggregate JSON and CSV output for paper-oriented evaluation tables.
+
+## After v0.7.0
+
+- Add scenario comparison utilities for alarm activation timelines.
+- Add agent-facing prompts for interpreting scenario resources.
+- Add plotting support for benchmark and scenario CSV files.
+- Compare scenario-based simulation results with real SDC devices once the lab VPN is available.

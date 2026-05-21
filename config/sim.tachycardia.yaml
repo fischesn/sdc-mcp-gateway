@@ -1,0 +1,57 @@
+version: "0.7"
+description: "Tachycardia scenario: heart rate ramps above the high alarm threshold while SpO2 remains stable."
+random_seed: 7001
+devices:
+  - device_id: "sim-monitor-1"
+    display_name: "Simulated Patient Monitor - Tachycardia"
+    manufacturer: "Research Prototype"
+    model: "SimMonitor-v0.7"
+    location_ref: "simulation-bed-1"
+    patient_ref: "simulated-patient-redacted"
+    metrics:
+      - handle: "metric.hr"
+        code: "150456"
+        unit: "beats/min"
+        baseline: 78
+        amplitude: 4
+        period_s: 45
+        noise: 0.8
+        min_value: 35
+        max_value: 190
+        events:
+          - kind: "ramp"
+            start_s: 20
+            end_s: 60
+            target: 135
+            description: "Heart rate gradually rises above tachycardia threshold."
+      - handle: "metric.spo2"
+        code: "150452"
+        unit: "%"
+        baseline: 97
+        amplitude: 0.5
+        period_s: 75
+        noise: 0.2
+        min_value: 70
+        max_value: 100
+      - handle: "metric.resp_rate"
+        code: "151562"
+        unit: "1/min"
+        baseline: 18
+        amplitude: 1.5
+        period_s: 60
+        noise: 0.4
+        min_value: 5
+        max_value: 45
+    alarms:
+      - handle: "alarm.hr.high"
+        code: "alarm.hr.high"
+        metric_handle: "metric.hr"
+        high_threshold: 120
+        priority: "medium"
+        kind: "physiological"
+      - handle: "alarm.spo2.low"
+        code: "alarm.spo2.low"
+        metric_handle: "metric.spo2"
+        low_threshold: 90
+        priority: "high"
+        kind: "physiological"

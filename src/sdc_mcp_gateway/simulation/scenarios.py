@@ -4,12 +4,36 @@ import math
 import random
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import yaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from sdc_mcp_gateway.models import AlarmState, ContextState, DeviceSnapshot, MetricState, utc_now_iso
+
+
+class SimMetricEventConfig(BaseModel):
+    """Time-dependent modifier for one simulated metric.
+
+    Events allow a scenario author to create clinically meaningful trajectories
+    such as tachycardia, oxygen desaturation, or high airway pressure without
+    changing the simulator code.
+    """
+
+    kind: Literal["step", "ramp", "pulse"] = "step"
+    start_s: float = 0.0
+    end_s: float | None = None
+    target: float | None = None
+    delta: float | None = None
+    description: str | None = None
+
+    @model_validator(mode="after")
+    def _validate_event(self) -> "SimMetricEventConfig":
+        if self.end_s is not None and self.end_s < self.start_s:
+            raise ValueError("event end_s must be greater than or equal to start_s")
+        if self.target is None and self.delta is None:
+            raise ValueError("event must define either target or delta")
+        return self
 
 
 class SimMetricConfig(BaseModel):
@@ -25,6 +49,7 @@ class SimMetricConfig(BaseModel):
     min_value: float | None = None
     max_value: float | None = None
     validity: str = "valid"
+    events: list[SimMetricEventConfig] = Field(default_factory=list)
 
 
 class SimAlarmConfig(BaseModel):
@@ -55,7 +80,7 @@ class SimDeviceConfig(BaseModel):
 class SimulationScenario(BaseModel):
     """A reproducible scenario containing one or more simulated device snapshots."""
 
-    version: str = "0.3"
+    version: str = "0.7"
     description: str | None = None
     random_seed: int = 42
     devices: list[SimDeviceConfig] = Field(default_factory=list)
@@ -105,6 +130,7 @@ class SimulationEngine:
                         "baseline": metric.baseline,
                         "amplitude": metric.amplitude,
                         "period_s": metric.period_s,
+                        "event_count": len(metric.events),
                     },
                 )
             )
@@ -134,11 +160,50 @@ class SimulationEngine:
         periodic = metric.amplitude * math.sin((2.0 * math.pi * elapsed_s) / period)
         noisy = rng.uniform(-metric.noise, metric.noise) if metric.noise else 0.0
         value = metric.baseline + periodic + noisy
+        for event in metric.events:
+            value = self._apply_event(value, metric.baseline, event, elapsed_s)
         if metric.min_value is not None:
             value = max(metric.min_value, value)
         if metric.max_value is not None:
             value = min(metric.max_value, value)
         return value
+
+    def _apply_event(
+        self, current_value: float, baseline: float, event: SimMetricEventConfig, elapsed_s: float
+    ) -> float:
+        if elapsed_s < event.start_s:
+            return current_value
+
+        if event.kind == "ramp":
+            if event.end_s is None or event.end_s == event.start_s:
+                return self._event_value(current_value, event)
+            progress = (elapsed_s - event.start_s) / (event.end_s - event.start_s)
+            # After the ramp end, the scenario remains at the fully applied
+            # target/delta. This makes ramp scenarios useful for benchmark runs
+            # that continue after the onset phase.
+            progress = min(1.0, max(0.0, progress))
+            target_value = self._event_value(baseline, event)
+            return current_value + progress * (target_value - baseline)
+
+        if event.end_s is not None and elapsed_s > event.end_s:
+            return current_value
+
+        if event.kind == "step":
+            return self._event_value(current_value, event)
+
+        if event.kind == "pulse":
+            # A pulse behaves like a finite step between start_s and end_s. If no
+            # end_s is given, it remains active after start_s.
+            return self._event_value(current_value, event)
+
+        return current_value
+
+    def _event_value(self, current_value: float, event: SimMetricEventConfig) -> float:
+        if event.target is not None:
+            return event.target
+        if event.delta is not None:
+            return current_value + event.delta
+        return current_value
 
     def _alarm_state(self, alarm: SimAlarmConfig, values_by_handle: dict[str, float]) -> AlarmState:
         value = values_by_handle.get(alarm.metric_handle or "")

@@ -1,8 +1,8 @@
-# Installation Guide for the SDC-to-MCP Gateway v0.6.0
+# Installation Guide for the SDC-to-MCP Gateway v0.7.0
 
 This document describes how to set up a local Python virtual environment and install all dependencies required for the current read-only research prototype.
 
-Version v0.6.0 is still strictly read-only. It includes the simulated SDC-like provider testbed, optional `sdc11073` discovery/snapshot support, MCP resource exposure, MCP client smoke tests, and repeatable benchmark logging. It does not execute SDC operations and exports no MCP tools.
+Version v0.7.0 is still strictly read-only. It includes the simulated SDC-like provider testbed, optional `sdc11073` discovery/snapshot support, MCP resource exposure, MCP client smoke tests, and repeatable benchmark logging. It does not execute SDC operations and exports no MCP tools.
 
 ## 1. Prerequisites
 
@@ -32,7 +32,7 @@ python3.14 --version
 If you received the ZIP archive, unpack it and enter the project directory:
 
 ```bash
-cd sdc-mcp-gateway-v0.6.0
+cd sdc-mcp-gateway-v0.7.0
 ```
 
 All commands below assume that you are in the repository root, i.e., the directory containing `pyproject.toml`.
@@ -132,7 +132,7 @@ Run the test suite:
 pytest -q
 ```
 
-Expected result for v0.6.0:
+Expected result for v0.7.0:
 
 ```text
 20 passed
@@ -217,7 +217,7 @@ Their roles are:
 - `gateway.simulated.example.yaml`: template for in-process simulated device scenarios
 - `sim.*.yaml`: reproducible simulated patient-monitor and ventilator scenarios
 - `sdc_mie.yaml`: semantic mappings from SDC/BICEPS/nomenclature elements to agent-readable names
-- `policies.yaml`: read-only safety policy; all write/tool operations remain denied in v0.6.0
+- `policies.yaml`: read-only safety policy; all write/tool operations remain denied in v0.7.0
 - `config/README.md`: short explanation of the configuration workflow
 
 The following file is intentionally not included and must not be committed:
@@ -231,7 +231,7 @@ It may contain your local VPN IP address, provider identifiers, device filters, 
 
 ## 7. Simulated device tests without a real SDC network
 
-The v0.6.0 simulator is useful while no real SDC network is available. It is not a networked IEEE 11073 SDC Provider. It generates normalized SDC-like snapshots in-process and therefore tests the mapping, resource, logging, and later agent-facing parts of the gateway.
+The v0.7.0 simulator is useful while no real SDC network is available. It is not a networked IEEE 11073 SDC Provider. It generates normalized SDC-like snapshots in-process and therefore tests the mapping, resource, logging, and later agent-facing parts of the gateway.
 
 Direct scenario run:
 
@@ -418,7 +418,7 @@ sdc-mcp-gateway benchmark --config config/gateway.simulated.example.yaml --mie c
 
 ## 12. Safety note
 
-This repository is a research prototype. v0.6.0 is read-only. It must not be used for clinical operation, patient treatment, clinical decision-making, clinical studies, or uncontrolled access to real medical devices.
+This repository is a research prototype. v0.7.0 is read-only. It must not be used for clinical operation, patient treatment, clinical decision-making, clinical studies, or uncontrolled access to real medical devices.
 
 
 Run the end-to-end MCP client smoke test. This requires the optional MCP SDK and
@@ -441,3 +441,23 @@ sdc-mcp-gateway summarize-benchmarks --input-dir data/experiment_runs --label si
 ```
 
 The command reads `*.summary.json` files and writes aggregate JSON/CSV files in the same directory unless `--output-dir` is specified.
+
+## Running the v0.7 scenario examples
+
+After installation, the scenario files can be tested without any real SDC network:
+
+```powershell
+sdc-mcp-gateway simulate-snapshot --scenario config/sim.tachycardia.yaml --elapsed-s 60 --mie config/sdc_mie.yaml
+sdc-mcp-gateway simulate-snapshot --scenario config/sim.spo2-drop.yaml --elapsed-s 70 --mie config/sdc_mie.yaml
+sdc-mcp-gateway simulate-snapshot --scenario config/sim.high-airway-pressure.yaml --elapsed-s 60 --mie config/sdc_mie.yaml
+```
+
+For scenario-specific benchmarks:
+
+```powershell
+sdc-mcp-gateway benchmark --config config/gateway.simulated.tachycardia.example.yaml --mie config/sdc_mie.yaml --iterations 100 --warmup 10 --label tachycardia-v07
+sdc-mcp-gateway benchmark --config config/gateway.simulated.spo2-drop.example.yaml --mie config/sdc_mie.yaml --iterations 100 --warmup 10 --label spo2-drop-v07
+sdc-mcp-gateway benchmark --config config/gateway.simulated.high-airway-pressure.example.yaml --mie config/sdc_mie.yaml --iterations 100 --warmup 10 --label high-airway-pressure-v07
+```
+
+Custom scenario authoring is described in `docs/scenarios.md`.

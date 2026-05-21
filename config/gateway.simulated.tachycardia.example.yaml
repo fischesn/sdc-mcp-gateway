@@ -1,0 +1,17 @@
+gateway:
+  name: "sdc-to-mcp-gateway-tachycardia"
+  mode: "read-only"
+  log_file: "data/logs/gateway-simulated-tachycardia.jsonl"
+  expose_raw_mdib: true
+  allow_tools: false
+  allow_write_operations: false
+
+sdc:
+  adapter: "simulated"
+  simulation_config: "config/sim.tachycardia.yaml"
+  simulation_elapsed_s: 0.0
+  max_devices: null
+
+mcp:
+  server_name: "sdc-mcp-gateway"
+  transport: "stdio"

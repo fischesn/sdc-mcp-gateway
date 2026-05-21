@@ -38,3 +38,17 @@ Then edit `gateway.local.yaml`. Do not commit it because it may contain VPN inte
 ## Simulation note
 
 The simulation scenarios are not real IEEE 11073 SDC providers. They generate normalized SDC-like snapshots in-process. Use them for gateway and mapping development before real devices are available.
+
+## Scenario-based simulation files
+
+Version 0.7.0 includes three event-based scenario files:
+
+```text
+sim.tachycardia.yaml
+sim.spo2-drop.yaml
+sim.high-airway-pressure.yaml
+```
+
+Each file defines simulated devices, metrics, events, and alarm thresholds. Use the matching `gateway.simulated.*.example.yaml` template when running the scenario through the normal gateway, MCP, or benchmark path.
+
+To create your own scenario, copy one of these files, change metric baselines/events/alarms, and update or create a matching gateway template. See `docs/scenarios.md` for details.

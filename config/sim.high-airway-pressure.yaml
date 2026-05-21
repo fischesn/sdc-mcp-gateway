@@ -1,0 +1,51 @@
+version: "0.7"
+description: "High-airway-pressure scenario: ventilator airway pressure rises above the high alarm threshold."
+random_seed: 7003
+devices:
+  - device_id: "sim-ventilator-1"
+    display_name: "Simulated Ventilator - High Airway Pressure"
+    manufacturer: "Research Prototype"
+    model: "SimVentilator-v0.7"
+    location_ref: "simulation-bed-1"
+    patient_ref: "simulated-patient-redacted"
+    metrics:
+      - handle: "metric.fio2"
+        code: "oxygen_concentration"
+        unit: "%"
+        baseline: 35
+        amplitude: 1.5
+        period_s: 120
+        noise: 0.2
+        min_value: 21
+        max_value: 100
+      - handle: "metric.peep"
+        code: "peep"
+        unit: "cmH2O"
+        baseline: 8
+        amplitude: 0.4
+        period_s: 90
+        noise: 0.1
+        min_value: 0
+        max_value: 25
+      - handle: "metric.airway_pressure"
+        code: "airway_pressure"
+        unit: "cmH2O"
+        baseline: 24
+        amplitude: 2
+        period_s: 16
+        noise: 0.4
+        min_value: 0
+        max_value: 70
+        events:
+          - kind: "pulse"
+            start_s: 30
+            end_s: 90
+            target: 46
+            description: "Sustained high airway pressure episode above threshold."
+    alarms:
+      - handle: "alarm.airway_pressure.high"
+        code: "alarm.airway_pressure.high"
+        metric_handle: "metric.airway_pressure"
+        high_threshold: 40
+        priority: "high"
+        kind: "physiological"
