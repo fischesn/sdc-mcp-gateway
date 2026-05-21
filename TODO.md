@@ -78,3 +78,10 @@
 - Add automated MCP client integration tests when the MCP SDK is available in CI.
 - Add dynamic refresh for long-running server mode.
 - Define v0.6 dry-run MCP tools, still without SDC write execution.
+
+
+## v0.5.0
+
+- [x] Add end-to-end MCP client smoke test using stdio transport.
+- [x] Verify list_resources, read_resource, and no exported tools through a real MCP ClientSession.
+- [ ] Next: connect an external MCP-capable agent/client and add experiment recording for client-side latencies.

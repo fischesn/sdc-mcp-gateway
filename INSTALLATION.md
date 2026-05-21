@@ -1,8 +1,8 @@
-# Installation Guide for the SDC-to-MCP Gateway v0.4.1
+# Installation Guide for the SDC-to-MCP Gateway v0.5.0
 
 This document describes how to set up a local Python virtual environment and install all dependencies required for the current read-only research prototype.
 
-Version v0.4.1 is still strictly read-only. It adds an in-process simulated SDC-like provider testbed for reproducible patient-monitor and ventilator scenarios, and it can optionally use `sdc11073` to discover real SDC providers and capture one-shot MDIB snapshots in an isolated lab network. It does not execute SDC operations and exports no MCP tools.
+Version v0.5.0 is still strictly read-only. It adds an in-process simulated SDC-like provider testbed for reproducible patient-monitor and ventilator scenarios, and it can optionally use `sdc11073` to discover real SDC providers and capture one-shot MDIB snapshots in an isolated lab network. It does not execute SDC operations and exports no MCP tools.
 
 ## 1. Prerequisites
 
@@ -32,7 +32,7 @@ python3.14 --version
 If you received the ZIP archive, unpack it and enter the project directory:
 
 ```bash
-cd sdc-mcp-gateway-v0.4.1
+cd sdc-mcp-gateway-v0.5.0
 ```
 
 All commands below assume that you are in the repository root, i.e., the directory containing `pyproject.toml`.
@@ -132,10 +132,10 @@ Run the test suite:
 pytest -q
 ```
 
-Expected result for v0.4.1:
+Expected result for v0.5.0:
 
 ```text
-17 passed
+18 passed
 ```
 
 Show the command-line help:
@@ -217,7 +217,7 @@ Their roles are:
 - `gateway.simulated.example.yaml`: template for in-process simulated device scenarios
 - `sim.*.yaml`: reproducible simulated patient-monitor and ventilator scenarios
 - `sdc_mie.yaml`: semantic mappings from SDC/BICEPS/nomenclature elements to agent-readable names
-- `policies.yaml`: read-only safety policy; all write/tool operations remain denied in v0.4.1
+- `policies.yaml`: read-only safety policy; all write/tool operations remain denied in v0.5.0
 - `config/README.md`: short explanation of the configuration workflow
 
 The following file is intentionally not included and must not be committed:
@@ -231,7 +231,7 @@ It may contain your local VPN IP address, provider identifiers, device filters, 
 
 ## 7. Simulated device tests without a real SDC network
 
-The v0.4.1 simulator is useful while no real SDC network is available. It is not a networked IEEE 11073 SDC Provider. It generates normalized SDC-like snapshots in-process and therefore tests the mapping, resource, logging, and later agent-facing parts of the gateway.
+The v0.5.0 simulator is useful while no real SDC network is available. It is not a networked IEEE 11073 SDC Provider. It generates normalized SDC-like snapshots in-process and therefore tests the mapping, resource, logging, and later agent-facing parts of the gateway.
 
 Direct scenario run:
 
@@ -401,4 +401,15 @@ If that works, the package is installed but the console-script path is not visib
 
 ## 12. Safety note
 
-This repository is a research prototype. v0.4.1 is read-only. It must not be used for clinical operation, patient treatment, clinical decision-making, clinical studies, or uncontrolled access to real medical devices.
+This repository is a research prototype. v0.5.0 is read-only. It must not be used for clinical operation, patient treatment, clinical decision-making, clinical studies, or uncontrolled access to real medical devices.
+
+
+Run the end-to-end MCP client smoke test. This requires the optional MCP SDK and
+starts the stdio MCP server as a subprocess:
+
+```bash
+sdc-mcp-gateway mcp-client-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+```
+
+The expected result is a JSON report with `"status": "ok"`, listed MCP resources,
+readable sample resources, and `"tool_count": 0`.

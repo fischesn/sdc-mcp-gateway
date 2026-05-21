@@ -8,6 +8,11 @@ import typer
 from sdc_mcp_gateway.config import GatewayConfig
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
 from sdc_mcp_gateway.mapping.mie_loader import load_mapping
+from sdc_mcp_gateway.mcp.client_smoke import (
+    McpClientSmokeTestConfig,
+    MissingMcpClientDependency,
+    run_mcp_client_smoke_test,
+)
 from sdc_mcp_gateway.mcp.resources import ResourceRegistry
 from sdc_mcp_gateway.mcp.server import MissingMcpDependency, create_mcp_server
 from sdc_mcp_gateway.sdc.consumer import (
@@ -257,6 +262,46 @@ def mcp_smoke_test(
     }
     typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
     if failures:
+        raise typer.Exit(code=1)
+
+
+@app.command("mcp-client-smoke-test")
+def mcp_client_smoke_test(
+    config: Path = typer.Option(Path("config/gateway.yaml"), help="Gateway YAML configuration."),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    timeout_s: float = typer.Option(15.0, help="Read timeout for MCP client requests in seconds."),
+) -> None:
+    """Start the stdio MCP server as a subprocess and test it with an MCP client.
+
+    Unlike `mcp-smoke-test`, this command exercises the actual MCP protocol path:
+    it starts `sdc-mcp-gateway serve`, initializes an MCP ClientSession, lists
+    resources, reads selected resources, and verifies that no tools are exposed.
+    """
+
+    try:
+        report = run_mcp_client_smoke_test(
+            McpClientSmokeTestConfig(
+                config_path=config,
+                mie_path=mie,
+                cwd=Path.cwd(),
+                timeout_s=timeout_s,
+            )
+        )
+    except MissingMcpClientDependency as exc:
+        raise typer.Exit(str(exc)) from exc
+    except Exception as exc:  # pragma: no cover - defensive user-facing command
+        typer.echo(
+            json.dumps(
+                {"status": "failed", "error": str(exc), "config": str(config), "mie": str(mie)},
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if report.get("status") != "ok":
         raise typer.Exit(code=1)
 
 

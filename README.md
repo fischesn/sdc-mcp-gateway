@@ -2,7 +2,7 @@
 
 Research prototype for exposing IEEE 11073 SDC device state as Model Context Protocol (MCP) resources.
 
-This repository currently contains **v0.4.1-simulated-sdc-provider-testbed**. It remains deliberately limited to read-only access:
+This repository currently contains **v0.5.0-read-only-MCP-client-smoke-test**. It remains deliberately limited to read-only access:
 
 - A deterministic dummy SDC consumer is included for local development and tests.
 - A reproducible in-process simulated SDC-like provider testbed is included for patient monitor and ventilator scenarios.
@@ -104,7 +104,7 @@ sdc-mcp-gateway snapshot --config config/gateway.yaml --mie config/sdc_mie.yaml
 
 ## Run a simulated SDC-like snapshot
 
-The v0.4.1 simulator does **not** open a real IEEE 11073 SDC network endpoint. It generates normalized SDC-like device snapshots in-process so that mapping, MCP resources, and logging can be developed without real devices.
+The v0.5.0 simulator does **not** open a real IEEE 11073 SDC network endpoint. It generates normalized SDC-like device snapshots in-process so that mapping, MCP resources, and logging can be developed without real devices.
 
 Direct scenario snapshot:
 
@@ -154,10 +154,10 @@ This requires the Python MCP SDK. If it is not installed, the package will expla
 pytest -q
 ```
 
-Expected result for v0.4.1:
+Expected result for v0.5.0:
 
 ```text
-17 passed
+18 passed
 ```
 
 ## Recommended Git workflow
@@ -168,8 +168,8 @@ For a clean version history:
 git init
 git branch -M main
 git add .
-git commit -m "Add simulated SDC-like provider testbed v0.4.1"
-git tag -a v0.4.1 -m "v0.4.1 simulated SDC-like provider testbed"
+git commit -m "Add end-to-end MCP client smoke test v0.5.0"
+git tag -a v0.5.0 -m "v0.5.0 end-to-end MCP client smoke test"
 ```
 
 Before committing, check that `config/gateway.local.yaml` is not staged:
@@ -221,3 +221,17 @@ sdc-mcp-gateway serve --config config/gateway.simulated.example.yaml --mie confi
 ```
 
 See `docs/v0.4-spec.md`, `docs/v0.4.1-spec.md`, and `docs/mcp-server.md` for details.
+
+
+## v0.5: End-to-end MCP client smoke test
+
+Version v0.5 adds an actual MCP client smoke test. Unlike `mcp-smoke-test`, which
+checks the internal registry and FastMCP server construction, this command starts
+`serve` as a stdio MCP subprocess and interacts with it through an MCP `ClientSession`.
+
+```bash
+sdc-mcp-gateway mcp-client-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+```
+
+Expected result: `status: ok`, 12 listed resources for the simulated two-device
+scenario, readable health/devices/metrics resources, and zero exported MCP tools.

@@ -13,8 +13,13 @@ class MissingMcpDependency(RuntimeError):
 def create_mcp_server(registry: ResourceRegistry, server_name: str = "sdc-mcp-gateway") -> Any:
     """Create a FastMCP server exposing the read-only resource surface.
 
-    This function imports the MCP SDK lazily so that unit tests and snapshot mode work
-    without the optional `mcp` dependency installed.
+    The server registers every currently advertised gateway resource as a concrete
+    MCP resource. This makes `list_resources` useful for clients and avoids forcing
+    clients to infer device-specific URIs from templates. No MCP tools are exposed
+    in the read-only prototype.
+
+    The MCP SDK is imported lazily so snapshot mode and unit tests can run without
+    the optional dependency installed.
     """
 
     try:
@@ -26,39 +31,25 @@ def create_mcp_server(registry: ResourceRegistry, server_name: str = "sdc-mcp-ga
 
     mcp = FastMCP(server_name)
 
-    @mcp.resource("sdc://health")
-    def health() -> str:
-        return _json(registry.read("sdc://health").model_dump())
-
-    @mcp.resource("sdc://resources")
-    def resources() -> str:
-        return _json(registry.read("sdc://resources").model_dump())
-
-    @mcp.resource("sdc://devices")
-    def devices() -> str:
-        return _json(registry.read("sdc://devices").model_dump())
-
-    @mcp.resource("sdc://mapping")
-    def mapping() -> str:
-        return _json(registry.read("sdc://mapping").model_dump())
-
-    @mcp.resource("sdc://devices/{device_id}/metrics")
-    def device_metrics(device_id: str) -> str:
-        return _json(registry.read(f"sdc://devices/{device_id}/metrics").model_dump())
-
-    @mcp.resource("sdc://devices/{device_id}/alarms")
-    def device_alarms(device_id: str) -> str:
-        return _json(registry.read(f"sdc://devices/{device_id}/alarms").model_dump())
-
-    @mcp.resource("sdc://devices/{device_id}/context")
-    def device_context(device_id: str) -> str:
-        return _json(registry.read(f"sdc://devices/{device_id}/context").model_dump())
-
-    @mcp.resource("sdc://devices/{device_id}/mdib/raw")
-    def device_raw_mdib(device_id: str) -> str:
-        return _json(registry.read(f"sdc://devices/{device_id}/mdib/raw").model_dump())
+    for descriptor in registry.list_resource_descriptors():
+        _register_concrete_resource(mcp, registry, descriptor)
 
     return mcp
+
+
+def _register_concrete_resource(mcp: Any, registry: ResourceRegistry, descriptor: Any) -> None:
+    uri = str(descriptor.uri)
+    name = str(descriptor.name)
+    description = str(descriptor.description)
+    mime_type = str(descriptor.mime_type)
+
+    def reader() -> str:
+        return _json(registry.read(uri).model_dump())
+
+    # Give the function a unique name for easier debugging/introspection.
+    reader.__name__ = "read_" + uri.replace("://", "_").replace("/", "_").replace("-", "_")
+    reader.__doc__ = description
+    mcp.resource(uri, name=name, description=description, mime_type=mime_type)(reader)
 
 
 def _json(data: Any) -> str:
