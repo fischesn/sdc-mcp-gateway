@@ -1,0 +1,502 @@
+{
+  "active_alarm_count_last_values": [
+    1
+  ],
+  "active_alarm_count_max_values": [
+    1
+  ],
+  "active_alarm_seen_any": true,
+  "adapter_values": [
+    "simulated"
+  ],
+  "aggregate_id": "airway-pressure-v07-summary-20260521T174710_712269Z",
+  "alarms_count_values": [
+    1
+  ],
+  "device_count_values": [
+    1
+  ],
+  "failed_runs": [],
+  "input_dir": "data\\experiment_runs",
+  "iterations_values": [
+    200
+  ],
+  "latency_aggregate": {
+    "list_resources": {
+      "max_ms": {
+        "max": 0.228,
+        "mean": 0.149,
+        "median": 0.181,
+        "min": 0.038,
+        "runs": 3,
+        "values": [
+          0.181,
+          0.038,
+          0.228
+        ]
+      },
+      "mean_ms": {
+        "max": 0.023,
+        "mean": 0.02,
+        "median": 0.019,
+        "min": 0.018,
+        "runs": 3,
+        "values": [
+          0.019,
+          0.018,
+          0.023
+        ]
+      },
+      "median_ms": {
+        "max": 0.021,
+        "mean": 0.018,
+        "median": 0.017,
+        "min": 0.017,
+        "runs": 3,
+        "values": [
+          0.017,
+          0.017,
+          0.021
+        ]
+      },
+      "min_ms": {
+        "max": 0.017,
+        "mean": 0.014,
+        "median": 0.013,
+        "min": 0.012,
+        "runs": 3,
+        "values": [
+          0.012,
+          0.013,
+          0.017
+        ]
+      },
+      "p95_ms": {
+        "max": 0.028,
+        "mean": 0.026,
+        "median": 0.026,
+        "min": 0.024,
+        "runs": 3,
+        "values": [
+          0.026,
+          0.024,
+          0.028
+        ]
+      }
+    },
+    "read_health": {
+      "max_ms": {
+        "max": 2.959,
+        "mean": 1.852,
+        "median": 1.381,
+        "min": 1.216,
+        "runs": 3,
+        "values": [
+          1.381,
+          1.216,
+          2.959
+        ]
+      },
+      "mean_ms": {
+        "max": 0.324,
+        "mean": 0.297,
+        "median": 0.287,
+        "min": 0.279,
+        "runs": 3,
+        "values": [
+          0.287,
+          0.279,
+          0.324
+        ]
+      },
+      "median_ms": {
+        "max": 0.293,
+        "mean": 0.27,
+        "median": 0.259,
+        "min": 0.257,
+        "runs": 3,
+        "values": [
+          0.259,
+          0.257,
+          0.293
+        ]
+      },
+      "min_ms": {
+        "max": 0.16,
+        "mean": 0.153,
+        "median": 0.152,
+        "min": 0.147,
+        "runs": 3,
+        "values": [
+          0.147,
+          0.152,
+          0.16
+        ]
+      },
+      "p95_ms": {
+        "max": 0.476,
+        "mean": 0.462,
+        "median": 0.472,
+        "min": 0.438,
+        "runs": 3,
+        "values": [
+          0.476,
+          0.438,
+          0.472
+        ]
+      }
+    },
+    "read_resources": {
+      "max_ms": {
+        "max": 4.829,
+        "mean": 4.529,
+        "median": 4.722,
+        "min": 4.037,
+        "runs": 3,
+        "values": [
+          4.722,
+          4.037,
+          4.829
+        ]
+      },
+      "mean_ms": {
+        "max": 2.515,
+        "mean": 2.351,
+        "median": 2.282,
+        "min": 2.255,
+        "runs": 3,
+        "values": [
+          2.282,
+          2.255,
+          2.515
+        ]
+      },
+      "median_ms": {
+        "max": 2.455,
+        "mean": 2.277,
+        "median": 2.201,
+        "min": 2.176,
+        "runs": 3,
+        "values": [
+          2.201,
+          2.176,
+          2.455
+        ]
+      },
+      "min_ms": {
+        "max": 1.403,
+        "mean": 1.377,
+        "median": 1.392,
+        "min": 1.337,
+        "runs": 3,
+        "values": [
+          1.392,
+          1.337,
+          1.403
+        ]
+      },
+      "p95_ms": {
+        "max": 3.288,
+        "mean": 3.177,
+        "median": 3.257,
+        "min": 2.987,
+        "runs": 3,
+        "values": [
+          3.257,
+          2.987,
+          3.288
+        ]
+      }
+    },
+    "snapshot_build": {
+      "max_ms": {
+        "max": 7.357,
+        "mean": 5.68,
+        "median": 5.035,
+        "min": 4.647,
+        "runs": 3,
+        "values": [
+          4.647,
+          7.357,
+          5.035
+        ]
+      },
+      "mean_ms": {
+        "max": 2.59,
+        "mean": 2.431,
+        "median": 2.354,
+        "min": 2.348,
+        "runs": 3,
+        "values": [
+          2.354,
+          2.348,
+          2.59
+        ]
+      },
+      "median_ms": {
+        "max": 2.501,
+        "mean": 2.296,
+        "median": 2.214,
+        "min": 2.174,
+        "runs": 3,
+        "values": [
+          2.214,
+          2.174,
+          2.501
+        ]
+      },
+      "min_ms": {
+        "max": 2.111,
+        "mean": 1.929,
+        "median": 1.882,
+        "min": 1.794,
+        "runs": 3,
+        "values": [
+          1.794,
+          1.882,
+          2.111
+        ]
+      },
+      "p95_ms": {
+        "max": 3.277,
+        "mean": 3.167,
+        "median": 3.164,
+        "min": 3.061,
+        "runs": 3,
+        "values": [
+          3.277,
+          3.061,
+          3.164
+        ]
+      }
+    },
+    "total": {
+      "max_ms": {
+        "max": 10.707,
+        "mean": 9.392,
+        "median": 9.696,
+        "min": 7.774,
+        "runs": 3,
+        "values": [
+          9.696,
+          10.707,
+          7.774
+        ]
+      },
+      "mean_ms": {
+        "max": 5.452,
+        "mean": 5.098,
+        "median": 4.942,
+        "min": 4.901,
+        "runs": 3,
+        "values": [
+          4.942,
+          4.901,
+          5.452
+        ]
+      },
+      "median_ms": {
+        "max": 5.44,
+        "mean": 5.008,
+        "median": 4.796,
+        "min": 4.787,
+        "runs": 3,
+        "values": [
+          4.787,
+          4.796,
+          5.44
+        ]
+      },
+      "min_ms": {
+        "max": 3.792,
+        "mean": 3.584,
+        "median": 3.541,
+        "min": 3.418,
+        "runs": 3,
+        "values": [
+          3.418,
+          3.541,
+          3.792
+        ]
+      },
+      "p95_ms": {
+        "max": 6.405,
+        "mean": 6.175,
+        "median": 6.192,
+        "min": 5.927,
+        "runs": 3,
+        "values": [
+          6.192,
+          5.927,
+          6.405
+        ]
+      }
+    }
+  },
+  "mapping_versions": [
+    "0.7-example"
+  ],
+  "metrics_count_values": [
+    3
+  ],
+  "output_csv": "data\\experiment_runs\\airway-pressure-v07-summary-20260521T174710_712269Z.aggregate.csv",
+  "output_json": "data\\experiment_runs\\airway-pressure-v07-summary-20260521T174710_712269Z.aggregate.json",
+  "pattern": "airway-pressure-v07-run*.summary.json",
+  "read_error_count_total": 0,
+  "resource_count_values": [
+    8
+  ],
+  "rows": [
+    {
+      "active_alarm_count_last": 1,
+      "active_alarm_count_max": 1,
+      "active_alarm_seen_any": true,
+      "adapter": "simulated",
+      "alarms_count": 1,
+      "all_read_only": true,
+      "device_count": 1,
+      "file": "airway-pressure-v07-run1-20260521T174706_226567Z.summary.json",
+      "iterations": 200,
+      "list_resources_max_ms": 0.181,
+      "list_resources_mean_ms": 0.019,
+      "list_resources_median_ms": 0.017,
+      "list_resources_min_ms": 0.012,
+      "list_resources_p95_ms": 0.026,
+      "mapping_version": "0.7-example",
+      "metrics_count": 3,
+      "read_error_count_total": 0,
+      "read_health_max_ms": 1.381,
+      "read_health_mean_ms": 0.287,
+      "read_health_median_ms": 0.259,
+      "read_health_min_ms": 0.147,
+      "read_health_p95_ms": 0.476,
+      "read_resources_max_ms": 4.722,
+      "read_resources_mean_ms": 2.282,
+      "read_resources_median_ms": 2.201,
+      "read_resources_min_ms": 1.392,
+      "read_resources_p95_ms": 3.257,
+      "resource_count": 8,
+      "run_id": "airway-pressure-v07-run1-20260521T174706_226567Z",
+      "snapshot_build_max_ms": 4.647,
+      "snapshot_build_mean_ms": 2.354,
+      "snapshot_build_median_ms": 2.214,
+      "snapshot_build_min_ms": 1.794,
+      "snapshot_build_p95_ms": 3.277,
+      "status": "ok",
+      "tools_exported_any": false,
+      "total_max_ms": 9.696,
+      "total_mean_ms": 4.942,
+      "total_median_ms": 4.787,
+      "total_min_ms": 3.418,
+      "total_p95_ms": 6.192,
+      "warmup": 20,
+      "write_operations_allowed_any": false
+    },
+    {
+      "active_alarm_count_last": 1,
+      "active_alarm_count_max": 1,
+      "active_alarm_seen_any": true,
+      "adapter": "simulated",
+      "alarms_count": 1,
+      "all_read_only": true,
+      "device_count": 1,
+      "file": "airway-pressure-v07-run2-20260521T174707_648142Z.summary.json",
+      "iterations": 200,
+      "list_resources_max_ms": 0.038,
+      "list_resources_mean_ms": 0.018,
+      "list_resources_median_ms": 0.017,
+      "list_resources_min_ms": 0.013,
+      "list_resources_p95_ms": 0.024,
+      "mapping_version": "0.7-example",
+      "metrics_count": 3,
+      "read_error_count_total": 0,
+      "read_health_max_ms": 1.216,
+      "read_health_mean_ms": 0.279,
+      "read_health_median_ms": 0.257,
+      "read_health_min_ms": 0.152,
+      "read_health_p95_ms": 0.438,
+      "read_resources_max_ms": 4.037,
+      "read_resources_mean_ms": 2.255,
+      "read_resources_median_ms": 2.176,
+      "read_resources_min_ms": 1.337,
+      "read_resources_p95_ms": 2.987,
+      "resource_count": 8,
+      "run_id": "airway-pressure-v07-run2-20260521T174707_648142Z",
+      "snapshot_build_max_ms": 7.357,
+      "snapshot_build_mean_ms": 2.348,
+      "snapshot_build_median_ms": 2.174,
+      "snapshot_build_min_ms": 1.882,
+      "snapshot_build_p95_ms": 3.061,
+      "status": "ok",
+      "tools_exported_any": false,
+      "total_max_ms": 10.707,
+      "total_mean_ms": 4.901,
+      "total_median_ms": 4.796,
+      "total_min_ms": 3.541,
+      "total_p95_ms": 5.927,
+      "warmup": 20,
+      "write_operations_allowed_any": false
+    },
+    {
+      "active_alarm_count_last": 1,
+      "active_alarm_count_max": 1,
+      "active_alarm_seen_any": true,
+      "adapter": "simulated",
+      "alarms_count": 1,
+      "all_read_only": true,
+      "device_count": 1,
+      "file": "airway-pressure-v07-run3-20260521T174709_078819Z.summary.json",
+      "iterations": 200,
+      "list_resources_max_ms": 0.228,
+      "list_resources_mean_ms": 0.023,
+      "list_resources_median_ms": 0.021,
+      "list_resources_min_ms": 0.017,
+      "list_resources_p95_ms": 0.028,
+      "mapping_version": "0.7-example",
+      "metrics_count": 3,
+      "read_error_count_total": 0,
+      "read_health_max_ms": 2.959,
+      "read_health_mean_ms": 0.324,
+      "read_health_median_ms": 0.293,
+      "read_health_min_ms": 0.16,
+      "read_health_p95_ms": 0.472,
+      "read_resources_max_ms": 4.829,
+      "read_resources_mean_ms": 2.515,
+      "read_resources_median_ms": 2.455,
+      "read_resources_min_ms": 1.403,
+      "read_resources_p95_ms": 3.288,
+      "resource_count": 8,
+      "run_id": "airway-pressure-v07-run3-20260521T174709_078819Z",
+      "snapshot_build_max_ms": 5.035,
+      "snapshot_build_mean_ms": 2.59,
+      "snapshot_build_median_ms": 2.501,
+      "snapshot_build_min_ms": 2.111,
+      "snapshot_build_p95_ms": 3.164,
+      "status": "ok",
+      "tools_exported_any": false,
+      "total_max_ms": 7.774,
+      "total_mean_ms": 5.452,
+      "total_median_ms": 5.44,
+      "total_min_ms": 3.792,
+      "total_p95_ms": 6.405,
+      "warmup": 20,
+      "write_operations_allowed_any": false
+    }
+  ],
+  "run_count": 3,
+  "runs": [
+    "airway-pressure-v07-run1-20260521T174706_226567Z",
+    "airway-pressure-v07-run2-20260521T174707_648142Z",
+    "airway-pressure-v07-run3-20260521T174709_078819Z"
+  ],
+  "safety_boundary_ok": true,
+  "status": "ok",
+  "statuses": [
+    "ok",
+    "ok",
+    "ok"
+  ],
+  "warmup_values": [
+    20
+  ]
+}

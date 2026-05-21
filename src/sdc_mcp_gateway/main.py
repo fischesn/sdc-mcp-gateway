@@ -8,6 +8,7 @@ import typer
 from sdc_mcp_gateway.config import GatewayConfig
 from sdc_mcp_gateway.experiments.benchmark import BenchmarkConfig, run_benchmark
 from sdc_mcp_gateway.experiments.summarize import BenchmarkSummaryConfig, summarize_benchmarks
+from sdc_mcp_gateway.agent_eval.harness import AgentEvalConfig, run_agent_evaluation
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
 from sdc_mcp_gateway.mapping.mie_loader import load_mapping
 from sdc_mcp_gateway.mcp.client_smoke import (
@@ -344,6 +345,61 @@ def benchmark(
         typer.echo(
             json.dumps(
                 {"status": "failed", "error": str(exc), "config": str(config), "mie": str(mie)},
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if report.get("status") != "ok":
+        raise typer.Exit(code=1)
+
+
+@app.command("evaluate-agent-tasks")
+def evaluate_agent_tasks(
+    config: Path = typer.Option(Path("config/gateway.simulated.example.yaml"), help="Gateway YAML configuration."),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    tasks: Path = typer.Option(Path("config/agent_eval.tasks.yaml"), help="Agent task YAML file."),
+    scenario: str = typer.Option("baseline", help="Scenario key used for ground-truth expectations."),
+    agent: str = typer.Option("oracle", help="Agent backend. v0.8 supports only 'oracle'."),
+    output_dir: Path = typer.Option(Path("data/agent_eval"), help="Directory for JSON, CSV, and Markdown outputs."),
+    label: str = typer.Option("agent-eval", help="Prefix for generated output files."),
+    elapsed_s: float | None = typer.Option(100.0, help="Simulated scenario time in seconds, if using the simulated adapter."),
+) -> None:
+    """Evaluate agent-facing read-only tasks against scenario ground truth.
+
+    v0.8 intentionally uses a deterministic oracle agent. This validates the
+    task definitions, scenario ground truth, and graders before LLM-based agents
+    are introduced in a later version.
+    """
+
+    try:
+        report = run_agent_evaluation(
+            AgentEvalConfig(
+                config_path=config,
+                mie_path=mie,
+                tasks_path=tasks,
+                scenario=scenario,
+                output_dir=output_dir,
+                run_label=label,
+                agent=agent,
+                elapsed_s=elapsed_s,
+            )
+        )
+    except Exception as exc:  # pragma: no cover - defensive user-facing command
+        typer.echo(
+            json.dumps(
+                {
+                    "status": "failed",
+                    "error": str(exc),
+                    "config": str(config),
+                    "mie": str(mie),
+                    "tasks": str(tasks),
+                    "scenario": scenario,
+                    "agent": agent,
+                },
                 ensure_ascii=False,
                 indent=2,
                 sort_keys=True,

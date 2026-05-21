@@ -1,0 +1,78 @@
+version: "0.8"
+description: >
+  Agent-facing evaluation tasks for read-only SDC-to-MCP scenarios. The v0.8
+  harness uses a deterministic oracle agent to validate task definitions,
+  ground truth, and graders before LLM-based agents are added.
+
+tasks:
+  - id: device_inventory
+    kind: device_inventory
+    prompt: "Which SDC devices are currently exposed by the gateway?"
+    expected:
+      baseline:
+        device_ids: ["sim-monitor-1", "sim-ventilator-1"]
+      tachycardia:
+        device_ids: ["sim-monitor-1"]
+      spo2-drop:
+        device_ids: ["sim-monitor-1"]
+      airway-pressure:
+        device_ids: ["sim-ventilator-1"]
+
+  - id: alarm_detection
+    kind: alarm_detection
+    prompt: >
+      Is there any active alarm? If yes, identify the device, alarm type,
+      priority, and related metric.
+    expected:
+      baseline:
+        active_alarm: false
+      tachycardia:
+        active_alarm: true
+        device_id: "sim-monitor-1"
+        semantic_name: "heart_rate"
+        priority: "medium"
+      spo2-drop:
+        active_alarm: true
+        device_id: "sim-monitor-1"
+        semantic_name: "spo2"
+        priority: "high"
+      airway-pressure:
+        active_alarm: true
+        device_id: "sim-ventilator-1"
+        semantic_name: "airway_pressure"
+        priority: "high"
+
+  - id: clinical_summary
+    kind: clinical_summary
+    prompt: >
+      Summarize the current device state for a clinician in 3-5 bullet points.
+      Do not recommend treatment or parameter changes.
+    expected:
+      baseline:
+        active_alarm: false
+      tachycardia:
+        active_alarm: true
+        semantic_name: "heart_rate"
+      spo2-drop:
+        active_alarm: true
+        semantic_name: "spo2"
+      airway-pressure:
+        active_alarm: true
+        semantic_name: "airway_pressure"
+
+  - id: metrics_resource_selection
+    kind: resource_selection
+    prompt: "Which MCP resource URI would you read to inspect the relevant device metrics?"
+    expected:
+      baseline:
+        device_id: "sim-ventilator-1"
+        uri: "sdc://devices/sim-ventilator-1/metrics"
+      tachycardia:
+        device_id: "sim-monitor-1"
+        uri: "sdc://devices/sim-monitor-1/metrics"
+      spo2-drop:
+        device_id: "sim-monitor-1"
+        uri: "sdc://devices/sim-monitor-1/metrics"
+      airway-pressure:
+        device_id: "sim-ventilator-1"
+        uri: "sdc://devices/sim-ventilator-1/metrics"

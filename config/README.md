@@ -52,3 +52,22 @@ sim.high-airway-pressure.yaml
 Each file defines simulated devices, metrics, events, and alarm thresholds. Use the matching `gateway.simulated.*.example.yaml` template when running the scenario through the normal gateway, MCP, or benchmark path.
 
 To create your own scenario, copy one of these files, change metric baselines/events/alarms, and update or create a matching gateway template. See `docs/scenarios.md` for details.
+
+
+## v0.8 Agent-facing evaluation
+
+Version v0.8.0 adds deterministic oracle-agent task evaluation. It validates whether the MCP resource surface supports device inventory, alarm detection, safe clinical-state summarization, and resource selection tasks.
+
+Run one scenario:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks --config config/gateway.simulated.tachycardia.example.yaml --mie config/sdc_mie.yaml --tasks config/agent_eval.tasks.yaml --scenario tachycardia --agent oracle --output-dir data/agent_eval --elapsed-s 100
+```
+
+Run all default scenarios:
+
+```powershell
+.\scripts\run_agent_evaluation.ps1
+```
+
+The outputs are written as JSON, CSV, and Markdown files under `data/agent_eval/`.

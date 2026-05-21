@@ -100,3 +100,22 @@
 ### v0.7.1 alarm-observation update
 
 Version v0.7.1 corrects the high-airway-pressure scenario so that the simulated airway-pressure alarm remains active at the end of standard benchmark runs. Benchmark summaries also include `active_alarm_count_max` and `active_alarm_seen_any`, which are useful when evaluating transient or pulse-like alarm scenarios.
+
+
+## v0.8 Agent-facing evaluation
+
+Version v0.8.0 adds deterministic oracle-agent task evaluation. It validates whether the MCP resource surface supports device inventory, alarm detection, safe clinical-state summarization, and resource selection tasks.
+
+Run one scenario:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks --config config/gateway.simulated.tachycardia.example.yaml --mie config/sdc_mie.yaml --tasks config/agent_eval.tasks.yaml --scenario tachycardia --agent oracle --output-dir data/agent_eval --elapsed-s 100
+```
+
+Run all default scenarios:
+
+```powershell
+.\scripts\run_agent_evaluation.ps1
+```
+
+The outputs are written as JSON, CSV, and Markdown files under `data/agent_eval/`.

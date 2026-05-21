@@ -1,0 +1,502 @@
+{
+  "active_alarm_count_last_values": [
+    1
+  ],
+  "active_alarm_count_max_values": [
+    1
+  ],
+  "active_alarm_seen_any": true,
+  "adapter_values": [
+    "simulated"
+  ],
+  "aggregate_id": "spo2-drop-v07-summary-20260521T174705_957387Z",
+  "alarms_count_values": [
+    2
+  ],
+  "device_count_values": [
+    1
+  ],
+  "failed_runs": [],
+  "input_dir": "data\\experiment_runs",
+  "iterations_values": [
+    200
+  ],
+  "latency_aggregate": {
+    "list_resources": {
+      "max_ms": {
+        "max": 0.114,
+        "mean": 0.08,
+        "median": 0.064,
+        "min": 0.063,
+        "runs": 3,
+        "values": [
+          0.064,
+          0.114,
+          0.063
+        ]
+      },
+      "mean_ms": {
+        "max": 0.02,
+        "mean": 0.02,
+        "median": 0.02,
+        "min": 0.019,
+        "runs": 3,
+        "values": [
+          0.019,
+          0.02,
+          0.02
+        ]
+      },
+      "median_ms": {
+        "max": 0.019,
+        "mean": 0.019,
+        "median": 0.019,
+        "min": 0.018,
+        "runs": 3,
+        "values": [
+          0.019,
+          0.018,
+          0.019
+        ]
+      },
+      "min_ms": {
+        "max": 0.016,
+        "mean": 0.015,
+        "median": 0.015,
+        "min": 0.015,
+        "runs": 3,
+        "values": [
+          0.016,
+          0.015,
+          0.015
+        ]
+      },
+      "p95_ms": {
+        "max": 0.027,
+        "mean": 0.026,
+        "median": 0.027,
+        "min": 0.025,
+        "runs": 3,
+        "values": [
+          0.025,
+          0.027,
+          0.027
+        ]
+      }
+    },
+    "read_health": {
+      "max_ms": {
+        "max": 0.979,
+        "mean": 0.777,
+        "median": 0.7,
+        "min": 0.651,
+        "runs": 3,
+        "values": [
+          0.651,
+          0.7,
+          0.979
+        ]
+      },
+      "mean_ms": {
+        "max": 0.286,
+        "mean": 0.275,
+        "median": 0.273,
+        "min": 0.267,
+        "runs": 3,
+        "values": [
+          0.273,
+          0.267,
+          0.286
+        ]
+      },
+      "median_ms": {
+        "max": 0.264,
+        "mean": 0.259,
+        "median": 0.259,
+        "min": 0.253,
+        "runs": 3,
+        "values": [
+          0.259,
+          0.253,
+          0.264
+        ]
+      },
+      "min_ms": {
+        "max": 0.189,
+        "mean": 0.172,
+        "median": 0.169,
+        "min": 0.158,
+        "runs": 3,
+        "values": [
+          0.189,
+          0.158,
+          0.169
+        ]
+      },
+      "p95_ms": {
+        "max": 0.424,
+        "mean": 0.408,
+        "median": 0.42,
+        "min": 0.379,
+        "runs": 3,
+        "values": [
+          0.42,
+          0.379,
+          0.424
+        ]
+      }
+    },
+    "read_resources": {
+      "max_ms": {
+        "max": 8.382,
+        "mean": 5.446,
+        "median": 3.98,
+        "min": 3.976,
+        "runs": 3,
+        "values": [
+          3.98,
+          3.976,
+          8.382
+        ]
+      },
+      "mean_ms": {
+        "max": 2.33,
+        "mean": 2.267,
+        "median": 2.254,
+        "min": 2.218,
+        "runs": 3,
+        "values": [
+          2.254,
+          2.218,
+          2.33
+        ]
+      },
+      "median_ms": {
+        "max": 2.181,
+        "mean": 2.168,
+        "median": 2.167,
+        "min": 2.157,
+        "runs": 3,
+        "values": [
+          2.181,
+          2.157,
+          2.167
+        ]
+      },
+      "min_ms": {
+        "max": 1.688,
+        "mean": 1.635,
+        "median": 1.668,
+        "min": 1.55,
+        "runs": 3,
+        "values": [
+          1.688,
+          1.668,
+          1.55
+        ]
+      },
+      "p95_ms": {
+        "max": 3.266,
+        "mean": 3.0,
+        "median": 2.925,
+        "min": 2.808,
+        "runs": 3,
+        "values": [
+          2.925,
+          2.808,
+          3.266
+        ]
+      }
+    },
+    "snapshot_build": {
+      "max_ms": {
+        "max": 7.412,
+        "mean": 6.232,
+        "median": 6.743,
+        "min": 4.542,
+        "runs": 3,
+        "values": [
+          6.743,
+          7.412,
+          4.542
+        ]
+      },
+      "mean_ms": {
+        "max": 2.545,
+        "mean": 2.518,
+        "median": 2.52,
+        "min": 2.488,
+        "runs": 3,
+        "values": [
+          2.52,
+          2.488,
+          2.545
+        ]
+      },
+      "median_ms": {
+        "max": 2.44,
+        "mean": 2.405,
+        "median": 2.394,
+        "min": 2.381,
+        "runs": 3,
+        "values": [
+          2.394,
+          2.381,
+          2.44
+        ]
+      },
+      "min_ms": {
+        "max": 2.09,
+        "mean": 2.062,
+        "median": 2.085,
+        "min": 2.011,
+        "runs": 3,
+        "values": [
+          2.011,
+          2.085,
+          2.09
+        ]
+      },
+      "p95_ms": {
+        "max": 3.256,
+        "mean": 3.148,
+        "median": 3.114,
+        "min": 3.074,
+        "runs": 3,
+        "values": [
+          3.074,
+          3.114,
+          3.256
+        ]
+      }
+    },
+    "total": {
+      "max_ms": {
+        "max": 12.083,
+        "mean": 10.401,
+        "median": 10.026,
+        "min": 9.094,
+        "runs": 3,
+        "values": [
+          9.094,
+          10.026,
+          12.083
+        ]
+      },
+      "mean_ms": {
+        "max": 5.18,
+        "mean": 5.08,
+        "median": 5.066,
+        "min": 4.994,
+        "runs": 3,
+        "values": [
+          5.066,
+          4.994,
+          5.18
+        ]
+      },
+      "median_ms": {
+        "max": 5.01,
+        "mean": 4.944,
+        "median": 4.955,
+        "min": 4.868,
+        "runs": 3,
+        "values": [
+          4.955,
+          4.868,
+          5.01
+        ]
+      },
+      "min_ms": {
+        "max": 4.135,
+        "mean": 4.037,
+        "median": 4.063,
+        "min": 3.913,
+        "runs": 3,
+        "values": [
+          4.135,
+          4.063,
+          3.913
+        ]
+      },
+      "p95_ms": {
+        "max": 6.321,
+        "mean": 6.083,
+        "median": 6.114,
+        "min": 5.813,
+        "runs": 3,
+        "values": [
+          6.114,
+          5.813,
+          6.321
+        ]
+      }
+    }
+  },
+  "mapping_versions": [
+    "0.7-example"
+  ],
+  "metrics_count_values": [
+    3
+  ],
+  "output_csv": "data\\experiment_runs\\spo2-drop-v07-summary-20260521T174705_957387Z.aggregate.csv",
+  "output_json": "data\\experiment_runs\\spo2-drop-v07-summary-20260521T174705_957387Z.aggregate.json",
+  "pattern": "spo2-drop-v07-run*.summary.json",
+  "read_error_count_total": 0,
+  "resource_count_values": [
+    8
+  ],
+  "rows": [
+    {
+      "active_alarm_count_last": 1,
+      "active_alarm_count_max": 1,
+      "active_alarm_seen_any": true,
+      "adapter": "simulated",
+      "alarms_count": 2,
+      "all_read_only": true,
+      "device_count": 1,
+      "file": "spo2-drop-v07-run1-20260521T174701_564969Z.summary.json",
+      "iterations": 200,
+      "list_resources_max_ms": 0.064,
+      "list_resources_mean_ms": 0.019,
+      "list_resources_median_ms": 0.019,
+      "list_resources_min_ms": 0.016,
+      "list_resources_p95_ms": 0.025,
+      "mapping_version": "0.7-example",
+      "metrics_count": 3,
+      "read_error_count_total": 0,
+      "read_health_max_ms": 0.651,
+      "read_health_mean_ms": 0.273,
+      "read_health_median_ms": 0.259,
+      "read_health_min_ms": 0.189,
+      "read_health_p95_ms": 0.42,
+      "read_resources_max_ms": 3.98,
+      "read_resources_mean_ms": 2.254,
+      "read_resources_median_ms": 2.181,
+      "read_resources_min_ms": 1.688,
+      "read_resources_p95_ms": 2.925,
+      "resource_count": 8,
+      "run_id": "spo2-drop-v07-run1-20260521T174701_564969Z",
+      "snapshot_build_max_ms": 6.743,
+      "snapshot_build_mean_ms": 2.52,
+      "snapshot_build_median_ms": 2.394,
+      "snapshot_build_min_ms": 2.011,
+      "snapshot_build_p95_ms": 3.074,
+      "status": "ok",
+      "tools_exported_any": false,
+      "total_max_ms": 9.094,
+      "total_mean_ms": 5.066,
+      "total_median_ms": 4.955,
+      "total_min_ms": 4.135,
+      "total_p95_ms": 6.114,
+      "warmup": 20,
+      "write_operations_allowed_any": false
+    },
+    {
+      "active_alarm_count_last": 1,
+      "active_alarm_count_max": 1,
+      "active_alarm_seen_any": true,
+      "adapter": "simulated",
+      "alarms_count": 2,
+      "all_read_only": true,
+      "device_count": 1,
+      "file": "spo2-drop-v07-run2-20260521T174703_013550Z.summary.json",
+      "iterations": 200,
+      "list_resources_max_ms": 0.114,
+      "list_resources_mean_ms": 0.02,
+      "list_resources_median_ms": 0.018,
+      "list_resources_min_ms": 0.015,
+      "list_resources_p95_ms": 0.027,
+      "mapping_version": "0.7-example",
+      "metrics_count": 3,
+      "read_error_count_total": 0,
+      "read_health_max_ms": 0.7,
+      "read_health_mean_ms": 0.267,
+      "read_health_median_ms": 0.253,
+      "read_health_min_ms": 0.158,
+      "read_health_p95_ms": 0.379,
+      "read_resources_max_ms": 3.976,
+      "read_resources_mean_ms": 2.218,
+      "read_resources_median_ms": 2.157,
+      "read_resources_min_ms": 1.668,
+      "read_resources_p95_ms": 2.808,
+      "resource_count": 8,
+      "run_id": "spo2-drop-v07-run2-20260521T174703_013550Z",
+      "snapshot_build_max_ms": 7.412,
+      "snapshot_build_mean_ms": 2.488,
+      "snapshot_build_median_ms": 2.381,
+      "snapshot_build_min_ms": 2.085,
+      "snapshot_build_p95_ms": 3.114,
+      "status": "ok",
+      "tools_exported_any": false,
+      "total_max_ms": 10.026,
+      "total_mean_ms": 4.994,
+      "total_median_ms": 4.868,
+      "total_min_ms": 4.063,
+      "total_p95_ms": 5.813,
+      "warmup": 20,
+      "write_operations_allowed_any": false
+    },
+    {
+      "active_alarm_count_last": 1,
+      "active_alarm_count_max": 1,
+      "active_alarm_seen_any": true,
+      "adapter": "simulated",
+      "alarms_count": 2,
+      "all_read_only": true,
+      "device_count": 1,
+      "file": "spo2-drop-v07-run3-20260521T174704_445475Z.summary.json",
+      "iterations": 200,
+      "list_resources_max_ms": 0.063,
+      "list_resources_mean_ms": 0.02,
+      "list_resources_median_ms": 0.019,
+      "list_resources_min_ms": 0.015,
+      "list_resources_p95_ms": 0.027,
+      "mapping_version": "0.7-example",
+      "metrics_count": 3,
+      "read_error_count_total": 0,
+      "read_health_max_ms": 0.979,
+      "read_health_mean_ms": 0.286,
+      "read_health_median_ms": 0.264,
+      "read_health_min_ms": 0.169,
+      "read_health_p95_ms": 0.424,
+      "read_resources_max_ms": 8.382,
+      "read_resources_mean_ms": 2.33,
+      "read_resources_median_ms": 2.167,
+      "read_resources_min_ms": 1.55,
+      "read_resources_p95_ms": 3.266,
+      "resource_count": 8,
+      "run_id": "spo2-drop-v07-run3-20260521T174704_445475Z",
+      "snapshot_build_max_ms": 4.542,
+      "snapshot_build_mean_ms": 2.545,
+      "snapshot_build_median_ms": 2.44,
+      "snapshot_build_min_ms": 2.09,
+      "snapshot_build_p95_ms": 3.256,
+      "status": "ok",
+      "tools_exported_any": false,
+      "total_max_ms": 12.083,
+      "total_mean_ms": 5.18,
+      "total_median_ms": 5.01,
+      "total_min_ms": 3.913,
+      "total_p95_ms": 6.321,
+      "warmup": 20,
+      "write_operations_allowed_any": false
+    }
+  ],
+  "run_count": 3,
+  "runs": [
+    "spo2-drop-v07-run1-20260521T174701_564969Z",
+    "spo2-drop-v07-run2-20260521T174703_013550Z",
+    "spo2-drop-v07-run3-20260521T174704_445475Z"
+  ],
+  "safety_boundary_ok": true,
+  "status": "ok",
+  "statuses": [
+    "ok",
+    "ok",
+    "ok"
+  ],
+  "warmup_values": [
+    20
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "active_alarm_count_last": 1,
+  "active_alarm_count_max": 1,
+  "active_alarm_seen_any": true,
+  "adapter": "simulated",
+  "alarms_count": 2,
+  "config": "config\\gateway.simulated.tachycardia.example.yaml",
+  "device_count": 1,
+  "elapsed_start_s": 0.0,
+  "elapsed_step_s": 1.0,
+  "iterations": 200,
+  "latency": {
+    "list_resources": {
+      "count": 200,
+      "max_ms": 0.053,
+      "mean_ms": 0.02,
+      "median_ms": 0.019,
+      "min_ms": 0.014,
+      "p95_ms": 0.028
+    },
+    "read_health": {
+      "count": 200,
+      "max_ms": 1.079,
+      "mean_ms": 0.255,
+      "median_ms": 0.237,
+      "min_ms": 0.142,
+      "p95_ms": 0.392
+    },
+    "read_resources": {
+      "count": 200,
+      "max_ms": 3.827,
+      "mean_ms": 2.07,
+      "median_ms": 2.112,
+      "min_ms": 1.241,
+      "p95_ms": 2.781
+    },
+    "snapshot_build": {
+      "count": 200,
+      "max_ms": 4.906,
+      "mean_ms": 2.44,
+      "median_ms": 2.351,
+      "min_ms": 1.969,
+      "p95_ms": 3.224
+    },
+    "total": {
+      "count": 200,
+      "max_ms": 7.817,
+      "mean_ms": 4.785,
+      "median_ms": 4.738,
+      "min_ms": 3.541,
+      "p95_ms": 6.035
+    }
+  },
+  "mapping_version": "0.7-example",
+  "metrics_count": 3,
+  "mie": "config\\sdc_mie.yaml",
+  "output_csv": "data\\experiment_runs\\tachycardia-v07-run1-20260521T174656_817115Z.csv",
+  "output_jsonl": "data\\experiment_runs\\tachycardia-v07-run1-20260521T174656_817115Z.jsonl",
+  "output_summary": "data\\experiment_runs\\tachycardia-v07-run1-20260521T174656_817115Z.summary.json",
+  "read_error_count_total": 0,
+  "resource_count": 8,
+  "run_id": "tachycardia-v07-run1-20260521T174656_817115Z",
+  "safety_boundary": {
+    "all_read_only": true,
+    "tools_exported_any": false,
+    "write_operations_allowed_any": false
+  },
+  "status": "ok",
+  "warmup": 20
+}

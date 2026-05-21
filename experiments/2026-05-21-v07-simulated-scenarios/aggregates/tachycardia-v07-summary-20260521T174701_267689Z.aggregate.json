@@ -1,0 +1,502 @@
+{
+  "active_alarm_count_last_values": [
+    1
+  ],
+  "active_alarm_count_max_values": [
+    1
+  ],
+  "active_alarm_seen_any": true,
+  "adapter_values": [
+    "simulated"
+  ],
+  "aggregate_id": "tachycardia-v07-summary-20260521T174701_267689Z",
+  "alarms_count_values": [
+    2
+  ],
+  "device_count_values": [
+    1
+  ],
+  "failed_runs": [],
+  "input_dir": "data\\experiment_runs",
+  "iterations_values": [
+    200
+  ],
+  "latency_aggregate": {
+    "list_resources": {
+      "max_ms": {
+        "max": 0.616,
+        "mean": 0.238,
+        "median": 0.053,
+        "min": 0.046,
+        "runs": 3,
+        "values": [
+          0.053,
+          0.616,
+          0.046
+        ]
+      },
+      "mean_ms": {
+        "max": 0.022,
+        "mean": 0.02,
+        "median": 0.02,
+        "min": 0.019,
+        "runs": 3,
+        "values": [
+          0.02,
+          0.022,
+          0.019
+        ]
+      },
+      "median_ms": {
+        "max": 0.019,
+        "mean": 0.019,
+        "median": 0.019,
+        "min": 0.018,
+        "runs": 3,
+        "values": [
+          0.019,
+          0.018,
+          0.019
+        ]
+      },
+      "min_ms": {
+        "max": 0.015,
+        "mean": 0.014,
+        "median": 0.014,
+        "min": 0.014,
+        "runs": 3,
+        "values": [
+          0.014,
+          0.014,
+          0.015
+        ]
+      },
+      "p95_ms": {
+        "max": 0.029,
+        "mean": 0.027,
+        "median": 0.028,
+        "min": 0.023,
+        "runs": 3,
+        "values": [
+          0.028,
+          0.029,
+          0.023
+        ]
+      }
+    },
+    "read_health": {
+      "max_ms": {
+        "max": 1.079,
+        "mean": 0.849,
+        "median": 0.846,
+        "min": 0.623,
+        "runs": 3,
+        "values": [
+          1.079,
+          0.623,
+          0.846
+        ]
+      },
+      "mean_ms": {
+        "max": 0.276,
+        "mean": 0.267,
+        "median": 0.271,
+        "min": 0.255,
+        "runs": 3,
+        "values": [
+          0.255,
+          0.271,
+          0.276
+        ]
+      },
+      "median_ms": {
+        "max": 0.262,
+        "mean": 0.252,
+        "median": 0.257,
+        "min": 0.237,
+        "runs": 3,
+        "values": [
+          0.237,
+          0.262,
+          0.257
+        ]
+      },
+      "min_ms": {
+        "max": 0.169,
+        "mean": 0.148,
+        "median": 0.142,
+        "min": 0.133,
+        "runs": 3,
+        "values": [
+          0.142,
+          0.133,
+          0.169
+        ]
+      },
+      "p95_ms": {
+        "max": 0.429,
+        "mean": 0.406,
+        "median": 0.398,
+        "min": 0.392,
+        "runs": 3,
+        "values": [
+          0.392,
+          0.398,
+          0.429
+        ]
+      }
+    },
+    "read_resources": {
+      "max_ms": {
+        "max": 8.22,
+        "mean": 6.707,
+        "median": 8.074,
+        "min": 3.827,
+        "runs": 3,
+        "values": [
+          3.827,
+          8.22,
+          8.074
+        ]
+      },
+      "mean_ms": {
+        "max": 2.331,
+        "mean": 2.212,
+        "median": 2.234,
+        "min": 2.07,
+        "runs": 3,
+        "values": [
+          2.07,
+          2.331,
+          2.234
+        ]
+      },
+      "median_ms": {
+        "max": 2.218,
+        "mean": 2.149,
+        "median": 2.118,
+        "min": 2.112,
+        "runs": 3,
+        "values": [
+          2.112,
+          2.218,
+          2.118
+        ]
+      },
+      "min_ms": {
+        "max": 1.483,
+        "mean": 1.328,
+        "median": 1.259,
+        "min": 1.241,
+        "runs": 3,
+        "values": [
+          1.241,
+          1.259,
+          1.483
+        ]
+      },
+      "p95_ms": {
+        "max": 3.174,
+        "mean": 2.976,
+        "median": 2.973,
+        "min": 2.781,
+        "runs": 3,
+        "values": [
+          2.781,
+          3.174,
+          2.973
+        ]
+      }
+    },
+    "snapshot_build": {
+      "max_ms": {
+        "max": 5.628,
+        "mean": 4.722,
+        "median": 4.906,
+        "min": 3.631,
+        "runs": 3,
+        "values": [
+          4.906,
+          3.631,
+          5.628
+        ]
+      },
+      "mean_ms": {
+        "max": 2.505,
+        "mean": 2.479,
+        "median": 2.492,
+        "min": 2.44,
+        "runs": 3,
+        "values": [
+          2.44,
+          2.505,
+          2.492
+        ]
+      },
+      "median_ms": {
+        "max": 2.441,
+        "mean": 2.392,
+        "median": 2.385,
+        "min": 2.351,
+        "runs": 3,
+        "values": [
+          2.351,
+          2.441,
+          2.385
+        ]
+      },
+      "min_ms": {
+        "max": 2.037,
+        "mean": 1.996,
+        "median": 1.982,
+        "min": 1.969,
+        "runs": 3,
+        "values": [
+          1.969,
+          1.982,
+          2.037
+        ]
+      },
+      "p95_ms": {
+        "max": 3.224,
+        "mean": 3.141,
+        "median": 3.122,
+        "min": 3.078,
+        "runs": 3,
+        "values": [
+          3.224,
+          3.122,
+          3.078
+        ]
+      }
+    },
+    "total": {
+      "max_ms": {
+        "max": 12.688,
+        "mean": 10.603,
+        "median": 11.304,
+        "min": 7.817,
+        "runs": 3,
+        "values": [
+          7.817,
+          11.304,
+          12.688
+        ]
+      },
+      "mean_ms": {
+        "max": 5.129,
+        "mean": 4.978,
+        "median": 5.021,
+        "min": 4.785,
+        "runs": 3,
+        "values": [
+          4.785,
+          5.129,
+          5.021
+        ]
+      },
+      "median_ms": {
+        "max": 5.018,
+        "mean": 4.876,
+        "median": 4.873,
+        "min": 4.738,
+        "runs": 3,
+        "values": [
+          4.738,
+          5.018,
+          4.873
+        ]
+      },
+      "min_ms": {
+        "max": 3.841,
+        "mean": 3.673,
+        "median": 3.638,
+        "min": 3.541,
+        "runs": 3,
+        "values": [
+          3.541,
+          3.638,
+          3.841
+        ]
+      },
+      "p95_ms": {
+        "max": 6.137,
+        "mean": 6.054,
+        "median": 6.035,
+        "min": 5.99,
+        "runs": 3,
+        "values": [
+          6.035,
+          6.137,
+          5.99
+        ]
+      }
+    }
+  },
+  "mapping_versions": [
+    "0.7-example"
+  ],
+  "metrics_count_values": [
+    3
+  ],
+  "output_csv": "data\\experiment_runs\\tachycardia-v07-summary-20260521T174701_267689Z.aggregate.csv",
+  "output_json": "data\\experiment_runs\\tachycardia-v07-summary-20260521T174701_267689Z.aggregate.json",
+  "pattern": "tachycardia-v07-run*.summary.json",
+  "read_error_count_total": 0,
+  "resource_count_values": [
+    8
+  ],
+  "rows": [
+    {
+      "active_alarm_count_last": 1,
+      "active_alarm_count_max": 1,
+      "active_alarm_seen_any": true,
+      "adapter": "simulated",
+      "alarms_count": 2,
+      "all_read_only": true,
+      "device_count": 1,
+      "file": "tachycardia-v07-run1-20260521T174656_817115Z.summary.json",
+      "iterations": 200,
+      "list_resources_max_ms": 0.053,
+      "list_resources_mean_ms": 0.02,
+      "list_resources_median_ms": 0.019,
+      "list_resources_min_ms": 0.014,
+      "list_resources_p95_ms": 0.028,
+      "mapping_version": "0.7-example",
+      "metrics_count": 3,
+      "read_error_count_total": 0,
+      "read_health_max_ms": 1.079,
+      "read_health_mean_ms": 0.255,
+      "read_health_median_ms": 0.237,
+      "read_health_min_ms": 0.142,
+      "read_health_p95_ms": 0.392,
+      "read_resources_max_ms": 3.827,
+      "read_resources_mean_ms": 2.07,
+      "read_resources_median_ms": 2.112,
+      "read_resources_min_ms": 1.241,
+      "read_resources_p95_ms": 2.781,
+      "resource_count": 8,
+      "run_id": "tachycardia-v07-run1-20260521T174656_817115Z",
+      "snapshot_build_max_ms": 4.906,
+      "snapshot_build_mean_ms": 2.44,
+      "snapshot_build_median_ms": 2.351,
+      "snapshot_build_min_ms": 1.969,
+      "snapshot_build_p95_ms": 3.224,
+      "status": "ok",
+      "tools_exported_any": false,
+      "total_max_ms": 7.817,
+      "total_mean_ms": 4.785,
+      "total_median_ms": 4.738,
+      "total_min_ms": 3.541,
+      "total_p95_ms": 6.035,
+      "warmup": 20,
+      "write_operations_allowed_any": false
+    },
+    {
+      "active_alarm_count_last": 1,
+      "active_alarm_count_max": 1,
+      "active_alarm_seen_any": true,
+      "adapter": "simulated",
+      "alarms_count": 2,
+      "all_read_only": true,
+      "device_count": 1,
+      "file": "tachycardia-v07-run2-20260521T174658_353063Z.summary.json",
+      "iterations": 200,
+      "list_resources_max_ms": 0.616,
+      "list_resources_mean_ms": 0.022,
+      "list_resources_median_ms": 0.018,
+      "list_resources_min_ms": 0.014,
+      "list_resources_p95_ms": 0.029,
+      "mapping_version": "0.7-example",
+      "metrics_count": 3,
+      "read_error_count_total": 0,
+      "read_health_max_ms": 0.623,
+      "read_health_mean_ms": 0.271,
+      "read_health_median_ms": 0.262,
+      "read_health_min_ms": 0.133,
+      "read_health_p95_ms": 0.398,
+      "read_resources_max_ms": 8.22,
+      "read_resources_mean_ms": 2.331,
+      "read_resources_median_ms": 2.218,
+      "read_resources_min_ms": 1.259,
+      "read_resources_p95_ms": 3.174,
+      "resource_count": 8,
+      "run_id": "tachycardia-v07-run2-20260521T174658_353063Z",
+      "snapshot_build_max_ms": 3.631,
+      "snapshot_build_mean_ms": 2.505,
+      "snapshot_build_median_ms": 2.441,
+      "snapshot_build_min_ms": 1.982,
+      "snapshot_build_p95_ms": 3.122,
+      "status": "ok",
+      "tools_exported_any": false,
+      "total_max_ms": 11.304,
+      "total_mean_ms": 5.129,
+      "total_median_ms": 5.018,
+      "total_min_ms": 3.638,
+      "total_p95_ms": 6.137,
+      "warmup": 20,
+      "write_operations_allowed_any": false
+    },
+    {
+      "active_alarm_count_last": 1,
+      "active_alarm_count_max": 1,
+      "active_alarm_seen_any": true,
+      "adapter": "simulated",
+      "alarms_count": 2,
+      "all_read_only": true,
+      "device_count": 1,
+      "file": "tachycardia-v07-run3-20260521T174659_821337Z.summary.json",
+      "iterations": 200,
+      "list_resources_max_ms": 0.046,
+      "list_resources_mean_ms": 0.019,
+      "list_resources_median_ms": 0.019,
+      "list_resources_min_ms": 0.015,
+      "list_resources_p95_ms": 0.023,
+      "mapping_version": "0.7-example",
+      "metrics_count": 3,
+      "read_error_count_total": 0,
+      "read_health_max_ms": 0.846,
+      "read_health_mean_ms": 0.276,
+      "read_health_median_ms": 0.257,
+      "read_health_min_ms": 0.169,
+      "read_health_p95_ms": 0.429,
+      "read_resources_max_ms": 8.074,
+      "read_resources_mean_ms": 2.234,
+      "read_resources_median_ms": 2.118,
+      "read_resources_min_ms": 1.483,
+      "read_resources_p95_ms": 2.973,
+      "resource_count": 8,
+      "run_id": "tachycardia-v07-run3-20260521T174659_821337Z",
+      "snapshot_build_max_ms": 5.628,
+      "snapshot_build_mean_ms": 2.492,
+      "snapshot_build_median_ms": 2.385,
+      "snapshot_build_min_ms": 2.037,
+      "snapshot_build_p95_ms": 3.078,
+      "status": "ok",
+      "tools_exported_any": false,
+      "total_max_ms": 12.688,
+      "total_mean_ms": 5.021,
+      "total_median_ms": 4.873,
+      "total_min_ms": 3.841,
+      "total_p95_ms": 5.99,
+      "warmup": 20,
+      "write_operations_allowed_any": false
+    }
+  ],
+  "run_count": 3,
+  "runs": [
+    "tachycardia-v07-run1-20260521T174656_817115Z",
+    "tachycardia-v07-run2-20260521T174658_353063Z",
+    "tachycardia-v07-run3-20260521T174659_821337Z"
+  ],
+  "safety_boundary_ok": true,
+  "status": "ok",
+  "statuses": [
+    "ok",
+    "ok",
+    "ok"
+  ],
+  "warmup_values": [
+    20
+  ]
+}
