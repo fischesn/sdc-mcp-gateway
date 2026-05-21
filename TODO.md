@@ -43,45 +43,42 @@
 - [x] Verify that all advertised resources are readable.
 - [x] Verify read-only safety boundary in `sdc://health`.
 
-## v0.5-event-streaming
+## v0.5-end-to-end-mcp-client - completed
+
+- [x] Add end-to-end MCP client smoke test using stdio transport.
+- [x] Verify list_resources, read_resource, and no exported tools through a real MCP ClientSession.
+
+## v0.6-repeatable-benchmarking - completed
+
+- [x] Add repeatable benchmark CLI command.
+- [x] Export per-iteration JSONL records.
+- [x] Export CSV table for spreadsheet/plot workflows.
+- [x] Export compact summary JSON with latency statistics.
+- [x] Verify read-only safety boundary in benchmark summaries.
+
+## v0.7-event-streaming
 
 - [ ] Subscribe to real metric and alarm events through `sdc11073`.
 - [ ] Add a continuously updated local state cache.
 - [ ] Add event-to-resource latency measurements.
 - [ ] Add time-series simulation mode for repeated snapshots.
-- [ ] Export experiment CSV/JSONL summaries.
 
-## v0.6-dry-run-tools
+## v0.8-dry-run-tools
 
 - [ ] Extract SCO descriptors from the MDIB.
 - [ ] Generate MCP tool definitions and JSON schemas.
 - [ ] Validate tool arguments without executing SDC operations.
 - [ ] Add dry-run audit records.
 
-## v0.7-policy-hitl
+## v0.9-policy-hitl
 
 - [ ] Implement policy whitelist.
 - [ ] Add role and approval metadata.
 - [ ] Add CLI or web-based human-in-the-loop approval.
 - [ ] Add negative tests for unsafe tool calls.
 
-## v0.8-controlled-lab-execution
+## v1.0-controlled-lab-execution
 
 - [ ] Enable explicitly whitelisted write operations in isolated lab mode only.
 - [ ] Add hard kill switch for all write operations.
 - [ ] Run experiments with real SDC-capable devices.
-
-
-## After v0.4.1
-
-- Test `serve` with a real MCP client.
-- Add automated MCP client integration tests when the MCP SDK is available in CI.
-- Add dynamic refresh for long-running server mode.
-- Define v0.6 dry-run MCP tools, still without SDC write execution.
-
-
-## v0.5.0
-
-- [x] Add end-to-end MCP client smoke test using stdio transport.
-- [x] Verify list_resources, read_resource, and no exported tools through a real MCP ClientSession.
-- [ ] Next: connect an external MCP-capable agent/client and add experiment recording for client-side latencies.

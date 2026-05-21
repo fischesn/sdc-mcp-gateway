@@ -2,12 +2,13 @@
 
 Research prototype for exposing IEEE 11073 SDC device state as Model Context Protocol (MCP) resources.
 
-This repository currently contains **v0.5.0-read-only-MCP-client-smoke-test**. It remains deliberately limited to read-only access:
+This repository currently contains **v0.6.0-repeatable-benchmark-and-experiment-logging**. It remains deliberately limited to read-only access:
 
 - A deterministic dummy SDC consumer is included for local development and tests.
 - A reproducible in-process simulated SDC-like provider testbed is included for patient monitor and ventilator scenarios.
 - A real `sdc11073` adapter can discover providers and capture one-shot MDIB snapshots.
 - MCP resources expose devices, metrics, alarms, context, raw MDIB summaries, and the SDC-MIE mapping.
+- Repeatable benchmarks write JSONL, CSV, and summary artifacts for paper-oriented experiments.
 - No SDC operation is executed.
 - No MCP tool is exported.
 - No clinical use is intended or permitted.
@@ -104,7 +105,7 @@ sdc-mcp-gateway snapshot --config config/gateway.yaml --mie config/sdc_mie.yaml
 
 ## Run a simulated SDC-like snapshot
 
-The v0.5.0 simulator does **not** open a real IEEE 11073 SDC network endpoint. It generates normalized SDC-like device snapshots in-process so that mapping, MCP resources, and logging can be developed without real devices.
+The v0.6.0 simulator does **not** open a real IEEE 11073 SDC network endpoint. It generates normalized SDC-like device snapshots in-process so that mapping, MCP resources, and logging can be developed without real devices.
 
 Direct scenario snapshot:
 
@@ -154,10 +155,10 @@ This requires the Python MCP SDK. If it is not installed, the package will expla
 pytest -q
 ```
 
-Expected result for v0.5.0:
+Expected result for v0.6.0:
 
 ```text
-18 passed
+20 passed
 ```
 
 ## Recommended Git workflow
@@ -168,8 +169,8 @@ For a clean version history:
 git init
 git branch -M main
 git add .
-git commit -m "Add end-to-end MCP client smoke test v0.5.0"
-git tag -a v0.5.0 -m "v0.5.0 end-to-end MCP client smoke test"
+git commit -m "Add repeatable benchmark and experiment logging v0.6.0"
+git tag -a v0.6.0 -m "v0.6.0 repeatable benchmark and experiment logging"
 ```
 
 Before committing, check that `config/gateway.local.yaml` is not staged:

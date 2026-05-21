@@ -6,6 +6,7 @@ from pathlib import Path
 import typer
 
 from sdc_mcp_gateway.config import GatewayConfig
+from sdc_mcp_gateway.experiments.benchmark import BenchmarkConfig, run_benchmark
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
 from sdc_mcp_gateway.mapping.mie_loader import load_mapping
 from sdc_mcp_gateway.mcp.client_smoke import (
@@ -289,6 +290,55 @@ def mcp_client_smoke_test(
         )
     except MissingMcpClientDependency as exc:
         raise typer.Exit(str(exc)) from exc
+    except Exception as exc:  # pragma: no cover - defensive user-facing command
+        typer.echo(
+            json.dumps(
+                {"status": "failed", "error": str(exc), "config": str(config), "mie": str(mie)},
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if report.get("status") != "ok":
+        raise typer.Exit(code=1)
+
+
+@app.command("benchmark")
+def benchmark(
+    config: Path = typer.Option(Path("config/gateway.simulated.example.yaml"), help="Gateway YAML configuration."),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    iterations: int = typer.Option(10, help="Number of measured iterations."),
+    warmup: int = typer.Option(1, help="Number of warm-up iterations that are excluded from summaries."),
+    output_dir: Path = typer.Option(Path("data/experiment_runs"), help="Directory for JSONL, CSV, and summary output."),
+    label: str = typer.Option("benchmark", help="Prefix for generated result files."),
+    elapsed_start_s: float = typer.Option(0.0, help="Initial simulated scenario time in seconds."),
+    elapsed_step_s: float = typer.Option(1.0, help="Scenario-time increment per iteration for simulated adapters."),
+) -> None:
+    """Run a repeatable read-only benchmark and write experiment artifacts.
+
+    The command repeatedly builds the configured gateway resource registry, lists
+    resources, reads all advertised resources, checks the read-only safety
+    boundary, and writes JSONL/CSV/summary files that can be used for paper
+    figures and tables. For the simulated adapter, elapsed_s is advanced between
+    iterations so metric values change reproducibly.
+    """
+
+    try:
+        report = run_benchmark(
+            BenchmarkConfig(
+                config_path=config,
+                mie_path=mie,
+                output_dir=output_dir,
+                run_label=label,
+                iterations=iterations,
+                warmup=warmup,
+                elapsed_start_s=elapsed_start_s,
+                elapsed_step_s=elapsed_step_s,
+            )
+        )
     except Exception as exc:  # pragma: no cover - defensive user-facing command
         typer.echo(
             json.dumps(
