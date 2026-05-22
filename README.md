@@ -395,3 +395,39 @@ The expected safety state is:
 ```
 
 See `docs/dry-run-tools.md`, `docs/v0.10-spec.md`, and `docs/v0.10.1-spec.md`.
+
+## v0.10.2 single-task and free-question usability
+
+v0.10.2 adds two convenience features for interactive work with the agent layer.
+
+Run only one task from the task file:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks `
+  --config config/gateway.simulated.high-airway-pressure.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tasks config/agent_eval.tasks.yaml `
+  --scenario airway-pressure `
+  --task-id clinical_summary `
+  --agent llm-gemini `
+  --llm-model gemini-2.5-flash `
+  --elapsed-s 100
+```
+
+Ask one ungraded natural-language question against the current read-only resource state:
+
+```powershell
+sdc-mcp-gateway ask-agent `
+  --config config/gateway.simulated.high-airway-pressure.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --agent llm-gemini `
+  --llm-model gemini-2.5-flash `
+  --question "Is there an active alarm and which device is affected?" `
+  --elapsed-s 100
+```
+
+See the full user guide:
+
+```text
+docs/USER_GUIDE.md
+```

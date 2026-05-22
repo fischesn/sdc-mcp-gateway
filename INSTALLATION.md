@@ -583,3 +583,13 @@ sdc-mcp-gateway call-tool prepare_set_fio2 `
 ```
 
 Both commands should return `executed: false`; the second one should be rejected by policy validation. `--args-json` is still supported, but `--args-file` is recommended on Windows/PowerShell.
+
+## User guide
+
+The command surface has grown substantially. Start with the full command-oriented manual:
+
+```text
+docs/USER_GUIDE.md
+```
+
+It covers installation, SDC/simulation commands, MCP resources, benchmarks, agent task evaluation, `ask-agent`, dry-run tools, aggregation, and safety interpretation.

@@ -8,7 +8,7 @@ import typer
 from sdc_mcp_gateway.config import GatewayConfig
 from sdc_mcp_gateway.experiments.benchmark import BenchmarkConfig, run_benchmark
 from sdc_mcp_gateway.experiments.summarize import BenchmarkSummaryConfig, summarize_benchmarks
-from sdc_mcp_gateway.agent_eval.harness import AgentEvalConfig, run_agent_evaluation
+from sdc_mcp_gateway.agent_eval.harness import AgentEvalConfig, AskAgentConfig, run_agent_evaluation, run_agent_question
 from sdc_mcp_gateway.agent_eval.summarize import AgentEvalSummaryConfig, summarize_agent_evaluations
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
 from sdc_mcp_gateway.mapping.mie_loader import load_mapping
@@ -505,6 +505,7 @@ def evaluate_agent_tasks(
     output_dir: Path = typer.Option(Path("data/agent_eval"), help="Directory for JSON, CSV, and Markdown outputs."),
     label: str = typer.Option("agent-eval", help="Prefix for generated output files."),
     elapsed_s: float | None = typer.Option(100.0, help="Simulated scenario time in seconds, if using the simulated adapter."),
+    task_id: list[str] | None = typer.Option(None, "--task-id", help="Run only the selected task id. Can be passed multiple times."),
     llm_provider: str = typer.Option("mock", help="LLM provider when agent='llm': mock, ollama, openai-compatible, or gemini."),
     llm_model: str = typer.Option("mock-medical-agent", help="LLM model name for llm-* agents."),
     llm_endpoint: str | None = typer.Option(None, help="Optional LLM HTTP endpoint override."),
@@ -530,6 +531,7 @@ def evaluate_agent_tasks(
                 run_label=label,
                 agent=agent,
                 elapsed_s=elapsed_s,
+                task_ids=task_id,
                 llm_provider=llm_provider,
                 llm_model=llm_model,
                 llm_endpoint=llm_endpoint,
@@ -559,6 +561,63 @@ def evaluate_agent_tasks(
 
     typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
     if report.get("status") != "ok":
+        raise typer.Exit(code=1)
+
+
+@app.command("ask-agent")
+def ask_agent(
+    question: str = typer.Option(..., "--question", "-q", help="Natural-language question to ask about current MCP resources."),
+    config: Path = typer.Option(Path("config/gateway.simulated.example.yaml"), help="Gateway YAML configuration."),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    agent: str = typer.Option("llm-mock", help="Agent backend: oracle, llm-mock, llm-ollama, llm-openai-compatible, or llm-gemini."),
+    output_dir: Path | None = typer.Option(None, help="Optional directory for writing the JSON answer report."),
+    label: str = typer.Option("ask-agent", help="Prefix for optional output file."),
+    elapsed_s: float | None = typer.Option(100.0, help="Simulated scenario time in seconds, if using the simulated adapter."),
+    llm_provider: str = typer.Option("mock", help="LLM provider when agent='llm': mock, ollama, openai-compatible, or gemini."),
+    llm_model: str = typer.Option("mock-medical-agent", help="LLM model name for llm-* agents."),
+    llm_endpoint: str | None = typer.Option(None, help="Optional LLM HTTP endpoint override."),
+    llm_api_key_env: str | None = typer.Option(None, help="Environment variable holding API key for openai-compatible or Gemini provider."),
+    llm_timeout_s: float = typer.Option(60.0, help="LLM backend timeout in seconds."),
+    llm_temperature: float = typer.Option(0.0, help="LLM sampling temperature."),
+) -> None:
+    """Ask a single natural-language question about the current read-only resource state.
+
+    This is an exploratory convenience command, not a graded benchmark. Use
+    `evaluate-agent-tasks` for reproducible task evaluation against ground truth.
+    `ask-agent` does not expose MCP tools and does not permit write operations.
+    """
+
+    try:
+        report = run_agent_question(
+            AskAgentConfig(
+                config_path=config,
+                mie_path=mie,
+                question=question,
+                agent=agent,
+                elapsed_s=elapsed_s,
+                output_dir=output_dir,
+                run_label=label,
+                llm_provider=llm_provider,
+                llm_model=llm_model,
+                llm_endpoint=llm_endpoint,
+                llm_api_key_env=llm_api_key_env,
+                llm_timeout_s=llm_timeout_s,
+                llm_temperature=llm_temperature,
+            )
+        )
+    except Exception as exc:  # pragma: no cover - defensive user-facing command
+        typer.echo(
+            json.dumps(
+                {"status": "failed", "error": str(exc), "config": str(config), "mie": str(mie), "agent": agent},
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if report.get("status") not in {"ok", "warning"}:
         raise typer.Exit(code=1)
 
 

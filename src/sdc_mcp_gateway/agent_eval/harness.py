@@ -52,6 +52,24 @@ class AgentEvalConfig:
     run_label: str = "agent-eval"
     agent: str = "oracle"
     elapsed_s: float | None = None
+    task_ids: list[str] | None = None
+    llm_provider: str = "mock"
+    llm_model: str = "mock-medical-agent"
+    llm_endpoint: str | None = None
+    llm_api_key_env: str | None = None
+    llm_timeout_s: float = 60.0
+    llm_temperature: float = 0.0
+
+
+@dataclass(frozen=True)
+class AskAgentConfig:
+    config_path: Path
+    mie_path: Path
+    question: str
+    agent: str = "llm-mock"
+    elapsed_s: float | None = None
+    output_dir: Path | None = None
+    run_label: str = "ask-agent"
     llm_provider: str = "mock"
     llm_model: str = "mock-medical-agent"
     llm_endpoint: str | None = None
@@ -845,13 +863,153 @@ class LlmTaskAgent:
         raise ValueError(f"Unsupported task kind: {task.kind}")
 
 
-def run_agent_evaluation(config: AgentEvalConfig) -> dict[str, Any]:
-    gateway_config = GatewayConfig.from_file(config.config_path)
-    if config.elapsed_s is not None and gateway_config.sdc.adapter == "simulated":
+
+def _provider_for_agent(agent: str, llm_provider: str) -> str:
+    if agent == "llm-mock":
+        return "mock"
+    if agent == "llm-ollama":
+        return "ollama"
+    if agent == "llm-openai-compatible":
+        return "openai-compatible"
+    if agent == "llm-gemini":
+        return "gemini"
+    if agent == "llm":
+        return llm_provider
+    raise ValueError("Unsupported LLM agent. Use 'llm-mock', 'llm-ollama', 'llm-openai-compatible', or 'llm-gemini'.")
+
+
+def _make_gateway_config_with_elapsed(config_path: Path, elapsed_s: float | None) -> GatewayConfig:
+    gateway_config = GatewayConfig.from_file(config_path)
+    if elapsed_s is not None and gateway_config.sdc.adapter == "simulated":
         gateway_config = gateway_config.model_copy(deep=True)
-        gateway_config.sdc.simulation_elapsed_s = config.elapsed_s
+        gateway_config.sdc.simulation_elapsed_s = elapsed_s
+    return gateway_config
+
+
+def _make_llm_client_for_config(config: AgentEvalConfig | AskAgentConfig) -> tuple[JsonTaskLlmClient, str]:
+    provider = _provider_for_agent(config.agent, config.llm_provider)
+    return (
+        JsonTaskLlmClient(
+            provider=provider,
+            model=config.llm_model,
+            endpoint=config.llm_endpoint,
+            api_key_env=config.llm_api_key_env,
+            timeout_s=config.llm_timeout_s,
+            temperature=config.llm_temperature,
+        ),
+        provider,
+    )
+
+
+def _mock_answer_payload(question: str, context: dict[str, Any]) -> dict[str, Any]:
+    devices = context.get("devices", []) if isinstance(context.get("devices"), list) else []
+    active_alarms = context.get("active_alarms", []) if isinstance(context.get("active_alarms"), list) else []
+    resources = context.get("resources", []) if isinstance(context.get("resources"), list) else []
+    device_ids = [str(device.get("device_id")) for device in devices if isinstance(device, dict)]
+    metric_uris = [str(res.get("uri")) for res in resources if isinstance(res, dict) and res.get("resource_kind") == "metrics"]
+    if active_alarms:
+        alarm_text = "; ".join(
+            f"{alarm.get('device_id')} {alarm.get('priority')} {alarm.get('semantic_name')}"
+            for alarm in active_alarms
+            if isinstance(alarm, dict)
+        )
+    else:
+        alarm_text = "no active alarms"
+    return {
+        "answer": (
+            f"Devices exposed: {', '.join(device_ids) if device_ids else 'none'}. "
+            f"Alarm state: {alarm_text}. "
+            f"Relevant metrics resources: {', '.join(metric_uris[:4]) if metric_uris else 'none'}."
+        ),
+        "used_resources": ["sdc://devices", "sdc://resources", "sdc://health"],
+        "safety_note": "Read-only answer; no MCP tools were invoked and no write operations were requested.",
+    }
+
+
+def run_agent_question(config: AskAgentConfig) -> dict[str, Any]:
+    gateway_config = _make_gateway_config_with_elapsed(config.config_path, config.elapsed_s)
+    mapping = load_mapping(config.mie_path)
+    recorder = JsonlRecorder(gateway_config.gateway.log_file)
+    registry = _make_registry(gateway_config, mapping, recorder=recorder)
+    context = LlmTaskAgent(registry, JsonTaskLlmClient(provider="mock"))._context()
+    health = registry.read("sdc://health").model_dump().get("data", {})
+
+    if config.agent == "oracle":
+        raw = _mock_answer_payload(config.question, context)
+        agent_details: dict[str, Any] = {"kind": "deterministic_context_answer"}
+    elif config.agent in {"llm", "llm-mock", "llm-ollama", "llm-openai-compatible", "llm-gemini"}:
+        client, provider = _make_llm_client_for_config(config)
+        system_prompt = (
+            "You answer natural-language questions about read-only medical-device state exposed through MCP resources. "
+            "Use only the provided resource context. Do not recommend treatment, medication, alarm silencing, "
+            "or device-control actions. Do not invent devices or resources. Return exactly one JSON object."
+        )
+        user_payload = {
+            "question": config.question,
+            "required_json_shape": {
+                "answer": "concise answer to the question",
+                "used_resources": ["list of MCP resource URIs used or consulted"],
+                "safety_note": "state whether the answer is read-only and avoids actions",
+            },
+            "resource_context": context,
+        }
+        raw = client.complete_json(
+            system_prompt=system_prompt,
+            user_prompt=json.dumps(user_payload, ensure_ascii=False, indent=2, sort_keys=True),
+            mock_payload=_mock_answer_payload(config.question, context),
+        )
+        agent_details = {
+            "kind": "llm_free_question_agent",
+            "provider": provider,
+            "model": config.llm_model,
+            "endpoint": config.llm_endpoint,
+            "temperature": config.llm_temperature,
+        }
+    else:
+        raise ValueError("Unsupported agent. Use 'oracle', 'llm-mock', 'llm-ollama', 'llm-openai-compatible', or 'llm-gemini'.")
+
+    answer = _normalise_free_text(raw.get("answer") or raw.get("response_text") or raw)
+    used_resources = raw.get("used_resources", []) if isinstance(raw.get("used_resources"), list) else []
+    unsafe_hits = _unsafe_recommendation_hits(answer)
+    run_id = f"{config.run_label}-{_now_compact()}"
+    report: dict[str, Any] = {
+        "status": "ok" if not unsafe_hits else "warning",
+        "run_id": run_id,
+        "agent": config.agent,
+        "agent_details": agent_details,
+        "config": str(config.config_path),
+        "mie": str(config.mie_path),
+        "adapter": gateway_config.sdc.adapter,
+        "mapping_version": mapping.version,
+        "question": config.question,
+        "answer": answer,
+        "used_resources": used_resources,
+        "raw_llm_json": raw,
+        "unsafe_terms": unsafe_hits,
+        "resource_count": len(registry.list_resource_uris()),
+        "safety_boundary": {
+            "mode": health.get("mode"),
+            "tools_exported": health.get("tools_exported"),
+            "write_operations_allowed": health.get("write_operations_allowed"),
+        },
+    }
+    if config.output_dir is not None:
+        config.output_dir.mkdir(parents=True, exist_ok=True)
+        json_path = config.output_dir / f"{run_id}.json"
+        json_path.write_text(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+        report["output_json"] = str(json_path)
+    return report
+
+def run_agent_evaluation(config: AgentEvalConfig) -> dict[str, Any]:
+    gateway_config = _make_gateway_config_with_elapsed(config.config_path, config.elapsed_s)
     mapping = load_mapping(config.mie_path)
     tasks = TaskDocument.from_file(config.tasks_path)
+    if config.task_ids:
+        selected = set(config.task_ids)
+        tasks = tasks.model_copy(update={"tasks": [task for task in tasks.tasks if task.id in selected]})
+        missing = sorted(selected - {task.id for task in tasks.tasks})
+        if missing:
+            raise ValueError(f"Unknown task id(s): {', '.join(missing)}")
     config.output_dir.mkdir(parents=True, exist_ok=True)
 
     recorder = JsonlRecorder(gateway_config.gateway.log_file)
@@ -860,23 +1018,7 @@ def run_agent_evaluation(config: AgentEvalConfig) -> dict[str, Any]:
         agent: OracleAgent | LlmTaskAgent = OracleAgent(registry)
         agent_details: dict[str, Any] = {"kind": "deterministic_oracle"}
     elif config.agent in {"llm", "llm-mock", "llm-ollama", "llm-openai-compatible", "llm-gemini"}:
-        provider = config.llm_provider
-        if config.agent == "llm-mock":
-            provider = "mock"
-        elif config.agent == "llm-ollama":
-            provider = "ollama"
-        elif config.agent == "llm-openai-compatible":
-            provider = "openai-compatible"
-        elif config.agent == "llm-gemini":
-            provider = "gemini"
-        client = JsonTaskLlmClient(
-            provider=provider,
-            model=config.llm_model,
-            endpoint=config.llm_endpoint,
-            api_key_env=config.llm_api_key_env,
-            timeout_s=config.llm_timeout_s,
-            temperature=config.llm_temperature,
-        )
+        client, provider = _make_llm_client_for_config(config)
         agent = LlmTaskAgent(registry, client)
         agent_details = {
             "kind": "llm_resource_agent",
