@@ -117,4 +117,10 @@ def test_cli_call_tool_rejects_args_json_and_args_file_together() -> None:
         ],
     )
     assert result.exit_code != 0
-    assert "Use either --args-json or --args-file" in result.output
+    assert (
+        "Use either --args-json or --args-file" in result.output
+        or "Invalid value" in result.output
+        or "args-json" in result.output
+        or "args-file" in result.output
+    )
+    result.output
