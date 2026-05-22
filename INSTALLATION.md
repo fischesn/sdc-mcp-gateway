@@ -1,538 +1,273 @@
-# Installation Guide for the SDC-to-MCP Gateway v0.9.3
+# Installation Guide
 
-This document describes how to set up a local Python virtual environment and install all dependencies required for the current read-only research prototype.
+This document describes how to install and test the SDC-MCP Gateway research prototype.
 
-Version v0.9.3 is still strictly read-only. It includes the simulated SDC-like provider testbed, optional `sdc11073` discovery/snapshot support, MCP resource exposure, MCP client smoke tests, repeatable benchmark logging, deterministic oracle-agent evaluation, and optional LLM-backed agent evaluation. It does not execute SDC operations and exports no MCP tools.
+The instructions assume Windows PowerShell because the prototype has been developed and
+tested primarily in that environment. Linux/macOS users can use the same Python commands
+with the corresponding shell activation command for virtual environments.
 
-## 1. Prerequisites
+## Requirements
 
-Use Python 3.11, 3.12, 3.13, or 3.14. Python 3.14 is acceptable for this prototype because the current `sdc11073` package line used here supports Python `>=3.10,<3.15`.
+Recommended:
 
-Recommended tools:
+- Python 3.11, 3.12, 3.13, or 3.14
+- Git
+- PowerShell
+- Optional: Ollama for local LLM experiments
+- Optional: Gemini API key for Gemini-backed LLM experiments
 
-- Python 3.14 if this is already installed on your system; otherwise Python 3.11 or newer
-- Git, strongly recommended
-- A terminal: PowerShell on Windows, Terminal on macOS/Linux
+The package metadata currently declares:
 
-Check your Python version:
-
-```bash
-python --version
+```text
+requires-python = >=3.11,<3.15
 ```
 
-On some systems, especially Linux/macOS, the executable may be called `python3` or `python3.14`:
-
-```bash
-python3 --version
-python3.14 --version
-```
-
-## 2. Unpack or clone the repository
-
-If you received the ZIP archive, unpack it and enter the project directory:
-
-```bash
-cd sdc-mcp-gateway-v0.9.3
-```
-
-All commands below assume that you are in the repository root, i.e., the directory containing `pyproject.toml`.
-
-## 3. Create a virtual environment
-
-### Windows PowerShell with Python 3.14
+## Clone the repository
 
 ```powershell
-py -3.14 -m venv .venv
+git clone https://github.com/fischesn/sdc-mcp-gateway.git
+cd sdc-mcp-gateway
+```
+
+If your repository URL is different, adjust the command accordingly.
+
+## Create and activate a virtual environment
+
+```powershell
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip setuptools wheel
+python -m pip install --upgrade pip
 ```
 
-If PowerShell blocks activation scripts, run this once for your user account:
+If PowerShell blocks script execution, use a process-local execution policy:
 
 ```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-```
-
-Then activate the environment again:
-
-```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\.venv\Scripts\Activate.ps1
 ```
 
-### Windows CMD with Python 3.14
+## Install the package
 
-```cmd
-py -3.14 -m venv .venv
-.venv\Scripts\activate.bat
-python -m pip install --upgrade pip setuptools wheel
-```
+### Full development installation
 
-### macOS/Linux with Python 3.14
+For most development and paper-artifact reproduction work, install all optional dependencies:
 
-```bash
-python3.14 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip setuptools wheel
-```
-
-If your system uses a different executable name, first inspect available Python installations, for example:
-
-```bash
-python3 --version
-which python3.14
-```
-
-For older, but still supported, installations replace `3.14` with `3.13`, `3.12`, or `3.11` in the commands above.
-
-## 4. Install the package
-
-### Minimal development installation
-
-This is the recommended installation for dummy-mode development and unit tests:
-
-```bash
-python -m pip install -e ".[dev]"
-```
-
-This installs the gateway in editable mode and adds the development tools required for tests and linting.
-
-### Installation with MCP support
-
-Use this when you want to run the MCP server interface rather than only the local snapshot demo:
-
-```bash
-python -m pip install -e ".[mcp,dev]"
-```
-
-### Installation with real SDC snapshot support
-
-Use this if you want to test provider discovery and one-shot MDIB snapshots with `sdc11073`:
-
-```bash
-python -m pip install -e ".[sdc,dev]"
-```
-
-This installs `sdc11073>=2.4.1,<3.0`. The upper bound is intentional for now: the real-SDC adapter targets the stable 2.x API, not a future incompatible major release.
-
-### Full installation
-
-For convenience, all optional dependencies can be installed with:
-
-```bash
+```powershell
 python -m pip install -e ".[all]"
 ```
 
-If your shell treats square brackets specially, keep the quotes around the package specifier.
+This installs:
 
-## 5. Verify the installation
+- core package dependencies;
+- MCP SDK support;
+- `sdc11073` support;
+- Gemini support;
+- development/test tools.
 
-Run the test suite:
-
-```bash
-pytest -q
-```
-
-Expected result for v0.7.1:
-
-```text
-20 passed
-```
-
-Show the command-line help:
-
-```bash
-sdc-mcp-gateway --help
-```
-
-Print the read-only dummy resource snapshot:
-
-```bash
-sdc-mcp-gateway snapshot --config config/gateway.yaml --mie config/sdc_mie.yaml
-```
-
-Alternative without relying on the installed console script:
-
-```bash
-python -m sdc_mcp_gateway snapshot --config config/gateway.yaml --mie config/sdc_mie.yaml
-```
-
-
-Print a simulated multi-device snapshot without SDC networking:
-
-```bash
-sdc-mcp-gateway simulate-snapshot --scenario config/sim.combined.yaml --elapsed-s 10 --mie config/sdc_mie.yaml
-```
-
-Exercise the regular gateway path with the simulated adapter:
-
-```bash
-sdc-mcp-gateway discover --config config/gateway.simulated.example.yaml
-sdc-mcp-gateway snapshot --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
-```
-
-Run the MCP resource smoke test:
-
-```bash
-sdc-mcp-gateway mcp-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
-```
-
-If you installed the optional MCP SDK and want the smoke test to fail when the SDK is missing, add `--require-mcp-sdk`:
-
-```bash
-sdc-mcp-gateway mcp-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml --require-mcp-sdk
-```
-
-Run the example script:
-
-```bash
-python examples/read_only_demo.py
-```
-
-Verify the optional SDC dependency if installed:
-
-```bash
-python -c "import sdc11073; print('sdc11073 import ok')"
-```
-
-## 6. Configuration files
-
-The repository contains configuration templates and defaults. These files should stay in Git:
-
-```text
-config/gateway.yaml
-config/gateway.sdc11073.example.yaml
-config/gateway.simulated.example.yaml
-config/sim.patient-monitor.yaml
-config/sim.ventilator.yaml
-config/sim.combined.yaml
-config/sdc_mie.yaml
-config/policies.yaml
-config/README.md
-```
-
-Their roles are:
-
-- `gateway.yaml`: default read-only dummy configuration for local development and tests
-- `gateway.sdc11073.example.yaml`: template for real SDC discovery and snapshot tests
-- `gateway.simulated.example.yaml`: template for in-process simulated device scenarios
-- `sim.*.yaml`: reproducible simulated patient-monitor and ventilator scenarios
-- `sdc_mie.yaml`: semantic mappings from SDC/BICEPS/nomenclature elements to agent-readable names
-- `policies.yaml`: read-only safety policy; all write/tool operations remain denied in v0.7.1
-- `config/README.md`: short explanation of the configuration workflow
-
-The following file is intentionally not included and must not be committed:
-
-```text
-config/gateway.local.yaml
-```
-
-It may contain your local VPN IP address, provider identifiers, device filters, or other lab-specific details. It is listed in `.gitignore`.
-
-
-## 7. Simulated device tests without a real SDC network
-
-The v0.7.1 simulator is useful while no real SDC network is available. It is not a networked IEEE 11073 SDC Provider. It generates normalized SDC-like snapshots in-process and therefore tests the mapping, resource, logging, and later agent-facing parts of the gateway.
-
-Direct scenario run:
-
-```bash
-sdc-mcp-gateway simulate-snapshot --scenario config/sim.patient-monitor.yaml --elapsed-s 0 --mie config/sdc_mie.yaml
-sdc-mcp-gateway simulate-snapshot --scenario config/sim.ventilator.yaml --elapsed-s 30 --mie config/sdc_mie.yaml
-sdc-mcp-gateway simulate-snapshot --scenario config/sim.combined.yaml --elapsed-s 60 --mie config/sdc_mie.yaml
-```
-
-Regular gateway path using the simulated adapter:
-
-```bash
-sdc-mcp-gateway discover --config config/gateway.simulated.example.yaml
-sdc-mcp-gateway snapshot --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
-```
-
-For local experiments you may copy the simulated template as a local configuration:
-
-```bash
-cp config/gateway.simulated.example.yaml config/gateway.local.yaml
-```
-
-Windows PowerShell:
+### Minimal installation
 
 ```powershell
-Copy-Item config/gateway.simulated.example.yaml config/gateway.local.yaml
+python -m pip install -e .
 ```
 
-Then edit `config/gateway.local.yaml`, for example to switch between `sim.patient-monitor.yaml`, `sim.ventilator.yaml`, and `sim.combined.yaml`.
+This is sufficient for basic non-MCP, non-LLM functionality.
 
-## 8. Real SDC discovery and snapshot test
-
-
-After installing with `.[sdc,dev]` or `.[all]`, create a local configuration from the template.
-
-Linux/macOS:
-
-```bash
-cp config/gateway.sdc11073.example.yaml config/gateway.local.yaml
-```
-
-Windows PowerShell:
+### MCP support only
 
 ```powershell
-Copy-Item config/gateway.sdc11073.example.yaml config/gateway.local.yaml
+python -m pip install -e ".[mcp]"
 ```
 
-Then edit `config/gateway.local.yaml`:
-
-```yaml
-sdc:
-  adapter: "sdc11073"
-  local_ip: "YOUR_LOCAL_SDC_VPN_OR_LAB_INTERFACE_IPV4"
-  max_devices: 1
-  provider_whitelist: []
-```
-
-`local_ip` is the IPv4 address of the network interface on which the gateway process runs. In a Dräger-provided SDC VPN, this is normally your own VPN adapter address, not the address of a medical device.
-
-Run discovery:
-
-```bash
-sdc-mcp-gateway discover --config config/gateway.local.yaml
-```
-
-Capture a read-only snapshot:
-
-```bash
-sdc-mcp-gateway snapshot --config config/gateway.local.yaml --mie config/sdc_mie.yaml
-```
-
-The adapter only reads provider metadata and MDIB state. It does not execute Service Control Object operations.
-
-## 9. Git workflow and avoiding accidental local-config commits
-
-Before committing, inspect the status:
-
-```bash
-git status
-```
-
-You should see the template files under `config/`, but not `config/gateway.local.yaml`.
-
-If `gateway.local.yaml` was accidentally added, unstage it:
-
-```bash
-git rm --cached config/gateway.local.yaml
-```
-
-Do not use a broad `.gitignore` entry such as `config/*.yaml`; that would hide the important templates from Git. The intended rule is precise:
-
-```gitignore
-config/gateway.local.yaml
-```
-
-## 10. Deactivation and cleanup
-
-Deactivate the virtual environment:
-
-```bash
-deactivate
-```
-
-Remove the virtual environment completely:
-
-```bash
-rm -rf .venv
-```
-
-On Windows PowerShell:
+### SDC support only
 
 ```powershell
-Remove-Item -Recurse -Force .venv
+python -m pip install -e ".[sdc]"
 ```
 
-## 11. Troubleshooting
-
-### `python` points to the wrong version
-
-Use an explicit launcher:
-
-```powershell
-py -3.14 --version
-py -3.14 -m venv .venv
-```
-
-or on Linux/macOS:
-
-```bash
-python3.14 --version
-python3.14 -m venv .venv
-```
-
-### Activation fails on Windows
-
-Use:
-
-```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-```
-
-Then reopen PowerShell or reactivate the environment.
-
-### `pip install -e ".[all]"` fails
-
-First upgrade the packaging tools:
-
-```bash
-python -m pip install --upgrade pip setuptools wheel
-```
-
-Then retry the installation. If the failure concerns `sdc11073`, use the minimal installation first:
-
-```bash
-python -m pip install -e ".[dev]"
-```
-
-### `sdc-mcp-gateway` command not found
-
-Use the module form:
-
-```bash
-python -m sdc_mcp_gateway --help
-```
-
-If that works, the package is installed but the console-script path is not visible in your shell. Reactivate the virtual environment.
-
-
-## Benchmark and experiment logging
-
-Run a short simulated benchmark:
-
-```bash
-sdc-mcp-gateway benchmark --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml --iterations 5 --warmup 1 --output-dir data/experiment_runs --label local-smoke
-```
-
-The benchmark writes JSONL, CSV, and summary JSON files into `data/experiment_runs/`. These files are local experiment output and are ignored by Git.
-
-For paper-oriented runs, use more iterations, for example:
-
-```bash
-sdc-mcp-gateway benchmark --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml --iterations 100 --warmup 10 --output-dir data/experiment_runs --label simulated-baseline
-```
-
-## 12. Safety note
-
-This repository is a research prototype. v0.7.1 is read-only. It must not be used for clinical operation, patient treatment, clinical decision-making, clinical studies, or uncontrolled access to real medical devices.
-
-
-Run the end-to-end MCP client smoke test. This requires the optional MCP SDK and
-starts the stdio MCP server as a subprocess:
-
-```bash
-sdc-mcp-gateway mcp-client-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
-```
-
-The expected result is a JSON report with `"status": "ok"`, listed MCP resources,
-readable sample resources, and `"tool_count": 0`.
-
-
-## Aggregating benchmark results
-
-After running several benchmarks, use:
-
-```powershell
-sdc-mcp-gateway summarize-benchmarks --input-dir data/experiment_runs --label simulated-v06-summary
-```
-
-The command reads `*.summary.json` files and writes aggregate JSON/CSV files in the same directory unless `--output-dir` is specified.
-
-## Running the v0.7 scenario examples
-
-After installation, the scenario files can be tested without any real SDC network:
-
-```powershell
-sdc-mcp-gateway simulate-snapshot --scenario config/sim.tachycardia.yaml --elapsed-s 60 --mie config/sdc_mie.yaml
-sdc-mcp-gateway simulate-snapshot --scenario config/sim.spo2-drop.yaml --elapsed-s 70 --mie config/sdc_mie.yaml
-sdc-mcp-gateway simulate-snapshot --scenario config/sim.high-airway-pressure.yaml --elapsed-s 60 --mie config/sdc_mie.yaml
-```
-
-For scenario-specific benchmarks:
-
-```powershell
-sdc-mcp-gateway benchmark --config config/gateway.simulated.tachycardia.example.yaml --mie config/sdc_mie.yaml --iterations 100 --warmup 10 --label tachycardia-v07
-sdc-mcp-gateway benchmark --config config/gateway.simulated.spo2-drop.example.yaml --mie config/sdc_mie.yaml --iterations 100 --warmup 10 --label spo2-drop-v07
-sdc-mcp-gateway benchmark --config config/gateway.simulated.high-airway-pressure.example.yaml --mie config/sdc_mie.yaml --iterations 100 --warmup 10 --label high-airway-pressure-v07
-```
-
-Custom scenario authoring is described in `docs/scenarios.md`.
-
-
-### v0.7.1 alarm-observation update
-
-Version v0.7.1 corrects the high-airway-pressure scenario so that the simulated airway-pressure alarm remains active at the end of standard benchmark runs. Benchmark summaries also include `active_alarm_count_max` and `active_alarm_seen_any`, which are useful when evaluating transient or pulse-like alarm scenarios.
-
-
-## v0.8 Agent-facing evaluation
-
-Version v0.8.0 adds deterministic oracle-agent task evaluation. It validates whether the MCP resource surface supports device inventory, alarm detection, safe clinical-state summarization, and resource selection tasks.
-
-Run one scenario:
-
-```powershell
-sdc-mcp-gateway evaluate-agent-tasks --config config/gateway.simulated.tachycardia.example.yaml --mie config/sdc_mie.yaml --tasks config/agent_eval.tasks.yaml --scenario tachycardia --agent oracle --output-dir data/agent_eval --elapsed-s 100
-```
-
-Run all default scenarios:
-
-```powershell
-.\scripts\run_agent_evaluation.ps1
-```
-
-The outputs are written as JSON, CSV, and Markdown files under `data/agent_eval/`.
-
-## v0.9 LLM-backed agent evaluation
-
-Version v0.9.3 adds optional LLM-backed task evaluation. The deterministic oracle agent remains available and should be used as the reference baseline. The mock LLM backend validates the prompt/parsing/grading path without external services:
-
-```powershell
-sdc-mcp-gateway evaluate-agent-tasks `
-  --config config/gateway.simulated.tachycardia.example.yaml `
-  --mie config/sdc_mie.yaml `
-  --tasks config/agent_eval.tasks.yaml `
-  --scenario tachycardia `
-  --agent llm-mock `
-  --output-dir data/agent_eval `
-  --elapsed-s 100
-```
-
-For local Ollama-based testing, use:
-
-```powershell
-sdc-mcp-gateway evaluate-agent-tasks `
-  --config config/gateway.simulated.tachycardia.example.yaml `
-  --mie config/sdc_mie.yaml `
-  --tasks config/agent_eval.tasks.yaml `
-  --scenario tachycardia `
-  --agent llm-ollama `
-  --llm-model llama3.1 `
-  --output-dir data/agent_eval `
-  --elapsed-s 100
-```
-
-For OpenAI-compatible endpoints, keep API keys in environment variables and never commit them. The LLM receives read-only MCP resource context only. No MCP tools are exported and no write operations are enabled.
-
-
-## Optional Gemini backend
-
-For Gemini-backed agent evaluation, install the optional dependency:
+### Gemini support only
 
 ```powershell
 python -m pip install -e ".[gemini]"
 ```
 
-Set an API key before running Gemini experiments:
+### Development tools only
 
 ```powershell
-$env:GEMINI_API_KEY = "YOUR_KEY"
+python -m pip install -e ".[dev]"
 ```
 
-Example:
+## Verify installation
+
+Run:
+
+```powershell
+sdc-mcp-gateway --help
+```
+
+Then run the test suite:
+
+```powershell
+pytest -q
+```
+
+A clean release candidate should have no failing tests. One skipped test can be acceptable
+if it depends on an optional external service or optional SDK behavior.
+
+## Quick read-only resource checks
+
+Run the internal MCP/resource smoke test:
+
+```powershell
+sdc-mcp-gateway mcp-smoke-test `
+  --config config/gateway.simulated.example.yaml `
+  --mie config/sdc_mie.yaml
+```
+
+Run the MCP client smoke test:
+
+```powershell
+sdc-mcp-gateway mcp-client-smoke-test `
+  --config config/gateway.simulated.example.yaml `
+  --mie config/sdc_mie.yaml
+```
+
+List resources:
+
+```powershell
+sdc-mcp-gateway list-resources `
+  --config config/gateway.simulated.example.yaml `
+  --mie config/sdc_mie.yaml
+```
+
+Read gateway health:
+
+```powershell
+sdc-mcp-gateway read-resource sdc://health `
+  --config config/gateway.simulated.example.yaml `
+  --mie config/sdc_mie.yaml
+```
+
+Read simulated ventilator metrics:
+
+```powershell
+sdc-mcp-gateway read-resource sdc://devices/sim-ventilator-1/metrics `
+  --config config/gateway.simulated.example.yaml `
+  --mie config/sdc_mie.yaml
+```
+
+## Run scenario simulations
+
+Baseline combined scenario:
+
+```powershell
+sdc-mcp-gateway simulate-snapshot `
+  --scenario config/sim.combined.yaml `
+  --elapsed-s 100 `
+  --mie config/sdc_mie.yaml
+```
+
+Tachycardia:
+
+```powershell
+sdc-mcp-gateway simulate-snapshot `
+  --scenario config/sim.tachycardia.yaml `
+  --elapsed-s 100 `
+  --mie config/sdc_mie.yaml
+```
+
+SpO2 drop:
+
+```powershell
+sdc-mcp-gateway simulate-snapshot `
+  --scenario config/sim.spo2-drop.yaml `
+  --elapsed-s 100 `
+  --mie config/sdc_mie.yaml
+```
+
+High airway pressure:
+
+```powershell
+sdc-mcp-gateway simulate-snapshot `
+  --scenario config/sim.high-airway-pressure.yaml `
+  --elapsed-s 100 `
+  --mie config/sdc_mie.yaml
+```
+
+## Benchmarking
+
+Run a benchmark:
+
+```powershell
+sdc-mcp-gateway benchmark `
+  --config config/gateway.simulated.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --iterations 200 `
+  --warmup 20 `
+  --output-dir data/experiment_runs `
+  --label baseline-v1
+```
+
+Aggregate benchmark summaries:
+
+```powershell
+sdc-mcp-gateway summarize-benchmarks `
+  --input-dir data/experiment_runs `
+  --label baseline-summary `
+  --pattern "baseline-v1*.summary.json"
+```
+
+Generated benchmark files are written to `data/experiment_runs/` and should not be committed.
+
+## Agent evaluation
+
+### Deterministic oracle agent
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks `
+  --config config/gateway.simulated.high-airway-pressure.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tasks config/agent_eval.tasks.yaml `
+  --scenario airway-pressure `
+  --agent oracle `
+  --output-dir data/agent_eval `
+  --elapsed-s 100
+```
+
+### Single-task evaluation
+
+Use `--task-id` to run one task instead of the complete task file:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks `
+  --config config/gateway.simulated.high-airway-pressure.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tasks config/agent_eval.tasks.yaml `
+  --scenario airway-pressure `
+  --task-id clinical_summary `
+  --agent oracle `
+  --output-dir data/agent_eval `
+  --elapsed-s 100
+```
+
+You can pass `--task-id` multiple times if needed.
+
+### Gemini-backed evaluation
+
+Install Gemini support if you did not install `.[all]`:
+
+```powershell
+python -m pip install -e ".[gemini]"
+```
+
+Set your API key:
+
+```powershell
+$env:GEMINI_API_KEY = "your-key"
+```
+
+Alternatively, the code can use `GOOGLE_API_KEY` if supported by your environment.
+
+Run an evaluation:
 
 ```powershell
 sdc-mcp-gateway evaluate-agent-tasks `
@@ -546,27 +281,139 @@ sdc-mcp-gateway evaluate-agent-tasks `
   --elapsed-s 100
 ```
 
-## v0.9.4 Agent-evaluation aggregation
+### LLM mock agent
 
-Use `summarize-agent-evaluations` to aggregate multiple oracle or LLM-backed agent-evaluation JSON reports:
-
-```powershell
-sdc-mcp-gateway summarize-agent-evaluations --input-dir data/agent_eval --label gemini-v093-summary --pattern "agent-eval-*.json"
-```
-
-The command writes an `.aggregate.json` and `.aggregate.csv` file with task-pass counts, wrong URI counts, false alarm counts, unsafe-summary counts, and read-only safety-boundary status.
-
-## Testing v0.10 dry-run tools
-
-After installing the package, run:
+For deterministic local tests without an external LLM:
 
 ```powershell
-pytest -q
-sdc-mcp-gateway list-tools --config config/gateway.simulated.dryrun.example.yaml
-sdc-mcp-gateway tool-smoke-test --config config/gateway.simulated.dryrun.example.yaml
+sdc-mcp-gateway evaluate-agent-tasks `
+  --config config/gateway.simulated.tachycardia.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tasks config/agent_eval.tasks.yaml `
+  --scenario tachycardia `
+  --agent llm-mock `
+  --output-dir data/agent_eval `
+  --elapsed-s 100
 ```
 
-A valid dry-run proposal:
+### Ollama-backed evaluation
+
+Make sure Ollama is running and the model is available.
+
+Example:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks `
+  --config config/gateway.simulated.tachycardia.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tasks config/agent_eval.tasks.yaml `
+  --scenario tachycardia `
+  --agent llm-ollama `
+  --llm-model llama3.1 `
+  --output-dir data/agent_eval `
+  --elapsed-s 100
+```
+
+### OpenAI-compatible evaluation
+
+For OpenAI-compatible chat completion endpoints:
+
+```powershell
+$env:OPENAI_API_KEY = "your-key"
+```
+
+Then run, adapting endpoint/model arguments according to the current CLI help:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks `
+  --config config/gateway.simulated.tachycardia.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tasks config/agent_eval.tasks.yaml `
+  --scenario tachycardia `
+  --agent llm-openai-compatible `
+  --llm-model your-model `
+  --output-dir data/agent_eval `
+  --elapsed-s 100
+```
+
+Use:
+
+```powershell
+sdc-mcp-gateway evaluate-agent-tasks --help
+```
+
+to inspect the exact options supported by the installed version.
+
+## Free-question mode
+
+`ask-agent` asks a free natural-language question against the current resource context. It is
+exploratory and ungraded.
+
+Example with Gemini:
+
+```powershell
+sdc-mcp-gateway ask-agent `
+  --config config/gateway.simulated.high-airway-pressure.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --agent llm-gemini `
+  --llm-model gemini-2.5-flash `
+  --question "Is there an active alarm and which device is affected?" `
+  --elapsed-s 100
+```
+
+Example with mock agent:
+
+```powershell
+sdc-mcp-gateway ask-agent `
+  --config config/gateway.simulated.high-airway-pressure.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --agent llm-mock `
+  --question "Is there an active alarm and which device is affected?" `
+  --elapsed-s 100
+```
+
+For paper-quality, reproducible evaluation results, use `evaluate-agent-tasks`, not
+`ask-agent`.
+
+## Summarize agent evaluations
+
+Aggregate selected agent-evaluation JSON files:
+
+```powershell
+sdc-mcp-gateway summarize-agent-evaluations `
+  --input-dir data/agent_eval/gemini-v093-final `
+  --label gemini-v093-final-summary `
+  --pattern "agent-eval-*.json"
+```
+
+Important: use a clean input directory or a restrictive pattern. Otherwise old exploratory
+runs, failed preliminary runs, oracle runs, and LLM runs may be aggregated together.
+
+Generated aggregation files should not be committed.
+
+## Dry-run MCP tools
+
+Dry-run tools are enabled through:
+
+```text
+config/gateway.simulated.dryrun.example.yaml
+```
+
+List tools:
+
+```powershell
+sdc-mcp-gateway list-tools `
+  --config config/gateway.simulated.dryrun.example.yaml
+```
+
+Run dry-run smoke tests:
+
+```powershell
+sdc-mcp-gateway tool-smoke-test `
+  --config config/gateway.simulated.dryrun.example.yaml
+```
+
+Call a valid dry-run FiO2 proposal:
 
 ```powershell
 sdc-mcp-gateway call-tool prepare_set_fio2 `
@@ -574,7 +421,7 @@ sdc-mcp-gateway call-tool prepare_set_fio2 `
   --config config/gateway.simulated.dryrun.example.yaml
 ```
 
-An intentionally invalid proposal:
+Call an invalid FiO2 proposal:
 
 ```powershell
 sdc-mcp-gateway call-tool prepare_set_fio2 `
@@ -582,14 +429,202 @@ sdc-mcp-gateway call-tool prepare_set_fio2 `
   --config config/gateway.simulated.dryrun.example.yaml
 ```
 
-Both commands should return `executed: false`; the second one should be rejected by policy validation. `--args-json` is still supported, but `--args-file` is recommended on Windows/PowerShell.
+Call a PEEP dry-run proposal:
 
-## User guide
-
-The command surface has grown substantially. Start with the full command-oriented manual:
-
-```text
-docs/USER_GUIDE.md
+```powershell
+sdc-mcp-gateway call-tool prepare_set_peep `
+  --args-file config/tool_args/set_peep_10.json `
+  --config config/gateway.simulated.dryrun.example.yaml
 ```
 
-It covers installation, SDC/simulation commands, MCP resources, benchmarks, agent task evaluation, `ask-agent`, dry-run tools, aggregation, and safety interpretation.
+Call a dry-run alarm acknowledgment proposal:
+
+```powershell
+sdc-mcp-gateway call-tool prepare_acknowledge_alarm `
+  --args-file config/tool_args/ack_airway_pressure_alarm.json `
+  --config config/gateway.simulated.dryrun.example.yaml
+```
+
+Prefer `--args-file` on Windows. Passing raw JSON via `--args-json` is fragile in PowerShell
+because of quoting rules.
+
+Dry-run tool results must always report:
+
+```json
+{
+  "executed": false,
+  "write_operations_allowed": false
+}
+```
+
+Valid proposals should be accepted as dry-runs. Invalid proposals should be rejected by
+the policy layer.
+
+## MCP server mode
+
+Read-only resource server:
+
+```powershell
+sdc-mcp-gateway serve `
+  --config config/gateway.simulated.example.yaml `
+  --mie config/sdc_mie.yaml
+```
+
+Dry-run resource/tool server:
+
+```powershell
+sdc-mcp-gateway serve `
+  --config config/gateway.simulated.dryrun.example.yaml `
+  --mie config/sdc_mie.yaml
+```
+
+If the server starts and prints no further output, that can be normal for a stdio-based
+MCP server. It is waiting for an MCP client.
+
+## Real SDC network configuration
+
+Create a local file such as:
+
+```text
+config/gateway.local.yaml
+```
+
+Do not commit this file.
+
+Example:
+
+```yaml
+gateway:
+  name: "sdc-mcp-gateway-local"
+  mode: "read-only"
+
+sdc:
+  adapter: "sdc11073"
+  local_ip: "192.0.2.10"
+  max_devices: 2
+  provider_whitelist: []
+
+mapping:
+  version: "local"
+
+logging:
+  enabled: true
+  directory: "data/logs"
+```
+
+The address above uses a documentation address range. Replace it locally with the real
+VPN or interface address when testing in a real SDC network.
+
+Do not commit:
+
+- VPN configuration;
+- certificates;
+- private keys;
+- device credentials;
+- real network addresses if they are sensitive;
+- `config/gateway.local.yaml`;
+- `.env`;
+- `secrets/`.
+
+## Generated files and Git hygiene
+
+The following folders are for runtime outputs and should normally contain only `.gitkeep`
+files in Git:
+
+```text
+data/agent_eval/
+data/experiment_runs/
+data/logs/
+```
+
+If generated files are accidentally tracked, remove them from the Git index while keeping
+them locally:
+
+```powershell
+git rm -r --cached data\agent_eval
+git rm -r --cached data\experiment_runs
+git rm -r --cached data\logs
+git add data\agent_eval\.gitkeep
+git add data\experiment_runs\.gitkeep
+git add data\logs\.gitkeep
+```
+
+## Troubleshooting
+
+### PowerShell blocks virtual-environment activation
+
+Use:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+```
+
+### JSON command-line arguments fail under PowerShell
+
+Use `--args-file` instead of `--args-json`:
+
+```powershell
+sdc-mcp-gateway call-tool prepare_set_fio2 `
+  --args-file config/tool_args/set_fio2_45.json `
+  --config config/gateway.simulated.dryrun.example.yaml
+```
+
+### Gemini evaluation fails because no API key is configured
+
+Set:
+
+```powershell
+$env:GEMINI_API_KEY = "your-key"
+```
+
+Then rerun the command.
+
+### MCP server appears to hang
+
+For a stdio MCP server, this can be normal. Use the smoke tests to validate the server path:
+
+```powershell
+sdc-mcp-gateway mcp-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+sdc-mcp-gateway mcp-client-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+```
+
+### Tests fail after cleaning data directories
+
+Make sure `.gitkeep` files still exist:
+
+```powershell
+New-Item -ItemType Directory -Force data\agent_eval | Out-Null
+New-Item -ItemType Directory -Force data\experiment_runs | Out-Null
+New-Item -ItemType Directory -Force data\logs | Out-Null
+
+New-Item -ItemType File -Force data\agent_eval\.gitkeep | Out-Null
+New-Item -ItemType File -Force data\experiment_runs\.gitkeep | Out-Null
+New-Item -ItemType File -Force data\logs\.gitkeep | Out-Null
+```
+
+## Recommended pre-release checklist
+
+Before tagging a release candidate:
+
+```powershell
+pytest -q
+
+sdc-mcp-gateway mcp-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+
+sdc-mcp-gateway mcp-client-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml
+
+sdc-mcp-gateway tool-smoke-test --config config/gateway.simulated.dryrun.example.yaml
+
+git status
+git ls-files data
+```
+
+`git ls-files data` should normally show only `.gitkeep` files.
+
+## Next steps for paper artifacts
+
+For a paper artifact release, keep code/configuration/scripts in the repository and place
+large or generated experiment outputs in a GitHub Release artifact or archival repository.
+If final experiment summaries are included in the repository, document them explicitly
+under `experiments/` and keep only the final, curated data.
