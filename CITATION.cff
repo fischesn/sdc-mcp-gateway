@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the associated paper or this software artifact."
+title: "SDC-MCP Gateway"
+type: software
+authors:
+  - family-names: Fischer
+    given-names: Stefan
+version: "0.10.3"
+date-released: "2026-05-22"
+license: MIT
+repository-code: "https://github.com/fischesn/sdc-mcp-gateway"
+abstract: "Research prototype for exposing IEEE 11073 SDC-like medical-device state through MCP resources and dry-run MCP tools."
