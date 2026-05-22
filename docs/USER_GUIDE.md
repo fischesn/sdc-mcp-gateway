@@ -2,7 +2,7 @@
 
 This guide summarizes the command-line workflows of the SDC-to-MCP Gateway research prototype. The prototype exposes simulated or real IEEE 11073 SDC state as MCP resources, evaluates agent-facing tasks, and supports dry-run MCP tools for policy-checked action proposals.
 
-The current evaluated version is **v0.10.2**.
+The current evaluated version is **v0.10.3**.
 
 ## 1. Installation and shell setup
 
