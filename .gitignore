@@ -1,20 +1,41 @@
+# Python virtual environments
 .venv/
+venv/
+env/
+
+# Local configuration and secrets
+.env
+.env.*
+secrets/
+config/gateway.local.yaml
+config/*.local.yaml
+
+# Runtime and experiment outputs
+data/agent_eval/*
+!data/agent_eval/.gitkeep
+
+data/experiment_runs/*
+!data/experiment_runs/.gitkeep
+
+data/logs/*
+!data/logs/.gitkeep
+
+# Python artifacts
 __pycache__/
-*.pyc
+*.py[cod]
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-dist/
+.coverage
+htmlcov/
+
+# Build artifacts
 build/
+dist/
 *.egg-info/
 
-# Runtime output; keep directory placeholders, not generated logs/results.
-data/logs/*.jsonl
-data/experiment_runs/*
-!data/experiment_runs/.gitkeep
-!data/logs/.gitkeep
-
-# Local lab-specific configuration. This may contain VPN interface IPs,
-# device/provider identifiers, or institution-specific testbed details.
-# Commit the templates in config/, but never this local instance.
-config/gateway.local.yaml
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
