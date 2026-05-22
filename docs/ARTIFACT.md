@@ -36,3 +36,4 @@ sdc-mcp-gateway mcp-client-smoke-test --config config/gateway.simulated.example.
 sdc-mcp-gateway benchmark --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml --iterations 200 --warmup 20 --output-dir data/experiment_runs --label baseline-v1
 
 sdc-mcp-gateway tool-smoke-test --config config/gateway.simulated.dryrun.example.yaml
+´´´
