@@ -364,3 +364,34 @@ sdc-mcp-gateway summarize-agent-evaluations --input-dir data/agent_eval --label 
 ```
 
 The command writes an `.aggregate.json` and `.aggregate.csv` file with task-pass counts, wrong URI counts, false alarm counts, unsafe-summary counts, and read-only safety-boundary status.
+
+## v0.10 dry-run MCP tools
+
+v0.10 adds policy-checked MCP tools for action proposals. These tools are **dry-run only**: they validate arguments and policies, write audit records, and return structured results, but they never execute SDC operations.
+
+Example:
+
+```powershell
+sdc-mcp-gateway tool-smoke-test --config config/gateway.simulated.dryrun.example.yaml
+
+sdc-mcp-gateway call-tool prepare_set_fio2 `
+  --args-file config/tool_args/set_fio2_45.json `
+  --config config/gateway.simulated.dryrun.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tool-policy config/tool_policies.yaml
+```
+
+`--args-json` is still supported, but `--args-file` is recommended on Windows/PowerShell because it avoids command-line JSON quoting issues.
+
+The expected safety state is:
+
+```json
+{
+  "tool_mode": "dry-run",
+  "tools_exported": true,
+  "write_operations_allowed": false,
+  "executed": false
+}
+```
+
+See `docs/dry-run-tools.md`, `docs/v0.10-spec.md`, and `docs/v0.10.1-spec.md`.

@@ -11,9 +11,7 @@ build/
 # Runtime output; keep directory placeholders, not generated logs/results.
 data/logs/*.jsonl
 data/experiment_runs/*
-data/agent_eval/*
 !data/experiment_runs/.gitkeep
-!data/agent_eval/.gitkeep
 !data/logs/.gitkeep
 
 # Local lab-specific configuration. This may contain VPN interface IPs,

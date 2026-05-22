@@ -1,0 +1,4 @@
+{
+  "device_id": "sim-ventilator-1",
+  "alarm_handle": "alarm.airway_pressure.high"
+}

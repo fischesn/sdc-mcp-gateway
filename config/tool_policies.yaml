@@ -1,0 +1,60 @@
+version: "0.10-example"
+description: "Dry-run MCP tool policies. These tools validate action proposals but never execute SDC operations."
+
+tools:
+  - name: "prepare_set_fio2"
+    operation: "set_fio2"
+    description: "Validate a dry-run proposal to set the ventilator FiO2 value. No device operation is executed."
+    dry_run_only: true
+    target_device_type: "ventilator"
+    semantic_name: "fio2"
+    min_value: 21
+    max_value: 100
+    unit: "%"
+    requires_human_approval: true
+    parameters:
+      - name: "device_id"
+        type: "string"
+        required: true
+        description: "Target ventilator device identifier."
+      - name: "value"
+        type: "number"
+        required: true
+        description: "Proposed FiO2 value in percent."
+
+  - name: "prepare_set_peep"
+    operation: "set_peep"
+    description: "Validate a dry-run proposal to set the ventilator PEEP value. No device operation is executed."
+    dry_run_only: true
+    target_device_type: "ventilator"
+    semantic_name: "peep"
+    min_value: 0
+    max_value: 25
+    unit: "cmH2O"
+    requires_human_approval: true
+    parameters:
+      - name: "device_id"
+        type: "string"
+        required: true
+        description: "Target ventilator device identifier."
+      - name: "value"
+        type: "number"
+        required: true
+        description: "Proposed PEEP value in cmH2O."
+
+  - name: "prepare_acknowledge_alarm"
+    operation: "acknowledge_alarm"
+    description: "Validate a dry-run proposal to acknowledge an active alarm. No alarm acknowledgement is sent to the device."
+    dry_run_only: true
+    target_device_type: null
+    semantic_name: null
+    requires_human_approval: true
+    parameters:
+      - name: "device_id"
+        type: "string"
+        required: true
+        description: "Target device identifier."
+      - name: "alarm_handle"
+        type: "string"
+        required: true
+        description: "Alarm handle to acknowledge in dry-run mode."

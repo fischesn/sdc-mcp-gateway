@@ -27,11 +27,19 @@ class ResourceRegistry:
         devices: list[DeviceSnapshot],
         mapping: MappingDocument,
         recorder: JsonlRecorder | None = None,
+        tools_exported: bool = False,
+        tool_mode: str | None = None,
+        write_operations_allowed: bool = False,
+        gateway_mode: str = "read-only",
     ) -> None:
         self.devices = {device.device_id: device for device in devices}
         self.mapping = mapping
         self.mapper = SdcMieMapper(mapping)
         self.recorder = recorder
+        self.tools_exported = tools_exported
+        self.tool_mode = tool_mode
+        self.write_operations_allowed = write_operations_allowed
+        self.gateway_mode = gateway_mode
 
     def list_resource_uris(self) -> list[str]:
         return [descriptor.uri for descriptor in self.list_resource_descriptors()]
@@ -105,12 +113,13 @@ class ResourceRegistry:
                 uri,
                 {
                     "status": "ok",
-                    "mode": "read-only",
+                    "mode": self.gateway_mode,
                     "device_count": len(self.devices),
                     "mapping_version": self.mapping.version,
                     "resource_count": len(self.list_resource_descriptors()),
-                    "tools_exported": False,
-                    "write_operations_allowed": False,
+                    "tools_exported": self.tools_exported,
+                    "tool_mode": self.tool_mode,
+                    "write_operations_allowed": self.write_operations_allowed,
                 },
             )
         if uri == "sdc://resources":

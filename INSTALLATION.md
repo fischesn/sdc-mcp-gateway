@@ -555,3 +555,31 @@ sdc-mcp-gateway summarize-agent-evaluations --input-dir data/agent_eval --label 
 ```
 
 The command writes an `.aggregate.json` and `.aggregate.csv` file with task-pass counts, wrong URI counts, false alarm counts, unsafe-summary counts, and read-only safety-boundary status.
+
+## Testing v0.10 dry-run tools
+
+After installing the package, run:
+
+```powershell
+pytest -q
+sdc-mcp-gateway list-tools --config config/gateway.simulated.dryrun.example.yaml
+sdc-mcp-gateway tool-smoke-test --config config/gateway.simulated.dryrun.example.yaml
+```
+
+A valid dry-run proposal:
+
+```powershell
+sdc-mcp-gateway call-tool prepare_set_fio2 `
+  --args-file config/tool_args/set_fio2_45.json `
+  --config config/gateway.simulated.dryrun.example.yaml
+```
+
+An intentionally invalid proposal:
+
+```powershell
+sdc-mcp-gateway call-tool prepare_set_fio2 `
+  --args-file config/tool_args/set_fio2_150_invalid.json `
+  --config config/gateway.simulated.dryrun.example.yaml
+```
+
+Both commands should return `executed: false`; the second one should be rejected by policy validation. `--args-json` is still supported, but `--args-file` is recommended on Windows/PowerShell.

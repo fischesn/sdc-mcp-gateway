@@ -1,0 +1,20 @@
+gateway:
+  name: "sdc-to-mcp-gateway-dry-run"
+  mode: "dry-run-tools"
+  log_file: "data/logs/gateway-simulated-dryrun.jsonl"
+  expose_raw_mdib: true
+  allow_tools: true
+  allow_write_operations: false
+
+sdc:
+  adapter: "simulated"
+  simulation_config: "config/sim.combined.yaml"
+  simulation_elapsed_s: 100.0
+  discovery_timeout_s: 1
+  provider_whitelist: []
+  local_ip: "127.0.0.1"
+  max_devices: null
+
+mcp:
+  server_name: "sdc-mcp-gateway"
+  transport: "stdio"

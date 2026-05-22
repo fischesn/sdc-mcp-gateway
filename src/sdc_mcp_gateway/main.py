@@ -19,6 +19,7 @@ from sdc_mcp_gateway.mcp.client_smoke import (
 )
 from sdc_mcp_gateway.mcp.resources import ResourceRegistry
 from sdc_mcp_gateway.mcp.server import MissingMcpDependency, create_mcp_server
+from sdc_mcp_gateway.tools.dry_run import DryRunToolRegistry, load_tool_policies
 from sdc_mcp_gateway.sdc.consumer import (
     DummySdcConsumer,
     MissingSdc11073Dependency,
@@ -62,7 +63,29 @@ def _make_registry(config_path: Path, mie_path: Path) -> ResourceRegistry:
     recorder = _make_recorder(config)
     consumer = _make_consumer(config, recorder=recorder)
     devices = consumer.get_snapshots()
-    return ResourceRegistry(devices=devices, mapping=mapping, recorder=recorder)
+    return ResourceRegistry(
+        devices=devices,
+        mapping=mapping,
+        recorder=recorder,
+        tools_exported=config.gateway.allow_tools,
+        tool_mode="dry-run" if config.gateway.allow_tools else None,
+        write_operations_allowed=config.gateway.allow_write_operations,
+        gateway_mode=config.gateway.mode,
+    )
+
+
+def _make_tool_registry(config_path: Path, mie_path: Path, tool_policy: Path) -> DryRunToolRegistry:
+    config = GatewayConfig.from_file(config_path)
+    recorder = _make_recorder(config)
+    registry = _make_registry(config_path, mie_path)
+    policies = load_tool_policies(tool_policy)
+    return DryRunToolRegistry(
+        resource_registry=registry,
+        policies=policies,
+        recorder=recorder,
+        tools_enabled=config.gateway.allow_tools,
+        write_operations_allowed=config.gateway.allow_write_operations,
+    )
 
 
 @app.command()
@@ -309,6 +332,120 @@ def mcp_client_smoke_test(
         raise typer.Exit(code=1)
 
 
+@app.command("list-tools")
+def list_tools(
+    config: Path = typer.Option(Path("config/gateway.simulated.dryrun.example.yaml"), help="Gateway YAML configuration."),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    tool_policy: Path = typer.Option(Path("config/tool_policies.yaml"), help="Dry-run tool policy YAML file."),
+) -> None:
+    """List policy-checked dry-run MCP tools for the configured gateway."""
+
+    tool_registry = _make_tool_registry(config, mie, tool_policy)
+    descriptors = [descriptor.model_dump() for descriptor in tool_registry.list_tool_descriptors()]
+    gateway_config = GatewayConfig.from_file(config)
+    typer.echo(
+        json.dumps(
+            {
+                "tools": descriptors,
+                "tool_count": len(descriptors),
+                "tool_mode": "dry-run" if gateway_config.gateway.allow_tools else None,
+                "tools_enabled": gateway_config.gateway.allow_tools,
+                "write_operations_allowed": gateway_config.gateway.allow_write_operations,
+            },
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@app.command("call-tool")
+def call_tool(
+    tool_name: str = typer.Argument(..., help="Dry-run tool name, e.g., prepare_set_fio2."),
+    args_json: str | None = typer.Option(None, "--args-json", help="Tool arguments as JSON object."),
+    args_file: Path | None = typer.Option(None, "--args-file", help="Path to a JSON file containing tool arguments."),
+    config: Path = typer.Option(Path("config/gateway.simulated.dryrun.example.yaml"), help="Gateway YAML configuration."),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    tool_policy: Path = typer.Option(Path("config/tool_policies.yaml"), help="Dry-run tool policy YAML file."),
+) -> None:
+    """Call one dry-run MCP tool without executing any SDC operation.
+
+    Prefer --args-file on Windows/PowerShell to avoid JSON quoting issues.
+    If neither --args-json nor --args-file is provided, an empty JSON object is used.
+    """
+
+    if args_json is not None and args_file is not None:
+        raise typer.BadParameter("Use either --args-json or --args-file, not both")
+
+    if args_file is not None:
+        try:
+            raw_args = args_file.read_text(encoding="utf-8")
+        except OSError as exc:
+            raise typer.BadParameter(f"--args-file could not be read: {exc}") from exc
+        source_label = f"--args-file {args_file}"
+    else:
+        raw_args = args_json if args_json is not None else "{}"
+        source_label = "--args-json"
+
+    try:
+        arguments = json.loads(raw_args)
+    except json.JSONDecodeError as exc:
+        raise typer.BadParameter(f"{source_label} must contain valid JSON: {exc}") from exc
+    if not isinstance(arguments, dict):
+        raise typer.BadParameter(f"{source_label} must decode to a JSON object")
+    tool_registry = _make_tool_registry(config, mie, tool_policy)
+    result = tool_registry.call_tool(tool_name, arguments)
+    typer.echo(json.dumps(result.model_dump(), ensure_ascii=False, indent=2, sort_keys=True))
+    if result.status == "rejected":
+        # Rejection is a valid policy outcome, not a CLI failure.
+        return
+
+
+@app.command("tool-smoke-test")
+def tool_smoke_test(
+    config: Path = typer.Option(Path("config/gateway.simulated.dryrun.example.yaml"), help="Gateway YAML configuration."),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    tool_policy: Path = typer.Option(Path("config/tool_policies.yaml"), help="Dry-run tool policy YAML file."),
+) -> None:
+    """Run a deterministic dry-run tool validation smoke test."""
+
+    tool_registry = _make_tool_registry(config, mie, tool_policy)
+    checks: list[dict[str, object]] = []
+
+    def check(name: str, ok: bool, details: dict[str, object] | None = None) -> None:
+        checks.append({"name": name, "ok": ok, "details": details or {}})
+
+    descriptors = tool_registry.list_tool_descriptors()
+    tool_names = {descriptor.name for descriptor in descriptors}
+    check("tools_listed", {"prepare_set_fio2", "prepare_set_peep", "prepare_acknowledge_alarm"}.issubset(tool_names), {"tool_names": sorted(tool_names)})
+
+    accepted = tool_registry.call_tool("prepare_set_fio2", {"device_id": "sim-ventilator-1", "value": 45.0})
+    check(
+        "valid_fio2_accepted_dry_run",
+        accepted.status == "accepted_dry_run" and accepted.executed is False and accepted.requires_human_approval is True,
+        accepted.model_dump(),
+    )
+
+    rejected_range = tool_registry.call_tool("prepare_set_fio2", {"device_id": "sim-ventilator-1", "value": 150.0})
+    check("out_of_range_fio2_rejected", rejected_range.status == "rejected" and rejected_range.reason == "value_out_of_range", rejected_range.model_dump())
+
+    rejected_device = tool_registry.call_tool("prepare_set_peep", {"device_id": "sim-monitor-1", "value": 8.0})
+    check("wrong_device_type_rejected", rejected_device.status == "rejected" and rejected_device.reason == "wrong_device_type", rejected_device.model_dump())
+
+    health = tool_registry.resource_registry.read("sdc://health").model_dump()["data"]
+    check(
+        "dry_run_safety_boundary",
+        health.get("tools_exported") is True and health.get("tool_mode") == "dry-run" and health.get("write_operations_allowed") is False,
+        health,
+    )
+
+    status = "ok" if all(item["ok"] for item in checks) else "failed"
+    report = {"status": status, "checks": checks, "tool_count": len(descriptors)}
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if status != "ok":
+        raise typer.Exit(code=1)
+
+
 @app.command("benchmark")
 def benchmark(
     config: Path = typer.Option(Path("config/gateway.simulated.example.yaml"), help="Gateway YAML configuration."),
@@ -487,6 +624,7 @@ def summarize_benchmark_results(
 def serve(
     config: Path = typer.Option(Path("config/gateway.yaml"), help="Gateway YAML configuration."),
     mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    tool_policy: Path = typer.Option(Path("config/tool_policies.yaml"), help="Dry-run tool policy YAML file."),
 ) -> None:
     """Run the MCP server with the configured SDC adapter."""
 
@@ -496,7 +634,10 @@ def serve(
     except MissingSdc11073Dependency as exc:
         raise typer.Exit(str(exc)) from exc
     try:
-        mcp = create_mcp_server(registry, server_name=gateway_config.mcp.server_name)
+        tool_registry = None
+        if gateway_config.gateway.allow_tools:
+            tool_registry = _make_tool_registry(config, mie, tool_policy)
+        mcp = create_mcp_server(registry, server_name=gateway_config.mcp.server_name, tool_registry=tool_registry)
     except MissingMcpDependency as exc:
         raise typer.Exit(str(exc)) from exc
     mcp.run()

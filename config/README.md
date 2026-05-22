@@ -77,3 +77,27 @@ The outputs are written as JSON, CSV, and Markdown files under `data/agent_eval/
 LLM agent evaluation is configured primarily through CLI options. No API keys should be written into YAML files. Use environment variables for external services.
 
 Supported agent values: `oracle`, `llm-mock`, `llm-ollama`, and `llm-openai-compatible`.
+
+## Dry-run tool configuration
+
+v0.10 adds:
+
+```text
+config/gateway.simulated.dryrun.example.yaml
+config/tool_policies.yaml
+```
+
+The dry-run gateway configuration enables MCP tools while keeping device writes disabled. The policy file defines the allowed dry-run proposals, value ranges, target device types, and human-approval requirements.
+
+Do not put real credentials, real device endpoints, or local lab secrets into these files. Use local ignored configuration files for testbed-specific settings.
+
+## Tool argument examples
+
+`config/tool_args/` contains JSON files used with the dry-run `call-tool --args-file` command. This is the recommended way to pass tool arguments on Windows/PowerShell and for reproducible experiments.
+
+Examples:
+
+```powershell
+sdc-mcp-gateway call-tool prepare_set_fio2 --args-file config\tool_args\set_fio2_45.json --config config\gateway.simulated.dryrun.example.yaml
+sdc-mcp-gateway call-tool prepare_set_fio2 --args-file config\tool_args\set_fio2_150_invalid.json --config config\gateway.simulated.dryrun.example.yaml
+```

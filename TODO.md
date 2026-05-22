@@ -142,3 +142,9 @@ sdc-mcp-gateway summarize-agent-evaluations --input-dir data/agent_eval --label 
 ```
 
 The command writes an `.aggregate.json` and `.aggregate.csv` file with task-pass counts, wrong URI counts, false alarm counts, unsafe-summary counts, and read-only safety-boundary status.
+
+## After v0.10
+
+- Evaluate dry-run tools with deterministic and LLM-backed agents.
+- Add paper use cases for resource-only situational awareness and dry-run action proposal validation.
+- Do not implement real SDC write operations before a controlled testbed, policy model, audit requirements, and human-in-the-loop approval workflow are defined.

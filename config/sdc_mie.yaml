@@ -1,4 +1,4 @@
-version: "0.9-example"
+version: "0.10-example"
 description: "Example SDC-MIE mapping for the read-only prototype and simulated SDC-like scenarios. Replace codes with real SDC nomenclature handles from the testbed."
 
 mappings:
