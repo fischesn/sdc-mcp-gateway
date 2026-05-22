@@ -2,7 +2,7 @@
 
 This guide summarizes the command-line workflows of the SDC-to-MCP Gateway research prototype. The prototype exposes simulated or real IEEE 11073 SDC state as MCP resources, evaluates agent-facing tasks, and supports dry-run MCP tools for policy-checked action proposals.
 
-The current evaluated version is **v0.10.5**.
+The current evaluated version is **v0.10.6**.
 
 ## 1. Installation and shell setup
 
@@ -282,3 +282,29 @@ Even when MCP tools are enabled in v0.10+, the prototype only validates proposal
 3. Run rejected dry-run calls, e.g. FiO2 150.
 4. Confirm `executed=false` in all tool results.
 5. Inspect audit logs in `data/logs/`.
+
+## Systematic dry-run tool evaluation
+
+Version v0.10.6 adds a paper-oriented dry-run tool evaluation command. It runs a small set of accepted and rejected tool cases and writes JSON, CSV, and Markdown output.
+
+```powershell
+sdc-mcp-gateway evaluate-dry-run-tools `
+  --config config/gateway.simulated.dryrun.example.yaml `
+  --ack-config config/gateway.simulated.dryrun.high-airway-pressure.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tool-policy config/tool_policies.yaml `
+  --output-dir data/tool_eval `
+  --label dryrun-tools-v0106
+```
+
+The default case set checks:
+
+- valid FiO2 proposal accepted as `accepted_dry_run`;
+- out-of-range FiO2 rejected;
+- valid PEEP proposal accepted as `accepted_dry_run`;
+- out-of-range PEEP rejected;
+- wrong-device-type PEEP proposal rejected;
+- acknowledgement of an active airway-pressure alarm accepted as dry-run;
+- acknowledgement of a non-active airway-pressure alarm rejected.
+
+All cases must report `executed=false` and `write_operations_allowed=false`.

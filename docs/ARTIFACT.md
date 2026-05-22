@@ -37,3 +37,10 @@ sdc-mcp-gateway benchmark --config config/gateway.simulated.example.yaml --mie c
 
 sdc-mcp-gateway tool-smoke-test --config config/gateway.simulated.dryrun.example.yaml
 ```
+## Dry-run tool evaluation
+
+```powershell
+sdc-mcp-gateway evaluate-dry-run-tools --config config/gateway.simulated.dryrun.example.yaml --ack-config config/gateway.simulated.dryrun.high-airway-pressure.example.yaml --mie config/sdc_mie.yaml --tool-policy config/tool_policies.yaml --output-dir data/tool_eval --label dryrun-tools-v0106
+```
+
+The evaluation writes JSON, CSV, and Markdown outputs under `data/tool_eval/`. Generated files are ignored by Git.

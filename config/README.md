@@ -101,3 +101,13 @@ Examples:
 sdc-mcp-gateway call-tool prepare_set_fio2 --args-file config\tool_args\set_fio2_45.json --config config\gateway.simulated.dryrun.example.yaml
 sdc-mcp-gateway call-tool prepare_set_fio2 --args-file config\tool_args\set_fio2_150_invalid.json --config config\gateway.simulated.dryrun.example.yaml
 ```
+
+## Dry-run tool evaluation configuration
+
+v0.10.6 adds:
+
+```text
+gateway.simulated.dryrun.high-airway-pressure.example.yaml
+```
+
+This configuration enables dry-run tools for the high-airway-pressure scenario and is used by `evaluate-dry-run-tools` to validate acknowledgement of an active airway-pressure alarm.

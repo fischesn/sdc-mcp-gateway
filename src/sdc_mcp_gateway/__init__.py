@@ -1,3 +1,3 @@
 """SDC-to-MCP Gateway research prototype."""
 
-__version__ = "0.10.2"
+__version__ = "0.10.6"

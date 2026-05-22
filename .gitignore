@@ -17,6 +17,9 @@ data/agent_eval/*
 data/experiment_runs/*
 !data/experiment_runs/.gitkeep
 
+data/tool_eval/*
+!data/tool_eval/.gitkeep
+
 data/logs/*
 !data/logs/.gitkeep
 

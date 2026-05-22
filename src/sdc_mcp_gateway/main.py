@@ -20,6 +20,7 @@ from sdc_mcp_gateway.mcp.client_smoke import (
 from sdc_mcp_gateway.mcp.resources import ResourceRegistry
 from sdc_mcp_gateway.mcp.server import MissingMcpDependency, create_mcp_server
 from sdc_mcp_gateway.tools.dry_run import DryRunToolRegistry, load_tool_policies
+from sdc_mcp_gateway.tools.evaluate import DryRunToolEvaluationConfig, run_dry_run_tool_evaluation
 from sdc_mcp_gateway.sdc.consumer import (
     DummySdcConsumer,
     MissingSdc11073Dependency,
@@ -443,6 +444,53 @@ def tool_smoke_test(
     report = {"status": status, "checks": checks, "tool_count": len(descriptors)}
     typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
     if status != "ok":
+        raise typer.Exit(code=1)
+
+
+@app.command("evaluate-dry-run-tools")
+def evaluate_dry_run_tools(
+    config: Path = typer.Option(Path("config/gateway.simulated.dryrun.example.yaml"), help="Gateway YAML configuration for baseline dry-run tool cases."),
+    ack_config: Path = typer.Option(Path("config/gateway.simulated.dryrun.high-airway-pressure.example.yaml"), help="Gateway YAML configuration used for active-alarm acknowledgement cases."),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    tool_policy: Path = typer.Option(Path("config/tool_policies.yaml"), help="Dry-run tool policy YAML file."),
+    output_dir: Path = typer.Option(Path("data/tool_eval"), help="Directory for JSON, CSV, and Markdown evaluation outputs."),
+    label: str = typer.Option("dryrun-tool-eval", help="Prefix for generated evaluation files."),
+) -> None:
+    """Run a systematic dry-run MCP tool evaluation.
+
+    The evaluation checks accepted and rejected tool proposals and verifies that
+    no case executes an SDC operation. It produces JSON, CSV, and Markdown files
+    that can be used for paper tables or artifact documentation.
+    """
+
+    try:
+        primary_registry = _make_tool_registry(config, mie, tool_policy)
+        active_alarm_registry = _make_tool_registry(ack_config, mie, tool_policy)
+        report = run_dry_run_tool_evaluation(
+            DryRunToolEvaluationConfig(
+                config_path=config,
+                ack_config_path=ack_config,
+                mie_path=mie,
+                tool_policy_path=tool_policy,
+                output_dir=output_dir,
+                run_label=label,
+            ),
+            primary_registry=primary_registry,
+            ack_registry=active_alarm_registry,
+        )
+    except Exception as exc:  # pragma: no cover - defensive user-facing command
+        typer.echo(
+            json.dumps(
+                {"status": "failed", "error": str(exc), "config": str(config), "ack_config": str(ack_config)},
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if report.get("status") != "ok":
         raise typer.Exit(code=1)
 
 

@@ -320,6 +320,21 @@ sdc-mcp-gateway call-tool prepare_set_fio2 `
 The valid call should return `accepted_dry_run` with `executed=false`. The invalid call
 should be rejected, for example with `reason=value_out_of_range`.
 
+Run the systematic dry-run tool evaluation:
+
+```powershell
+sdc-mcp-gateway evaluate-dry-run-tools `
+  --config config/gateway.simulated.dryrun.example.yaml `
+  --ack-config config/gateway.simulated.dryrun.high-airway-pressure.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tool-policy config/tool_policies.yaml `
+  --output-dir data/tool_eval `
+  --label dryrun-tools-v0106
+```
+
+This evaluates accepted and rejected dry-run tool proposals and verifies that all
+results preserve `executed=false` and `write_operations_allowed=false`.
+
 Available dry-run tools:
 
 ```text
