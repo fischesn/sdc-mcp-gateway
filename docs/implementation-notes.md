@@ -19,3 +19,8 @@ Python is used for the research prototype because it gives fast iteration, trans
 - Tool generation is not implemented yet.
 - Policy evaluation is a read-only deny-all placeholder.
 - No authentication or authorization is implemented in v0.1.
+
+
+## Real SDC validation note
+
+For practical first-test instructions, see [REAL_SDC_TESTING.md](REAL_SDC_TESTING.md).

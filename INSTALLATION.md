@@ -477,6 +477,20 @@ sdc-mcp-gateway evaluate-dry-run-tools `
 The command writes JSON, CSV, and Markdown outputs under `data/tool_eval/`.
 These files are ignored by Git.
 
+
+## Example MCP clients
+
+After installing MCP support, run the example clients from the repository root:
+
+```powershell
+python examples\mcp_client_read_resources.py
+python examples\mcp_client_call_dryrun_tool.py
+python examples\agent_mcp_client_demo.py --question "Is there an active alarm?"
+```
+
+The examples start `sdc-mcp-gateway serve` as a stdio MCP subprocess. They do not require
+a network server. See `docs/MCP_CLIENT_EXAMPLES.md` for details.
+
 ## MCP server mode
 
 Read-only resource server:
@@ -499,6 +513,11 @@ If the server starts and prints no further output, that can be normal for a stdi
 MCP server. It is waiting for an MCP client.
 
 ## Real SDC network configuration
+
+For detailed first-test instructions in a real SDC/VPN/lab network, see
+[docs/REAL_SDC_TESTING.md](docs/REAL_SDC_TESTING.md). Use the read-only local
+configuration first and verify discovery, snapshot extraction, and resource reads before
+starting the MCP server.
 
 Create a local file such as:
 

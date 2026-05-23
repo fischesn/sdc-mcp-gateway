@@ -355,6 +355,21 @@ Example tool arguments are stored under:
 config/tool_args/
 ```
 
+
+## Example MCP clients
+
+The repository includes small Python examples that show how custom clients and agent
+programs can use the gateway through the MCP Python SDK over stdio:
+
+```powershell
+python examples\mcp_client_read_resources.py
+python examples\mcp_client_call_dryrun_tool.py
+python examples\agent_mcp_client_demo.py --question "Is there an active alarm?"
+```
+
+See [docs/MCP_CLIENT_EXAMPLES.md](docs/MCP_CLIENT_EXAMPLES.md). Network MCP server
+transport is intentionally out of scope for v0.10.x and planned for a future v2 line.
+
 ## MCP server mode
 
 Start the MCP server:
@@ -377,6 +392,10 @@ sdc-mcp-gateway serve `
 ```
 
 ## Real SDC networks
+
+For a step-by-step first validation in a real SDC/VPN/lab network, see
+[docs/REAL_SDC_TESTING.md](docs/REAL_SDC_TESTING.md). The current MCP server mode is
+stdio-based; network-facing MCP transport is planned for a later major version.
 
 A real SDC network can be configured through a local, untracked configuration file such as:
 

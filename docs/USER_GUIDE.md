@@ -2,7 +2,7 @@
 
 This guide summarizes the command-line workflows of the SDC-to-MCP Gateway research prototype. The prototype exposes simulated or real IEEE 11073 SDC state as MCP resources, evaluates agent-facing tasks, and supports dry-run MCP tools for policy-checked action proposals.
 
-The current evaluated version is **v0.10.6**.
+The current evaluated version is **v0.10.7**.
 
 ## 1. Installation and shell setup
 
@@ -266,6 +266,18 @@ The prototype distinguishes two safety modes:
 
 Even when MCP tools are enabled in v0.10+, the prototype only validates proposals and writes audit records. It does not execute SDC SetService or ActivateOperation calls.
 
+## MCP client examples
+
+Version v0.10.7 adds example Python MCP clients under `examples/`. They demonstrate how custom Python programs can start the gateway as a stdio MCP subprocess, list and read resources, call dry-run tools, and implement a small deterministic agent-style workflow.
+
+```powershell
+python examples\mcp_client_read_resources.py
+python examples\mcp_client_call_dryrun_tool.py
+python examples\agent_mcp_client_demo.py --question "Is there an active alarm?"
+```
+
+See `docs/MCP_CLIENT_EXAMPLES.md`. Network MCP server transport remains out of scope for v0.10.x and is planned for a future v2 line.
+
 ## 10. Recommended paper workflows
 
 ### Read-only agent evaluation
@@ -275,7 +287,13 @@ Even when MCP tools are enabled in v0.10+, the prototype only validates proposal
 3. Run `summarize-agent-evaluations`.
 4. Report pass rate, wrong URI count, unsafe term count, and safety-boundary status.
 
-### Dry-run tool evaluation
+### Real SDC network testing
+
+For step-by-step real SDC/VPN/lab-network validation, see
+[REAL_SDC_TESTING.md](REAL_SDC_TESTING.md). Start with discovery and read-only resource
+validation before running the MCP server.
+
+## Dry-run tool evaluation
 
 1. Run `list-tools`.
 2. Run accepted dry-run calls, e.g. FiO2 45.
@@ -285,7 +303,7 @@ Even when MCP tools are enabled in v0.10+, the prototype only validates proposal
 
 ## Systematic dry-run tool evaluation
 
-Version v0.10.6 adds a paper-oriented dry-run tool evaluation command. It runs a small set of accepted and rejected tool cases and writes JSON, CSV, and Markdown output.
+Version v0.10.6 added a paper-oriented dry-run tool evaluation command. It runs a small set of accepted and rejected tool cases and writes JSON, CSV, and Markdown output.
 
 ```powershell
 sdc-mcp-gateway evaluate-dry-run-tools `
@@ -294,7 +312,7 @@ sdc-mcp-gateway evaluate-dry-run-tools `
   --mie config/sdc_mie.yaml `
   --tool-policy config/tool_policies.yaml `
   --output-dir data/tool_eval `
-  --label dryrun-tools-v0106
+  --label dryrun-tools-v0107
 ```
 
 The default case set checks:

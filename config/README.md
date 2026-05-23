@@ -111,3 +111,8 @@ gateway.simulated.dryrun.high-airway-pressure.example.yaml
 ```
 
 This configuration enables dry-run tools for the high-airway-pressure scenario and is used by `evaluate-dry-run-tools` to validate acknowledgement of an active airway-pressure alarm.
+
+
+## Real SDC local configuration
+
+For first tests in a real SDC/VPN/lab network, copy `gateway.sdc11073.example.yaml` to `gateway.local.yaml`, set `sdc.local_ip` to your own interface address on the SDC network, and follow `docs/REAL_SDC_TESTING.md`. Do not commit `gateway.local.yaml`.

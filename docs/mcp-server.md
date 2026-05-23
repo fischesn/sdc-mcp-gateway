@@ -1,5 +1,8 @@
 # Using the MCP Resource Server
 
+The current server transport is stdio-based. It is intended to be started by a local MCP client. Network-facing MCP transport is planned for a later major version.
+
+
 The gateway can now be used in two modes:
 
 1. **CLI inspection mode**, which prints JSON to the terminal.
@@ -84,3 +87,8 @@ If the MCP SDK is not installed, the command still succeeds by default but repor
 ```bash
 sdc-mcp-gateway mcp-smoke-test --config config/gateway.simulated.example.yaml --mie config/sdc_mie.yaml --require-mcp-sdk
 ```
+
+
+## Real SDC network testing
+
+For first validation against a real SDC/VPN/lab network, see [REAL_SDC_TESTING.md](REAL_SDC_TESTING.md).
