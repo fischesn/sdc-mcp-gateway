@@ -1,0 +1,310 @@
+{
+  "accepted_dry_run_count": 3,
+  "ack_config": "config\\gateway.simulated.dryrun.high-airway-pressure.example.yaml",
+  "case_count": 7,
+  "cases": [
+    {
+      "arguments": {
+        "device_id": "sim-ventilator-1",
+        "value": 45.0
+      },
+      "case_id": "valid_fio2_45",
+      "description": "Accept an in-range FiO2 proposal as dry-run only.",
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "policy_validated_no_execution",
+      "expected_status": "accepted_dry_run",
+      "observed_reason": "policy_validated_no_execution",
+      "observed_status": "accepted_dry_run",
+      "passed": true,
+      "policy_version": "0.10-example",
+      "requires_human_approval": true,
+      "result": {
+        "allowed_range": [
+          21.0,
+          100.0
+        ],
+        "details": {
+          "device_type": "ventilator",
+          "semantic_name": "fio2"
+        },
+        "device_id": "sim-ventilator-1",
+        "dry_run": true,
+        "executed": false,
+        "operation": "set_fio2",
+        "policy_version": "0.10-example",
+        "reason": "policy_validated_no_execution",
+        "requested_value": 45.0,
+        "requires_human_approval": true,
+        "status": "accepted_dry_run",
+        "timestamp": "2026-08-08T15:30:30.238389Z",
+        "tool": "prepare_set_fio2",
+        "unit": "%",
+        "write_operations_allowed": false
+      },
+      "tool_name": "prepare_set_fio2",
+      "write_operations_allowed": false
+    },
+    {
+      "arguments": {
+        "device_id": "sim-ventilator-1",
+        "value": 150.0
+      },
+      "case_id": "invalid_fio2_150",
+      "description": "Reject an out-of-range FiO2 proposal.",
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "value_out_of_range",
+      "expected_status": "rejected",
+      "observed_reason": "value_out_of_range",
+      "observed_status": "rejected",
+      "passed": true,
+      "policy_version": "0.10-example",
+      "requires_human_approval": true,
+      "result": {
+        "allowed_range": [
+          21.0,
+          100.0
+        ],
+        "details": {},
+        "device_id": "sim-ventilator-1",
+        "dry_run": true,
+        "executed": false,
+        "operation": "set_fio2",
+        "policy_version": "0.10-example",
+        "reason": "value_out_of_range",
+        "requested_value": 150.0,
+        "requires_human_approval": true,
+        "status": "rejected",
+        "timestamp": "2026-08-08T15:30:30.239154Z",
+        "tool": "prepare_set_fio2",
+        "unit": "%",
+        "write_operations_allowed": false
+      },
+      "tool_name": "prepare_set_fio2",
+      "write_operations_allowed": false
+    },
+    {
+      "arguments": {
+        "device_id": "sim-ventilator-1",
+        "value": 10.0
+      },
+      "case_id": "valid_peep_10",
+      "description": "Accept an in-range PEEP proposal as dry-run only.",
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "policy_validated_no_execution",
+      "expected_status": "accepted_dry_run",
+      "observed_reason": "policy_validated_no_execution",
+      "observed_status": "accepted_dry_run",
+      "passed": true,
+      "policy_version": "0.10-example",
+      "requires_human_approval": true,
+      "result": {
+        "allowed_range": [
+          0.0,
+          25.0
+        ],
+        "details": {
+          "device_type": "ventilator",
+          "semantic_name": "peep"
+        },
+        "device_id": "sim-ventilator-1",
+        "dry_run": true,
+        "executed": false,
+        "operation": "set_peep",
+        "policy_version": "0.10-example",
+        "reason": "policy_validated_no_execution",
+        "requested_value": 10.0,
+        "requires_human_approval": true,
+        "status": "accepted_dry_run",
+        "timestamp": "2026-08-08T15:30:30.239635Z",
+        "tool": "prepare_set_peep",
+        "unit": "cmH2O",
+        "write_operations_allowed": false
+      },
+      "tool_name": "prepare_set_peep",
+      "write_operations_allowed": false
+    },
+    {
+      "arguments": {
+        "device_id": "sim-ventilator-1",
+        "value": 50.0
+      },
+      "case_id": "invalid_peep_50",
+      "description": "Reject an out-of-range PEEP proposal.",
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "value_out_of_range",
+      "expected_status": "rejected",
+      "observed_reason": "value_out_of_range",
+      "observed_status": "rejected",
+      "passed": true,
+      "policy_version": "0.10-example",
+      "requires_human_approval": true,
+      "result": {
+        "allowed_range": [
+          0.0,
+          25.0
+        ],
+        "details": {},
+        "device_id": "sim-ventilator-1",
+        "dry_run": true,
+        "executed": false,
+        "operation": "set_peep",
+        "policy_version": "0.10-example",
+        "reason": "value_out_of_range",
+        "requested_value": 50.0,
+        "requires_human_approval": true,
+        "status": "rejected",
+        "timestamp": "2026-08-08T15:30:30.240407Z",
+        "tool": "prepare_set_peep",
+        "unit": "cmH2O",
+        "write_operations_allowed": false
+      },
+      "tool_name": "prepare_set_peep",
+      "write_operations_allowed": false
+    },
+    {
+      "arguments": {
+        "device_id": "sim-monitor-1",
+        "value": 8.0
+      },
+      "case_id": "wrong_device_type_peep_monitor",
+      "description": "Reject a ventilator setpoint proposal targeted at a patient monitor.",
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "wrong_device_type",
+      "expected_status": "rejected",
+      "observed_reason": "wrong_device_type",
+      "observed_status": "rejected",
+      "passed": true,
+      "policy_version": "0.10-example",
+      "requires_human_approval": true,
+      "result": {
+        "allowed_range": null,
+        "details": {
+          "actual_device_type": "patient_monitor",
+          "expected_device_type": "ventilator"
+        },
+        "device_id": "sim-monitor-1",
+        "dry_run": true,
+        "executed": false,
+        "operation": "set_peep",
+        "policy_version": "0.10-example",
+        "reason": "wrong_device_type",
+        "requested_value": null,
+        "requires_human_approval": true,
+        "status": "rejected",
+        "timestamp": "2026-08-08T15:30:30.240813Z",
+        "tool": "prepare_set_peep",
+        "unit": "cmH2O",
+        "write_operations_allowed": false
+      },
+      "tool_name": "prepare_set_peep",
+      "write_operations_allowed": false
+    },
+    {
+      "arguments": {
+        "alarm_handle": "alarm.airway_pressure.high",
+        "device_id": "sim-ventilator-1"
+      },
+      "case_id": "ack_active_airway_alarm",
+      "description": "Accept dry-run acknowledgement of an active airway-pressure alarm.",
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "policy_validated_no_execution",
+      "expected_status": "accepted_dry_run",
+      "observed_reason": "policy_validated_no_execution",
+      "observed_status": "accepted_dry_run",
+      "passed": true,
+      "policy_version": "0.10-example",
+      "requires_human_approval": true,
+      "result": {
+        "allowed_range": null,
+        "details": {
+          "alarm_handle": "alarm.airway_pressure.high"
+        },
+        "device_id": "sim-ventilator-1",
+        "dry_run": true,
+        "executed": false,
+        "operation": "acknowledge_alarm",
+        "policy_version": "0.10-example",
+        "reason": "policy_validated_no_execution",
+        "requested_value": null,
+        "requires_human_approval": true,
+        "status": "accepted_dry_run",
+        "timestamp": "2026-08-08T15:30:30.260840Z",
+        "tool": "prepare_acknowledge_alarm",
+        "unit": null,
+        "write_operations_allowed": false
+      },
+      "tool_name": "prepare_acknowledge_alarm",
+      "write_operations_allowed": false
+    },
+    {
+      "arguments": {
+        "alarm_handle": "alarm.airway_pressure.high",
+        "device_id": "sim-ventilator-1"
+      },
+      "case_id": "ack_missing_airway_alarm",
+      "description": "Reject acknowledgement of an alarm that is not active in the baseline dry-run scenario.",
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "alarm_not_active_or_unknown",
+      "expected_status": "rejected",
+      "observed_reason": "alarm_not_active_or_unknown",
+      "observed_status": "rejected",
+      "passed": true,
+      "policy_version": "0.10-example",
+      "requires_human_approval": true,
+      "result": {
+        "allowed_range": null,
+        "details": {
+          "active_alarm_handles": []
+        },
+        "device_id": "sim-ventilator-1",
+        "dry_run": true,
+        "executed": false,
+        "operation": "acknowledge_alarm",
+        "policy_version": "0.10-example",
+        "reason": "alarm_not_active_or_unknown",
+        "requested_value": null,
+        "requires_human_approval": true,
+        "status": "rejected",
+        "timestamp": "2026-08-08T15:30:30.261916Z",
+        "tool": "prepare_acknowledge_alarm",
+        "unit": null,
+        "write_operations_allowed": false
+      },
+      "tool_name": "prepare_acknowledge_alarm",
+      "write_operations_allowed": false
+    }
+  ],
+  "config": "config\\gateway.simulated.dryrun.example.yaml",
+  "executed_true_count": 0,
+  "failed_cases": 0,
+  "mapping_provenance": {
+    "basis": [
+      "IEEE 11073-10101 nomenclature codes represented in the evaluated profiles",
+      "Version-controlled simulator and software-provider MDIB profiles"
+    ],
+    "license": "MIT",
+    "scope": "Research-only semantic projection into read-only MCP resources; no standardization or device-control claim.",
+    "source": "Anonymous BHI revision artifact"
+  },
+  "mapping_schema_version": "1.0",
+  "mapping_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+  "mapping_version": "1.0.0",
+  "mie": "config\\sdc_mie.yaml",
+  "output_csv": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\tool-evaluations\\wp0-dry-run-tools-20260808T153030_238309Z.csv",
+  "output_json": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\tool-evaluations\\wp0-dry-run-tools-20260808T153030_238309Z.json",
+  "output_markdown": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\tool-evaluations\\wp0-dry-run-tools-20260808T153030_238309Z.md",
+  "passed_cases": 7,
+  "rejected_count": 4,
+  "run_id": "wp0-dry-run-tools-20260808T153030_238309Z",
+  "safety_boundary_ok": true,
+  "status": "ok",
+  "tool_policy": "config\\tool_policies.yaml",
+  "write_allowed_true_count": 0
+}

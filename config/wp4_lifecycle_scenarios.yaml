@@ -1,0 +1,231 @@
+version: "1.0"
+stale_after_s: 5.0
+
+# These deterministic, ordered events exercise gateway cache semantics only.
+# They do not emulate a production SDC subscription transport.
+cases:
+  - name: provider_disconnect_reconnect
+    description: "A disconnected provider fails closed and a newer valid update is marked recovered."
+    steps:
+      - {kind: update, at_s: 0, source_s: 0, mdib_version: 1, update_sequence: 1}
+      - {kind: disconnect, at_s: 2}
+      - {kind: proposal, at_s: 2, snapshot_version: current}
+      - {kind: update, at_s: 3, source_s: 3, mdib_version: 2, update_sequence: 2}
+      - {kind: proposal, at_s: 3, snapshot_version: current}
+    expected:
+      final_freshness: recovered
+      dispositions: [accepted_update, provider_disconnected, accepted_recovery]
+      proposal_reasons: [provider_unavailable, policy_validated_no_execution]
+      recovery_observed: true
+
+  - name: unavailable_provider
+    description: "An unavailable provider remains explicit and rejects a proposal."
+    steps:
+      - {kind: update, at_s: 0, source_s: 0, mdib_version: 1, update_sequence: 1}
+      - {kind: unavailable, at_s: 1}
+      - {kind: proposal, at_s: 1, snapshot_version: current}
+    expected:
+      final_freshness: unavailable
+      final_provider_status: unavailable
+      dispositions: [accepted_update, provider_unavailable]
+      proposal_reasons: [provider_unavailable]
+
+  - name: sensor_validity_fault
+    description: "A sensor validity fault is exposed as invalid and fails closed."
+    steps:
+      - {kind: update, at_s: 0, source_s: 0, mdib_version: 1, update_sequence: 1}
+      - {kind: update, at_s: 1, source_s: 1, mdib_version: 2, update_sequence: 2, metric_validity: questionable}
+      - {kind: proposal, at_s: 1, snapshot_version: current}
+    expected:
+      final_freshness: invalid
+      dispositions: [accepted_update, accepted_update]
+      proposal_reasons: [invalid_snapshot]
+
+  - name: missing_metric
+    description: "A missing required metric is explicit rather than silently current."
+    steps:
+      - {kind: update, at_s: 0, source_s: 0, mdib_version: 1, update_sequence: 1}
+      - {kind: update, at_s: 1, source_s: 1, mdib_version: 2, update_sequence: 2, metric_present: false}
+      - {kind: proposal, at_s: 1, snapshot_version: current}
+    expected:
+      final_freshness: invalid
+      dispositions: [accepted_update, accepted_update]
+      proposal_reasons: [invalid_snapshot]
+
+  - name: stale_data
+    description: "A cached update crossing the age threshold becomes stale."
+    steps:
+      - {kind: update, at_s: 0, source_s: 0, mdib_version: 1, update_sequence: 1}
+      - {kind: tick, at_s: 6}
+      - {kind: proposal, at_s: 6, snapshot_version: current}
+    expected:
+      final_freshness: stale
+      dispositions: [accepted_update, clock_advanced]
+      proposal_reasons: [stale_snapshot]
+
+  - name: delayed_update
+    description: "A newly delivered but old source sample is classified as stale."
+    steps:
+      - {kind: update, at_s: 10, source_s: 0, mdib_version: 1, update_sequence: 1}
+      - {kind: proposal, at_s: 10, snapshot_version: current}
+    expected:
+      final_freshness: stale
+      dispositions: [accepted_update]
+      proposal_reasons: [stale_snapshot]
+
+  - name: duplicate_update
+    description: "A duplicate version and sequence is ignored monotonically."
+    steps:
+      - {kind: update, at_s: 0, source_s: 0, mdib_version: 1, update_sequence: 1}
+      - {kind: update, at_s: 1, source_s: 1, mdib_version: 1, update_sequence: 1, metric_value: 99}
+      - {kind: proposal, at_s: 1, snapshot_version: current}
+    expected:
+      final_freshness: fresh
+      dispositions: [accepted_update, duplicate_ignored]
+      proposal_reasons: [policy_validated_no_execution]
+
+  - name: out_of_order_update
+    description: "An older version is ignored and an obsolete bound proposal is rejected."
+    steps:
+      - {kind: update, at_s: 2, source_s: 2, mdib_version: 2, update_sequence: 2}
+      - {kind: update, at_s: 3, source_s: 3, mdib_version: 1, update_sequence: 1, metric_value: 99}
+      - {kind: proposal, at_s: 3, snapshot_version: previous}
+    expected:
+      final_freshness: fresh
+      dispositions: [accepted_update, out_of_order_ignored]
+      proposal_reasons: [obsolete_snapshot]
+
+  - name: recovery_after_fault
+    description: "A newer valid update after invalid state is marked recovered."
+    steps:
+      - {kind: update, at_s: 0, source_s: 0, mdib_version: 1, update_sequence: 1}
+      - {kind: update, at_s: 1, source_s: 1, mdib_version: 2, update_sequence: 2, metric_validity: invalid}
+      - {kind: proposal, at_s: 1, snapshot_version: current}
+      - {kind: update, at_s: 2, source_s: 2, mdib_version: 3, update_sequence: 3}
+      - {kind: proposal, at_s: 2, snapshot_version: current}
+    expected:
+      final_freshness: recovered
+      dispositions: [accepted_update, accepted_update, accepted_recovery]
+      proposal_reasons: [invalid_snapshot, policy_validated_no_execution]
+      recovery_observed: true
+
+  - name: simultaneous_ambiguous_alarms
+    description: "Two simultaneous alarms remain separately visible without inferred precedence."
+    steps:
+      - kind: update
+        at_s: 0
+        source_s: 0
+        mdib_version: 1
+        update_sequence: 1
+        alarm_actions:
+          - {action: activate, handle: alarm.pressure, priority: high}
+          - {action: activate, handle: alarm.oxygen, priority: high}
+      - {kind: proposal, at_s: 0, snapshot_version: current}
+    expected:
+      final_freshness: fresh
+      dispositions: [accepted_update]
+      proposal_reasons: [policy_validated_no_execution]
+      alarm_states: {alarm.oxygen: active, alarm.pressure: active}
+
+  - name: alarm_escalation
+    description: "An active alarm can escalate while retaining its identity."
+    steps:
+      - kind: update
+        at_s: 0
+        source_s: 0
+        mdib_version: 1
+        update_sequence: 1
+        alarm_actions: [{action: activate, handle: alarm.pressure, priority: medium}]
+      - kind: update
+        at_s: 1
+        source_s: 1
+        mdib_version: 2
+        update_sequence: 2
+        alarm_actions: [{action: escalate, handle: alarm.pressure, priority: high}]
+    expected:
+      final_freshness: fresh
+      dispositions: [accepted_update, accepted_update]
+      proposal_reasons: []
+      alarm_states: {alarm.pressure: active}
+
+  - name: alarm_latching
+    description: "A cleared latched alarm remains visible until acknowledgement."
+    steps:
+      - kind: update
+        at_s: 0
+        source_s: 0
+        mdib_version: 1
+        update_sequence: 1
+        alarm_actions: [{action: activate, handle: alarm.pressure, priority: high}]
+      - kind: update
+        at_s: 1
+        source_s: 1
+        mdib_version: 2
+        update_sequence: 2
+        alarm_actions: [{action: latch, handle: alarm.pressure, priority: high}]
+      - kind: update
+        at_s: 2
+        source_s: 2
+        mdib_version: 3
+        update_sequence: 3
+        alarm_actions: [{action: clear, handle: alarm.pressure, priority: high}]
+    expected:
+      final_freshness: fresh
+      dispositions: [accepted_update, accepted_update, accepted_update]
+      proposal_reasons: []
+      alarm_states: {alarm.pressure: latched}
+
+  - name: alarm_acknowledgement
+    description: "Acknowledgement is represented as an alarm lifecycle state without device execution."
+    steps:
+      - kind: update
+        at_s: 0
+        source_s: 0
+        mdib_version: 1
+        update_sequence: 1
+        alarm_actions: [{action: activate, handle: alarm.pressure, priority: high}]
+      - kind: update
+        at_s: 1
+        source_s: 1
+        mdib_version: 2
+        update_sequence: 2
+        alarm_actions: [{action: latch, handle: alarm.pressure, priority: high}]
+      - kind: update
+        at_s: 2
+        source_s: 2
+        mdib_version: 3
+        update_sequence: 3
+        alarm_actions: [{action: acknowledge, handle: alarm.pressure, priority: high}]
+    expected:
+      final_freshness: fresh
+      dispositions: [accepted_update, accepted_update, accepted_update]
+      proposal_reasons: []
+      alarm_states: {alarm.pressure: acknowledged}
+
+  - name: alarm_suppression_reactivation
+    description: "Suppression and later reactivation remain explicit ordered transitions."
+    steps:
+      - kind: update
+        at_s: 0
+        source_s: 0
+        mdib_version: 1
+        update_sequence: 1
+        alarm_actions: [{action: activate, handle: alarm.pressure, priority: high}]
+      - kind: update
+        at_s: 1
+        source_s: 1
+        mdib_version: 2
+        update_sequence: 2
+        alarm_actions: [{action: suppress, handle: alarm.pressure, priority: high}]
+      - kind: update
+        at_s: 2
+        source_s: 2
+        mdib_version: 3
+        update_sequence: 3
+        alarm_actions: [{action: reactivate, handle: alarm.pressure, priority: high}]
+      - {kind: proposal, at_s: 2, snapshot_version: current}
+    expected:
+      final_freshness: fresh
+      dispositions: [accepted_update, accepted_update, accepted_update]
+      proposal_reasons: [policy_validated_no_execution]
+      alarm_states: {alarm.pressure: active}

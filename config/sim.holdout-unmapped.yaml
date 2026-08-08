@@ -1,0 +1,16 @@
+version: "1.0"
+description: "Frozen hold-out case: mapped and vendor-specific unmapped metrics coexist."
+random_seed: 6203
+devices:
+  - device_id: "holdout-monitor-unmapped"
+    display_name: "Reference Monitor with Vendor Metric"
+    metrics:
+      - handle: "metric.hr"
+        code: "150456"
+        unit: "beats/min"
+        baseline: 76
+      - handle: "metric.vendor.perfusion"
+        code: "vendor.perfusion.index.x7"
+        unit: "arb"
+        baseline: 4.2
+

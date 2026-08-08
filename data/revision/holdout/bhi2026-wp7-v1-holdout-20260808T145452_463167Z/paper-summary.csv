@@ -1,0 +1,6 @@
+scenario,agent_runs,agent_tasks,agent_tasks_passed,agent_tasks_failed,resource_count,read_error_count
+holdout-ambiguous,16,96,93,3,12,0
+holdout-invalid-stale,16,96,96,0,8,0
+holdout-multidevice-alarm,16,96,93,3,12,0
+holdout-unavailable,16,80,80,0,4,0
+holdout-unmapped,16,80,80,0,8,0

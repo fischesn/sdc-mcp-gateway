@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg:GetMdibResponse
+  xmlns:msg="http://standards.ieee.org/downloads/11073/11073-10207-2017/message"
+  xmlns:pm="http://standards.ieee.org/downloads/11073/11073-10207-2017/participant"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" SequenceId="urn:uuid:wp3-monitor">
+  <msg:Mdib SequenceId="urn:uuid:wp3-monitor">
+    <pm:MdDescription>
+      <pm:Mds Handle="mds.monitor" SafetyClassification="MedA">
+        <pm:Type Code="69965"><pm:ConceptDescription Lang="en">Patient monitor</pm:ConceptDescription></pm:Type>
+        <pm:AlertSystem Handle="alert.monitor" SafetyClassification="MedA" SelfCheckPeriod="PT5S">
+          <pm:AlertCondition Handle="alarm.hr.high" xsi:type="pm:AlertConditionDescriptor"
+            SafetyClassification="MedA" Kind="Phy" Priority="Me">
+            <pm:Type Code="alarm.hr.high"/><pm:Source>metric.hr</pm:Source>
+          </pm:AlertCondition>
+        </pm:AlertSystem>
+        <pm:SystemContext Handle="context.monitor">
+          <pm:PatientContext Handle="patient.monitor"/><pm:LocationContext Handle="location.monitor"/>
+        </pm:SystemContext>
+        <pm:Vmd Handle="vmd.monitor" SafetyClassification="MedA">
+          <pm:Channel Handle="channel.vitals" SafetyClassification="MedA">
+            <pm:Metric Handle="metric.hr" xsi:type="pm:NumericMetricDescriptor" SafetyClassification="MedA" MetricCategory="Msrmt" MetricAvailability="Cont" Resolution="1"><pm:Type Code="150456"/><pm:Unit Code="beats/min"/></pm:Metric>
+            <pm:Metric Handle="metric.spo2" xsi:type="pm:NumericMetricDescriptor" SafetyClassification="MedA" MetricCategory="Msrmt" MetricAvailability="Cont" Resolution="1"><pm:Type Code="150452"/><pm:Unit Code="%"/></pm:Metric>
+            <pm:Metric Handle="metric.rr" xsi:type="pm:NumericMetricDescriptor" SafetyClassification="MedA" MetricCategory="Msrmt" MetricAvailability="Cont" Resolution="1"><pm:Type Code="151562"/><pm:Unit Code="1/min"/></pm:Metric>
+            <pm:Metric Handle="metric.monitor.unknown" xsi:type="pm:NumericMetricDescriptor" SafetyClassification="MedA" MetricCategory="Clc" MetricAvailability="Intr" Resolution="0.1"><pm:Type Code="vendor.monitor.index"/><pm:Unit Code="1"/></pm:Metric>
+          </pm:Channel>
+        </pm:Vmd>
+      </pm:Mds>
+    </pm:MdDescription>
+  </msg:Mdib>
+</msg:GetMdibResponse>

@@ -32,6 +32,7 @@ class BenchmarkConfig:
     elapsed_start_s: float = 0.0
     elapsed_step_s: float = 1.0
     read_all_resources: bool = True
+    recorder_path: Path | None = None
 
 
 def _make_consumer(config: GatewayConfig, recorder: JsonlRecorder | None = None) -> SdcConsumer:
@@ -109,7 +110,7 @@ def run_benchmark(config: BenchmarkConfig) -> dict[str, Any]:
         if effective_config.sdc.adapter == "simulated":
             effective_config.sdc.simulation_elapsed_s = elapsed_s
 
-        recorder = JsonlRecorder(effective_config.gateway.log_file)
+        recorder = JsonlRecorder(config.recorder_path or effective_config.gateway.log_file)
 
         t0 = time.perf_counter()
         registry = _make_registry(effective_config, mapping, recorder=recorder)
@@ -184,6 +185,9 @@ def run_benchmark(config: BenchmarkConfig) -> dict[str, Any]:
         "mie": str(config.mie_path),
         "adapter": gateway_config.sdc.adapter,
         "mapping_version": mapping.version,
+        "mapping_schema_version": mapping.schema_version,
+        "mapping_sha256": mapping.source_sha256,
+        "mapping_provenance": mapping.provenance.model_dump(),
         "iterations": config.iterations,
         "warmup": config.warmup,
         "elapsed_start_s": config.elapsed_start_s,

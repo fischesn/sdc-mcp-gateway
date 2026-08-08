@@ -3,13 +3,20 @@ from __future__ import annotations
 import math
 import random
 from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any, Literal
+from typing import Literal
 
 import yaml
 from pydantic import BaseModel, Field, model_validator
 
-from sdc_mcp_gateway.models import AlarmState, ContextState, DeviceSnapshot, MetricState, utc_now_iso
+from sdc_mcp_gateway.models import (
+    AlarmState,
+    ContextState,
+    DeviceSnapshot,
+    FreshnessState,
+    MetricState,
+)
 
 
 class SimMetricEventConfig(BaseModel):
@@ -49,6 +56,7 @@ class SimMetricConfig(BaseModel):
     min_value: float | None = None
     max_value: float | None = None
     validity: str = "valid"
+    freshness: FreshnessState = "fresh"
     events: list[SimMetricEventConfig] = Field(default_factory=list)
 
 
@@ -83,6 +91,7 @@ class SimulationScenario(BaseModel):
     version: str = "0.7"
     description: str | None = None
     random_seed: int = 42
+    start_time: str = "2026-01-01T00:00:00Z"
     devices: list[SimDeviceConfig] = Field(default_factory=list)
 
     @classmethod
@@ -113,6 +122,8 @@ class SimulationEngine:
     def _device_snapshot(
         self, device: SimDeviceConfig, elapsed_s: float, rng: random.Random
     ) -> DeviceSnapshot:
+        source_timestamp = self._scenario_timestamp(elapsed_s)
+        update_sequence = max(1, int(round(elapsed_s * 1000.0)) + 1)
         metrics: list[MetricState] = []
         values_by_handle: dict[str, float] = {}
         for metric in device.metrics:
@@ -124,7 +135,9 @@ class SimulationEngine:
                     code=metric.code,
                     value=round(value, 3),
                     unit=metric.unit,
+                    timestamp=source_timestamp,
                     validity=metric.validity,
+                    freshness=metric.freshness,
                     raw={
                         "source": "simulation",
                         "baseline": metric.baseline,
@@ -135,7 +148,9 @@ class SimulationEngine:
                 )
             )
 
-        alarms = [self._alarm_state(alarm, values_by_handle) for alarm in device.alarms]
+        alarms = [
+            self._alarm_state(alarm, values_by_handle, source_timestamp) for alarm in device.alarms
+        ]
         return DeviceSnapshot(
             device_id=device.device_id,
             display_name=device.display_name,
@@ -151,9 +166,26 @@ class SimulationEngine:
             raw_mdib={
                 "kind": "simulated-normalized-mdib",
                 "warning": "This is not a real IEEE 11073 SDC MDIB.",
-                "generated_at": utc_now_iso(),
+                "generated_at": source_timestamp,
             },
+            observed_at=source_timestamp,
+            source_timestamp=source_timestamp,
+            gateway_received_at=source_timestamp,
+            age_of_information_ms=0.0,
+            provider_status="connected",
+            sequence_id=f"sim-{device.device_id}",
+            mdib_version=update_sequence,
+            update_sequence=update_sequence,
+            freshness="fresh",
+            freshness_reason="current_valid_state",
         )
+
+    def _scenario_timestamp(self, elapsed_s: float) -> str:
+        start = datetime.fromisoformat(self.scenario.start_time.replace("Z", "+00:00"))
+        if start.tzinfo is None:
+            start = start.replace(tzinfo=UTC)
+        timestamp = start.astimezone(UTC) + timedelta(seconds=elapsed_s)
+        return timestamp.isoformat().replace("+00:00", "Z")
 
     def _metric_value(self, metric: SimMetricConfig, elapsed_s: float, rng: random.Random) -> float:
         period = metric.period_s if metric.period_s > 0 else 60.0
@@ -205,7 +237,12 @@ class SimulationEngine:
             return current_value + event.delta
         return current_value
 
-    def _alarm_state(self, alarm: SimAlarmConfig, values_by_handle: dict[str, float]) -> AlarmState:
+    def _alarm_state(
+        self,
+        alarm: SimAlarmConfig,
+        values_by_handle: dict[str, float],
+        timestamp: str,
+    ) -> AlarmState:
         value = values_by_handle.get(alarm.metric_handle or "")
         present = False
         if value is not None:
@@ -219,6 +256,8 @@ class SimulationEngine:
             presence=present,
             priority=alarm.priority,
             kind=alarm.kind,
+            timestamp=timestamp,
+            lifecycle_state="active" if present else "inactive",
             raw={
                 "source": "simulation",
                 "metric_handle": alarm.metric_handle,

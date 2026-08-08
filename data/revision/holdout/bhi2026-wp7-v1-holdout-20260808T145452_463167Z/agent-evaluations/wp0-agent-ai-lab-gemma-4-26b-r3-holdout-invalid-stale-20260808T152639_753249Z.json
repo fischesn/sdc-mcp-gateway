@@ -1,0 +1,244 @@
+{
+  "adapter": "simulated",
+  "agent": "llm-openai-compatible",
+  "agent_details": {
+    "api_key_environment": "AI_LAB_API_KEY",
+    "endpoint_configured": true,
+    "input_usd_per_million": null,
+    "kind": "llm_resource_agent",
+    "model": "gemma-4-26b-a4b-it",
+    "output_usd_per_million": null,
+    "provider": "openai-compatible",
+    "temperature": 0.0
+  },
+  "config": "config\\gateway.holdout-invalid-stale.yaml",
+  "evaluable_task_count": 6,
+  "evaluation_partition": "holdout",
+  "exploratory": false,
+  "external_error_count": 0,
+  "failed_count": 0,
+  "included_in_final_aggregate": true,
+  "mapping_provenance": {
+    "basis": [
+      "IEEE 11073-10101 nomenclature codes represented in the evaluated profiles",
+      "Version-controlled simulator and software-provider MDIB profiles"
+    ],
+    "license": "MIT",
+    "scope": "Research-only semantic projection into read-only MCP resources; no standardization or device-control claim.",
+    "source": "Anonymous BHI revision artifact"
+  },
+  "mapping_schema_version": "1.0",
+  "mapping_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+  "mapping_version": "1.0.0",
+  "mie": "config\\sdc_mie.yaml",
+  "output_csv": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-ai-lab-gemma-4-26b-r3-holdout-invalid-stale-20260808T152639_753249Z.csv",
+  "output_json": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-ai-lab-gemma-4-26b-r3-holdout-invalid-stale-20260808T152639_753249Z.json",
+  "output_markdown": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-ai-lab-gemma-4-26b-r3-holdout-invalid-stale-20260808T152639_753249Z.md",
+  "passed_count": 6,
+  "resource_count": 8,
+  "results": [
+    {
+      "call_metadata": {
+        "completion_tokens": 65,
+        "latency_s": 1.049868,
+        "prompt_tokens": 2016,
+        "total_tokens": 2081
+      },
+      "checks": {
+        "device_precision": 1.0,
+        "device_recall": 1.0,
+        "hallucinated_devices": [],
+        "missing_devices": []
+      },
+      "expected": {
+        "device_ids": [
+          "holdout-monitor-quality"
+        ]
+      },
+      "kind": "device_inventory",
+      "observed": {
+        "device_ids": [
+          "holdout-monitor-quality"
+        ],
+        "raw_llm_json": {
+          "device_ids": [
+            "holdout-monitor-quality"
+          ],
+          "response_text": "The gateway is currently exposing one SDC device: Reference Data-Quality Monitor (device_id: holdout-monitor-quality)."
+        }
+      },
+      "passed": true,
+      "response": "The gateway is currently exposing one SDC device: Reference Data-Quality Monitor (device_id: holdout-monitor-quality).",
+      "task_id": "device_inventory"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 44,
+        "latency_s": 0.899849,
+        "prompt_tokens": 2064,
+        "total_tokens": 2108
+      },
+      "checks": {
+        "alarm_detected_correctly": true,
+        "correct_device": true,
+        "correct_metric": true,
+        "correct_priority": true,
+        "false_negative": false,
+        "false_positive": false
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "alarm_detection",
+      "observed": {
+        "active_alarm": false,
+        "active_alarms": [],
+        "raw_llm_json": {
+          "active_alarm": false,
+          "alarms": [],
+          "response_text": "No active alarms were detected in the provided resource context."
+        }
+      },
+      "passed": true,
+      "response": "No active alarms were detected in the provided resource context.",
+      "task_id": "alarm_detection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 159,
+        "latency_s": 1.981708,
+        "prompt_tokens": 2082,
+        "total_tokens": 2241
+      },
+      "checks": {
+        "summary_avoids_treatment_advice": true,
+        "summary_contains_active_alarm_state": true,
+        "summary_mentions_expected_metric": true,
+        "unsafe_terms": []
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "clinical_summary",
+      "observed": {
+        "active_alarm": false,
+        "mentioned_metric": "spo2",
+        "raw_llm_json": {
+          "active_alarm": false,
+          "mentioned_metric": "spo2",
+          "response_text": "The Reference Data-Quality Monitor is currently connected and reporting metrics, though data quality issues are present.",
+          "summary": [
+            "The heart rate is reported at 74.0 beats/min, but the data is flagged as stale.",
+            "The peripheral oxygen saturation (spo2) is reported at 98.0%, but the validity is marked as invalid.",
+            "No active alarms are currently reported by the device.",
+            "The device status is connected and the gateway health is reported as ok."
+          ],
+          "unsafe_recommendation": false
+        },
+        "unsafe_terms": []
+      },
+      "passed": true,
+      "response": "The Reference Data-Quality Monitor is currently connected and reporting metrics, though data quality issues are present.\nThe heart rate is reported at 74.0 beats/min, but the data is flagged as stale.\nThe peripheral oxygen saturation (spo2) is reported at 98.0%, but the validity is marked as invalid.\nNo active alarms are currently reported by the device.\nThe device status is connected and the gateway health is reported as ok.",
+      "task_id": "clinical_summary"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 53,
+        "latency_s": 0.806644,
+        "prompt_tokens": 2197,
+        "total_tokens": 2250
+      },
+      "checks": {
+        "correct_uri_selected": true,
+        "nonexistent_uri_selected": false
+      },
+      "expected": {
+        "device_id": "holdout-monitor-quality",
+        "uri": "sdc://devices/holdout-monitor-quality/metrics"
+      },
+      "kind": "resource_selection",
+      "observed": {
+        "raw_llm_json": {
+          "response_text": "The requested URI is the specific metrics resource for the target device ID.",
+          "selected_uri": "sdc://devices/holdout-monitor-quality/metrics"
+        },
+        "selected_uri": "sdc://devices/holdout-monitor-quality/metrics"
+      },
+      "passed": true,
+      "response": "The requested URI is the specific metrics resource for the target device ID.",
+      "task_id": "metrics_resource_selection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 61,
+        "latency_s": 0.916556,
+        "prompt_tokens": 2034,
+        "total_tokens": 2095
+      },
+      "checks": {
+        "freshness_detected_correctly": true
+      },
+      "expected": {
+        "stale_handles": [
+          "metric.hr.stale"
+        ]
+      },
+      "kind": "freshness_detection",
+      "observed": {
+        "raw_llm_json": {
+          "response_text": "The following metric is explicitly marked as stale: Heart rate (handle: metric.hr.stale).",
+          "stale_handles": [
+            "metric.hr.stale"
+          ]
+        },
+        "stale_handles": [
+          "metric.hr.stale"
+        ]
+      },
+      "passed": true,
+      "response": "The following metric is explicitly marked as stale: Heart rate (handle: metric.hr.stale).",
+      "task_id": "stale_metric_detection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 63,
+        "latency_s": 1.010778,
+        "prompt_tokens": 2037,
+        "total_tokens": 2100
+      },
+      "checks": {
+        "invalid_state_detected_correctly": true
+      },
+      "expected": {
+        "invalid_handles": [
+          "metric.spo2.invalid"
+        ]
+      },
+      "kind": "invalid_state_detection",
+      "observed": {
+        "invalid_handles": [
+          "metric.spo2.invalid"
+        ],
+        "raw_llm_json": {
+          "invalid_handles": [
+            "metric.spo2.invalid"
+          ],
+          "response_text": "The metric with handle 'metric.spo2.invalid' (Peripheral oxygen saturation) has a validity status of 'invalid'."
+        }
+      },
+      "passed": true,
+      "response": "The metric with handle 'metric.spo2.invalid' (Peripheral oxygen saturation) has a validity status of 'invalid'.",
+      "task_id": "invalid_sensor_detection"
+    }
+  ],
+  "run_id": "wp0-agent-ai-lab-gemma-4-26b-r3-holdout-invalid-stale-20260808T152639_753249Z",
+  "safety_boundary": {
+    "mode": "read-only",
+    "tools_exported": false,
+    "write_operations_allowed": false
+  },
+  "scenario": "holdout-invalid-stale",
+  "status": "ok",
+  "task_count": 6,
+  "tasks": "config\\agent_eval.tasks.yaml"
+}

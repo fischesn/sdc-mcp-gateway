@@ -11,7 +11,7 @@ gateway.simulated.example.yaml  Template for in-process simulated device scenari
 sim.patient-monitor.yaml        Simulated patient monitor scenario
 sim.ventilator.yaml             Simulated ventilator scenario
 sim.combined.yaml               Combined simulated monitor + ventilator scenario
-sdc_mie.yaml                    Example semantic mapping
+sdc_mie.yaml                    Schema-validated SDC-MIE 1.0 semantic mapping
 policies.yaml                   Read-only example policy
 ```
 
@@ -56,12 +56,12 @@ To create your own scenario, copy one of these files, change metric baselines/ev
 
 ## v0.8 Agent-facing evaluation
 
-Version v0.8.0 adds deterministic oracle-agent task evaluation. It validates whether the MCP resource surface supports device inventory, alarm detection, safe clinical-state summarization, and resource selection tasks.
+The WP6 evaluation uses a deterministic resource processor that receives the same MCP resource context as the LLM agents. Scenario ground truth is available only to the downstream grader.
 
 Run one scenario:
 
 ```powershell
-sdc-mcp-gateway evaluate-agent-tasks --config config/gateway.simulated.tachycardia.example.yaml --mie config/sdc_mie.yaml --tasks config/agent_eval.tasks.yaml --scenario tachycardia --agent oracle --output-dir data/agent_eval --elapsed-s 100
+sdc-mcp-gateway evaluate-agent-tasks --config config/gateway.simulated.tachycardia.example.yaml --mie config/sdc_mie.yaml --tasks config/agent_eval.tasks.yaml --scenario tachycardia --agent deterministic-baseline --output-dir data/agent_eval --elapsed-s 100
 ```
 
 Run all default scenarios:
@@ -76,7 +76,7 @@ The outputs are written as JSON, CSV, and Markdown files under `data/agent_eval/
 
 LLM agent evaluation is configured primarily through CLI options. No API keys should be written into YAML files. Use environment variables for external services.
 
-Supported agent values: `oracle`, `llm-mock`, `llm-ollama`, and `llm-openai-compatible`.
+Supported agent values include `deterministic-baseline`, `llm-mock`, `llm-ollama`, `llm-openai-compatible`, and `llm-gemini`. `oracle` remains only as a backward-compatible alias.
 
 ## Dry-run tool configuration
 

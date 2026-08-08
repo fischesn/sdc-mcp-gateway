@@ -1,0 +1,81 @@
+{
+  "active_alarm_count_last": 2,
+  "active_alarm_count_max": 2,
+  "active_alarm_seen_any": true,
+  "adapter": "simulated",
+  "alarms_count": 2,
+  "config": "config\\gateway.holdout-multidevice-alarm.yaml",
+  "device_count": 2,
+  "elapsed_start_s": 100.0,
+  "elapsed_step_s": 0.0,
+  "iterations": 5,
+  "latency": {
+    "list_resources": {
+      "count": 5,
+      "max_ms": 0.059,
+      "mean_ms": 0.04,
+      "median_ms": 0.036,
+      "min_ms": 0.032,
+      "p95_ms": 0.059
+    },
+    "read_health": {
+      "count": 5,
+      "max_ms": 10.739,
+      "mean_ms": 2.89,
+      "median_ms": 1.066,
+      "min_ms": 0.529,
+      "p95_ms": 10.739
+    },
+    "read_resources": {
+      "count": 5,
+      "max_ms": 22.052,
+      "mean_ms": 11.882,
+      "median_ms": 8.331,
+      "min_ms": 7.958,
+      "p95_ms": 22.052
+    },
+    "snapshot_build": {
+      "count": 5,
+      "max_ms": 29.929,
+      "mean_ms": 10.594,
+      "median_ms": 6.591,
+      "min_ms": 4.426,
+      "p95_ms": 29.929
+    },
+    "total": {
+      "count": 5,
+      "max_ms": 62.779,
+      "mean_ms": 25.406,
+      "median_ms": 16.273,
+      "min_ms": 13.942,
+      "p95_ms": 62.779
+    }
+  },
+  "mapping_provenance": {
+    "basis": [
+      "IEEE 11073-10101 nomenclature codes represented in the evaluated profiles",
+      "Version-controlled simulator and software-provider MDIB profiles"
+    ],
+    "license": "MIT",
+    "scope": "Research-only semantic projection into read-only MCP resources; no standardization or device-control claim.",
+    "source": "Anonymous BHI revision artifact"
+  },
+  "mapping_schema_version": "1.0",
+  "mapping_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+  "mapping_version": "1.0.0",
+  "metrics_count": 2,
+  "mie": "config\\sdc_mie.yaml",
+  "output_csv": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\benchmarks\\wp0-benchmark-holdout-multidevice-alarm-20260808T153029_511906Z.csv",
+  "output_jsonl": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\benchmarks\\wp0-benchmark-holdout-multidevice-alarm-20260808T153029_511906Z.jsonl",
+  "output_summary": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\benchmarks\\wp0-benchmark-holdout-multidevice-alarm-20260808T153029_511906Z.summary.json",
+  "read_error_count_total": 0,
+  "resource_count": 12,
+  "run_id": "wp0-benchmark-holdout-multidevice-alarm-20260808T153029_511906Z",
+  "safety_boundary": {
+    "all_read_only": true,
+    "tools_exported_any": false,
+    "write_operations_allowed_any": false
+  },
+  "status": "ok",
+  "warmup": 1
+}

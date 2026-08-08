@@ -1,0 +1,18 @@
+version: "1.0"
+description: "Frozen hold-out case: one stale metric and one invalid sensor state."
+random_seed: 7205
+devices:
+  - device_id: "holdout-monitor-quality"
+    display_name: "Reference Data-Quality Monitor"
+    metrics:
+      - handle: "metric.hr.stale"
+        code: "150456"
+        unit: "beats/min"
+        baseline: 74
+        freshness: "stale"
+      - handle: "metric.spo2.invalid"
+        code: "150452"
+        unit: "%"
+        baseline: 98
+        validity: "invalid"
+

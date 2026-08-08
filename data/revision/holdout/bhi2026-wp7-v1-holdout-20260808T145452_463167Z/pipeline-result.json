@@ -1,0 +1,22 @@
+{
+  "agent_aggregate_status": "warning",
+  "agent_runs": 80,
+  "agent_tasks": 448,
+  "agent_tasks_passed": 442,
+  "benchmark_runs": 5,
+  "holdout_executed": true,
+  "input_set_sha256": "c293aaf0af6a7523b600fa29bfd76a920f96329796c4c88959031ddfa677c08c",
+  "manifest_version": "bhi2026-wp7-v1",
+  "outputs": {
+    "manifest_lock": "manifest.lock.json",
+    "paper_summary": {
+      "csv": "paper-summary.csv",
+      "json": "paper-summary.json",
+      "markdown": "paper-summary.md"
+    }
+  },
+  "phase": "holdout",
+  "run_id": "bhi2026-wp7-v1-holdout-20260808T145452_463167Z",
+  "status": "failed",
+  "tool_cases": 7
+}

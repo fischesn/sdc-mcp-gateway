@@ -6,12 +6,17 @@ from typing import Any
 
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
 from sdc_mcp_gateway.models import AlarmState, AuditRecord, ContextState, DeviceSnapshot, MetricState
+from sdc_mcp_gateway.safety.no_execution import DeviceWriteSpy
 from sdc_mcp_gateway.sdc.extractor import MdibSnapshotExtractor
 from sdc_mcp_gateway.simulation.scenarios import SimulationEngine, SimulationScenario
 
 
 class SdcConsumer(ABC):
-    """Abstract SDC consumer interface used by the gateway."""
+    """Observation-only SDC interface used by the gateway.
+
+    Deliberately exposes discovery and snapshot reads only. Device-side Set
+    Service and ActivateOperation capabilities are absent from this contract.
+    """
 
     @abstractmethod
     def discover(self) -> list[str]:
@@ -20,6 +25,35 @@ class SdcConsumer(ABC):
     @abstractmethod
     def get_snapshots(self) -> list[DeviceSnapshot]:
         """Return the latest known snapshots for all discovered providers."""
+
+
+class WriteSpySdcConsumer(SdcConsumer):
+    """Instrumented observation-only adapter used to detect forbidden writes.
+
+    Normal gateway calls are delegated to the wrapped consumer. The explicit
+    attempt methods model the two forbidden SDC operation families for negative
+    tests; each increments the independent spy and fails closed.
+    """
+
+    def __init__(self, delegate: SdcConsumer, spy: DeviceWriteSpy | None = None) -> None:
+        self.delegate = delegate
+        self.spy = spy or DeviceWriteSpy()
+
+    def discover(self) -> list[str]:
+        return self.delegate.discover()
+
+    def get_snapshots(self) -> list[DeviceSnapshot]:
+        return self.delegate.get_snapshots()
+
+    def attempt_set_service(self, target: str, details: dict[str, Any] | None = None) -> None:
+        self.spy.record_attempt("SetService", target, details)
+
+    def attempt_activate_operation(
+        self,
+        target: str,
+        details: dict[str, Any] | None = None,
+    ) -> None:
+        self.spy.record_attempt("ActivateOperation", target, details)
 
 
 class DummySdcConsumer(SdcConsumer):
@@ -126,17 +160,19 @@ class Sdc11073Consumer(SdcConsumer):
 
     def __init__(
         self,
-        discovery_timeout_s: int = 5,
+        discovery_timeout_s: float = 5,
         provider_whitelist: list[str] | None = None,
         local_ip: str = "127.0.0.1",
         max_devices: int | None = None,
         recorder: JsonlRecorder | None = None,
+        ssl_context_container: Any | None = None,
     ) -> None:
         self.discovery_timeout_s = discovery_timeout_s
         self.provider_whitelist = provider_whitelist or []
         self.local_ip = local_ip
         self.max_devices = max_devices
         self.recorder = recorder
+        self.ssl_context_container = ssl_context_container
         self.extractor = MdibSnapshotExtractor()
 
     def discover(self) -> list[str]:
@@ -146,6 +182,21 @@ class Sdc11073Consumer(SdcConsumer):
     def get_snapshots(self) -> list[DeviceSnapshot]:
         start = monotonic()
         services = self._discover_services()
+        return self.get_snapshots_from_services(services, run_start=start)
+
+    def get_snapshots_from_services(
+        self,
+        services: list[Any],
+        *,
+        run_start: float | None = None,
+    ) -> list[DeviceSnapshot]:
+        """Read snapshots for already discovered services using the same read-only path.
+
+        This is used by the local protocol testbed, which keeps one WS-Discovery
+        listener open before the separate provider process publishes its Hello.
+        """
+
+        start = monotonic() if run_start is None else run_start
         snapshots: list[DeviceSnapshot] = []
         for service in services:
             service_epr = self._service_epr(service)
@@ -209,7 +260,10 @@ class Sdc11073Consumer(SdcConsumer):
 
     def _connect_and_init_mdib(self, service: Any) -> tuple[Any, Any]:
         imports = self._imports()
-        client = imports["SdcConsumer"].from_wsd_service(service, ssl_context_container=None)
+        client = imports["SdcConsumer"].from_wsd_service(
+            service,
+            ssl_context_container=self.ssl_context_container,
+        )
         try:
             client.start_all(not_subscribed_actions=imports["periodic_actions"])
         except TypeError:
@@ -245,11 +299,11 @@ class Sdc11073Consumer(SdcConsumer):
 
     def _imports(self) -> dict[str, Any]:
         try:
-            from sdc11073.consumer.consumerimpl import SdcConsumer as RealSdcConsumer  # type: ignore
-            from sdc11073.definitions_sdc import SdcV1Definitions  # type: ignore
-            from sdc11073.mdib import ConsumerMdib  # type: ignore
-            from sdc11073.wsdiscovery import WSDiscovery  # type: ignore
-            from sdc11073.xml_types.actions import periodic_actions  # type: ignore
+            from sdc11073.consumer.consumerimpl import SdcConsumer as RealSdcConsumer
+            from sdc11073.definitions_sdc import SdcV1Definitions
+            from sdc11073.mdib import ConsumerMdib
+            from sdc11073.wsdiscovery import WSDiscovery
+            from sdc11073.xml_types.actions import periodic_actions
         except Exception as exc:  # pragma: no cover - triggered only without optional dependency
             raise MissingSdc11073Dependency(
                 "The optional sdc11073 dependency is not installed. Install with: "

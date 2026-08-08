@@ -1,0 +1,19 @@
+version: "1.0"
+description: "Frozen hold-out case: two same-type devices requiring exact target selection."
+random_seed: 6202
+devices:
+  - device_id: "holdout-monitor-alpha"
+    display_name: "Reference Patient Monitor Alpha"
+    metrics:
+      - handle: "metric.hr.alpha"
+        code: "150456"
+        unit: "beats/min"
+        baseline: 68
+  - device_id: "holdout-monitor-beta"
+    display_name: "Reference Patient Monitor Beta"
+    metrics:
+      - handle: "metric.hr.beta"
+        code: "150456"
+        unit: "beats/min"
+        baseline: 83
+

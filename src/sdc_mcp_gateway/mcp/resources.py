@@ -109,17 +109,26 @@ class ResourceRegistry:
 
     def _read(self, uri: str) -> ResourcePayload:
         if uri == "sdc://health":
+            non_current = [
+                device
+                for device in self.devices.values()
+                if device.freshness not in {"fresh", "recovered"}
+                or device.provider_status != "connected"
+            ]
             return self._payload(
                 uri,
                 {
-                    "status": "ok",
+                    "status": "degraded" if non_current else "ok",
                     "mode": self.gateway_mode,
                     "device_count": len(self.devices),
                     "mapping_version": self.mapping.version,
+                    "mapping_schema_version": self.mapping.schema_version,
+                    "mapping_sha256": self.mapping.source_sha256,
                     "resource_count": len(self.list_resource_descriptors()),
                     "tools_exported": self.tools_exported,
                     "tool_mode": self.tool_mode,
                     "write_operations_allowed": self.write_operations_allowed,
+                    "non_current_device_count": len(non_current),
                 },
             )
         if uri == "sdc://resources":
@@ -137,6 +146,15 @@ class ResourceRegistry:
                         "manufacturer": device.manufacturer,
                         "model": device.model,
                         "observed_at": device.observed_at,
+                        "source_timestamp": device.source_timestamp,
+                        "gateway_received_at": device.gateway_received_at,
+                        "age_of_information_ms": device.age_of_information_ms,
+                        "provider_status": device.provider_status,
+                        "sequence_id": device.sequence_id,
+                        "mdib_version": device.mdib_version,
+                        "update_sequence": device.update_sequence,
+                        "freshness": device.freshness,
+                        "freshness_reason": device.freshness_reason,
                     }
                     for device in self.devices.values()
                 ],
@@ -168,7 +186,12 @@ class ResourceRegistry:
             raise KeyError(f"Unknown device_id: {device_id}") from exc
 
     def _payload(self, uri: str, data: Any) -> ResourcePayload:
-        return ResourcePayload(uri=uri, mapping_version=self.mapping.version, data=data)
+        return ResourcePayload(
+            uri=uri,
+            mapping_version=self.mapping.version,
+            mapping_sha256=self.mapping.source_sha256,
+            data=data,
+        )
 
     def _audit(self, uri: str, status: str, details: dict[str, Any] | None = None) -> None:
         if self.recorder is None:
@@ -179,6 +202,7 @@ class ResourceRegistry:
                 resource_uri=uri,
                 status=status,
                 mapping_version=self.mapping.version,
+                mapping_sha256=self.mapping.source_sha256,
                 details=details or {},
             )
         )

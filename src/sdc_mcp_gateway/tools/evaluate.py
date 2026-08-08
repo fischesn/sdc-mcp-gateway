@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -150,6 +150,7 @@ def run_dry_run_tool_evaluation(
     output_json = config.output_dir / f"{run_id}.json"
     output_csv = config.output_dir / f"{run_id}.csv"
     output_markdown = config.output_dir / f"{run_id}.md"
+    mapping = primary_registry.resource_registry.mapping
 
     report: dict[str, Any] = {
         "run_id": run_id,
@@ -157,6 +158,10 @@ def run_dry_run_tool_evaluation(
         "config": str(config.config_path),
         "ack_config": str(config.ack_config_path) if config.ack_config_path else None,
         "mie": str(config.mie_path),
+        "mapping_schema_version": mapping.schema_version,
+        "mapping_version": mapping.version,
+        "mapping_sha256": mapping.source_sha256,
+        "mapping_provenance": mapping.provenance.model_dump(),
         "tool_policy": str(config.tool_policy_path),
         "case_count": len(rows),
         "passed_cases": passed_cases,

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class GatewaySection(BaseModel):
@@ -14,6 +14,20 @@ class GatewaySection(BaseModel):
     expose_raw_mdib: bool = True
     allow_tools: bool = False
     allow_write_operations: bool = False
+
+    @model_validator(mode="after")
+    def enforce_no_execution_configuration(self) -> "GatewaySection":
+        if self.allow_write_operations:
+            raise ValueError(
+                "Fail-closed no-execution boundary: allow_write_operations must remain false"
+            )
+        if self.mode not in {"read-only", "dry-run-tools"}:
+            raise ValueError("gateway.mode must be 'read-only' or 'dry-run-tools'")
+        if self.allow_tools != (self.mode == "dry-run-tools"):
+            raise ValueError(
+                "gateway.allow_tools must be true exactly when gateway.mode is 'dry-run-tools'"
+            )
+        return self
 
 
 class SdcSection(BaseModel):

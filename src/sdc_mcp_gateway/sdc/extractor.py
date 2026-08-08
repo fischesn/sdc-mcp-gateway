@@ -23,6 +23,9 @@ class MdibSnapshotExtractor:
         alarms = self._extract_alarms(states, descriptors_by_handle)
         context = self._extract_context(states)
         device_id = _safe_identifier(provider_epr or _first_non_empty(_safe_getattr(mdib, "sequence_id"), display_name) or "sdc-provider")
+        observed_at = utc_now_iso()
+        mdib_version = _safe_int(_safe_getattr(mdib, "mdib_version")) or 0
+        sequence_id = _as_str(_safe_getattr(mdib, "sequence_id")) or "unknown"
 
         return DeviceSnapshot(
             device_id=device_id,
@@ -33,7 +36,16 @@ class MdibSnapshotExtractor:
             alarms=alarms,
             context=context,
             raw_mdib=self._summarize_raw_mdib(provider_epr, descriptors, states),
-            observed_at=utc_now_iso(),
+            observed_at=observed_at,
+            source_timestamp=observed_at,
+            gateway_received_at=observed_at,
+            age_of_information_ms=0.0,
+            provider_status="connected",
+            sequence_id=sequence_id,
+            mdib_version=mdib_version,
+            update_sequence=mdib_version,
+            freshness="fresh",
+            freshness_reason="point_in_time_mdib_read",
         )
 
     def _extract_metrics(self, states: list[Any], descriptors_by_handle: dict[str, Any]) -> list[MetricState]:
@@ -90,11 +102,12 @@ class MdibSnapshotExtractor:
                 _safe_getattr(state, "Handle"),
             )) or f"alarm-{len(alarms)}"
             descriptor = descriptors_by_handle.get(descriptor_handle)
+            presence = _to_bool(_safe_getattr(state, "Presence"))
             alarms.append(
                 AlarmState(
                     handle=descriptor_handle,
                     code=_extract_code(descriptor),
-                    presence=_to_bool(_safe_getattr(state, "Presence")),
+                    presence=presence,
                     priority=_as_str(_first_non_empty(
                         _safe_getattr(state, "Priority"),
                         _safe_getattr(descriptor, "Priority"),
@@ -104,6 +117,7 @@ class MdibSnapshotExtractor:
                         _safe_getattr(descriptor, "Kind"),
                     )),
                     timestamp=utc_now_iso(),
+                    lifecycle_state="active" if presence else "inactive",
                     raw={
                         "state_type": type_name,
                         "descriptor_type": _type_name(descriptor) if descriptor is not None else None,
@@ -180,6 +194,19 @@ class MdibSnapshotExtractor:
             descriptor_types[_type_name(descriptor)] = descriptor_types.get(_type_name(descriptor), 0) + 1
         for state in states:
             state_types[_type_name(state)] = state_types.get(_type_name(state), 0) + 1
+        structural_descriptor_markers = ("MdsDescriptor", "VmdDescriptor", "ChannelDescriptor", "SystemContextDescriptor")
+        extracted_descriptor_markers = ("MetricDescriptor", "Alert", "ContextDescriptor")
+        extracted_state_markers = ("MetricState", "RealTimeSampleArray", "Alert", "ContextState")
+        unsupported_descriptor_types = {
+            name: count
+            for name, count in descriptor_types.items()
+            if not any(marker in name for marker in structural_descriptor_markers + extracted_descriptor_markers)
+        }
+        unsupported_state_types = {
+            name: count
+            for name, count in state_types.items()
+            if not any(marker in name for marker in extracted_state_markers)
+        }
         return {
             "kind": "sdc11073-mdib-summary",
             "provider_epr": provider_epr,
@@ -187,6 +214,8 @@ class MdibSnapshotExtractor:
             "state_count": len(states),
             "descriptor_types": descriptor_types,
             "state_types": state_types,
+            "unsupported_descriptor_types": unsupported_descriptor_types,
+            "unsupported_state_types": unsupported_state_types,
             "note": "Raw device objects are summarized to avoid non-serializable sdc11073 internals.",
         }
 
@@ -309,3 +338,12 @@ def _to_bool(value: Any) -> bool | None:
 def _safe_identifier(value: str) -> str:
     sanitized = value.replace("urn:uuid:", "").replace(":", "-").replace("/", "-")
     return sanitized or "sdc-provider"
+
+
+def _safe_int(value: Any) -> int | None:
+    if value is None or isinstance(value, bool):
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None

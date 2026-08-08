@@ -1,0 +1,81 @@
+{
+  "active_alarm_count_last": 0,
+  "active_alarm_count_max": 0,
+  "active_alarm_seen_any": false,
+  "adapter": "simulated",
+  "alarms_count": 0,
+  "config": "config\\gateway.holdout-invalid-stale.yaml",
+  "device_count": 1,
+  "elapsed_start_s": 100.0,
+  "elapsed_step_s": 0.0,
+  "iterations": 5,
+  "latency": {
+    "list_resources": {
+      "count": 5,
+      "max_ms": 0.041,
+      "mean_ms": 0.035,
+      "median_ms": 0.038,
+      "min_ms": 0.025,
+      "p95_ms": 0.041
+    },
+    "read_health": {
+      "count": 5,
+      "max_ms": 1.399,
+      "mean_ms": 0.99,
+      "median_ms": 0.841,
+      "min_ms": 0.538,
+      "p95_ms": 1.399
+    },
+    "read_resources": {
+      "count": 5,
+      "max_ms": 13.414,
+      "mean_ms": 8.821,
+      "median_ms": 7.195,
+      "min_ms": 5.715,
+      "p95_ms": 13.414
+    },
+    "snapshot_build": {
+      "count": 5,
+      "max_ms": 12.398,
+      "mean_ms": 5.828,
+      "median_ms": 3.442,
+      "min_ms": 2.821,
+      "p95_ms": 12.398
+    },
+    "total": {
+      "count": 5,
+      "max_ms": 20.687,
+      "mean_ms": 15.673,
+      "median_ms": 14.563,
+      "min_ms": 11.602,
+      "p95_ms": 20.687
+    }
+  },
+  "mapping_provenance": {
+    "basis": [
+      "IEEE 11073-10101 nomenclature codes represented in the evaluated profiles",
+      "Version-controlled simulator and software-provider MDIB profiles"
+    ],
+    "license": "MIT",
+    "scope": "Research-only semantic projection into read-only MCP resources; no standardization or device-control claim.",
+    "source": "Anonymous BHI revision artifact"
+  },
+  "mapping_schema_version": "1.0",
+  "mapping_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+  "mapping_version": "1.0.0",
+  "metrics_count": 2,
+  "mie": "config\\sdc_mie.yaml",
+  "output_csv": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\benchmarks\\wp0-benchmark-holdout-invalid-stale-20260808T153030_073653Z.csv",
+  "output_jsonl": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\benchmarks\\wp0-benchmark-holdout-invalid-stale-20260808T153030_073653Z.jsonl",
+  "output_summary": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\benchmarks\\wp0-benchmark-holdout-invalid-stale-20260808T153030_073653Z.summary.json",
+  "read_error_count_total": 0,
+  "resource_count": 8,
+  "run_id": "wp0-benchmark-holdout-invalid-stale-20260808T153030_073653Z",
+  "safety_boundary": {
+    "all_read_only": true,
+    "tools_exported_any": false,
+    "write_operations_allowed_any": false
+  },
+  "status": "ok",
+  "warmup": 1
+}

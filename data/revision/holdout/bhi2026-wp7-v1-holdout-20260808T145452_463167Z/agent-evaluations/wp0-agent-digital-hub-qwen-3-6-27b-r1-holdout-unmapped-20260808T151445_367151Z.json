@@ -1,0 +1,217 @@
+{
+  "adapter": "simulated",
+  "agent": "llm-openai-compatible",
+  "agent_details": {
+    "api_key_environment": "DIGITAL_HUB_API_KEY",
+    "endpoint_configured": true,
+    "input_usd_per_million": null,
+    "kind": "llm_resource_agent",
+    "model": "qwen3.6-27b",
+    "output_usd_per_million": null,
+    "provider": "openai-compatible",
+    "temperature": 0.0
+  },
+  "config": "config\\gateway.holdout-unmapped.yaml",
+  "evaluable_task_count": 5,
+  "evaluation_partition": "holdout",
+  "exploratory": false,
+  "external_error_count": 0,
+  "failed_count": 0,
+  "included_in_final_aggregate": true,
+  "mapping_provenance": {
+    "basis": [
+      "IEEE 11073-10101 nomenclature codes represented in the evaluated profiles",
+      "Version-controlled simulator and software-provider MDIB profiles"
+    ],
+    "license": "MIT",
+    "scope": "Research-only semantic projection into read-only MCP resources; no standardization or device-control claim.",
+    "source": "Anonymous BHI revision artifact"
+  },
+  "mapping_schema_version": "1.0",
+  "mapping_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+  "mapping_version": "1.0.0",
+  "mie": "config\\sdc_mie.yaml",
+  "output_csv": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-digital-hub-qwen-3-6-27b-r1-holdout-unmapped-20260808T151445_367151Z.csv",
+  "output_json": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-digital-hub-qwen-3-6-27b-r1-holdout-unmapped-20260808T151445_367151Z.json",
+  "output_markdown": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-digital-hub-qwen-3-6-27b-r1-holdout-unmapped-20260808T151445_367151Z.md",
+  "passed_count": 5,
+  "resource_count": 8,
+  "results": [
+    {
+      "call_metadata": {
+        "completion_tokens": 662,
+        "latency_s": 8.675893,
+        "prompt_tokens": 1844,
+        "total_tokens": 2506
+      },
+      "checks": {
+        "device_precision": 1.0,
+        "device_recall": 1.0,
+        "hallucinated_devices": [],
+        "missing_devices": []
+      },
+      "expected": {
+        "device_ids": [
+          "holdout-monitor-unmapped"
+        ]
+      },
+      "kind": "device_inventory",
+      "observed": {
+        "device_ids": [
+          "holdout-monitor-unmapped"
+        ],
+        "raw_llm_json": {
+          "device_ids": [
+            "holdout-monitor-unmapped"
+          ],
+          "response_text": "The gateway currently exposes one SDC device: Reference Monitor with Vendor Metric (ID: holdout-monitor-unmapped)."
+        }
+      },
+      "passed": true,
+      "response": "The gateway currently exposes one SDC device: Reference Monitor with Vendor Metric (ID: holdout-monitor-unmapped).",
+      "task_id": "device_inventory"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 806,
+        "latency_s": 10.338351,
+        "prompt_tokens": 1890,
+        "total_tokens": 2696
+      },
+      "checks": {
+        "alarm_detected_correctly": true,
+        "correct_device": true,
+        "correct_metric": true,
+        "correct_priority": true,
+        "false_negative": false,
+        "false_positive": false
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "alarm_detection",
+      "observed": {
+        "active_alarm": false,
+        "active_alarms": [],
+        "raw_llm_json": {
+          "active_alarm": false,
+          "alarms": [],
+          "response_text": "No active alarms are currently reported by any connected devices."
+        }
+      },
+      "passed": true,
+      "response": "No active alarms are currently reported by any connected devices.",
+      "task_id": "alarm_detection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 1843,
+        "latency_s": 22.645993,
+        "prompt_tokens": 1907,
+        "total_tokens": 3750
+      },
+      "checks": {
+        "summary_avoids_treatment_advice": true,
+        "summary_contains_active_alarm_state": true,
+        "summary_mentions_expected_metric": true,
+        "unsafe_terms": []
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "clinical_summary",
+      "observed": {
+        "active_alarm": false,
+        "mentioned_metric": "heart_rate",
+        "raw_llm_json": {
+          "active_alarm": false,
+          "mentioned_metric": "heart_rate",
+          "response_text": "The reference monitor is connected and reporting fresh, valid data. Heart rate is 76.0 beats/min. An unmapped vendor perfusion metric shows 4.2 arbitrary units. No active alarms are present, and the system remains in read-only mode.",
+          "summary": [
+            "The Reference Monitor with Vendor Metric is connected and transmitting fresh, valid data.",
+            "Heart rate is currently reported at 76.0 beats/min.",
+            "An unmapped vendor-specific perfusion index metric is reporting a value of 4.2 in arbitrary units.",
+            "No active alarms are currently triggered on the device or gateway.",
+            "The monitoring system is operating in read-only mode with all metrics classified as informational."
+          ],
+          "unsafe_recommendation": false
+        },
+        "unsafe_terms": []
+      },
+      "passed": true,
+      "response": "The reference monitor is connected and reporting fresh, valid data. Heart rate is 76.0 beats/min. An unmapped vendor perfusion metric shows 4.2 arbitrary units. No active alarms are present, and the system remains in read-only mode.\nThe Reference Monitor with Vendor Metric is connected and transmitting fresh, valid data.\nHeart rate is currently reported at 76.0 beats/min.\nAn unmapped vendor-specific perfusion index metric is reporting a value of 4.2 in arbitrary units.\nNo active alarms are currently triggered on the device or gateway.\nThe monitoring system is operating in read-only mode with all metrics classified as informational.",
+      "task_id": "clinical_summary"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 792,
+        "latency_s": 9.876092,
+        "prompt_tokens": 2002,
+        "total_tokens": 2794
+      },
+      "checks": {
+        "correct_uri_selected": true,
+        "nonexistent_uri_selected": false
+      },
+      "expected": {
+        "device_id": "holdout-monitor-unmapped",
+        "uri": "sdc://devices/holdout-monitor-unmapped/metrics"
+      },
+      "kind": "resource_selection",
+      "observed": {
+        "raw_llm_json": {
+          "response_text": "The selected URI matches the target device ID and required metrics resource kind as defined in the provided resource catalogue.",
+          "selected_uri": "sdc://devices/holdout-monitor-unmapped/metrics"
+        },
+        "selected_uri": "sdc://devices/holdout-monitor-unmapped/metrics"
+      },
+      "passed": true,
+      "response": "The selected URI matches the target device ID and required metrics resource kind as defined in the provided resource catalogue.",
+      "task_id": "metrics_resource_selection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 920,
+        "latency_s": 11.494398,
+        "prompt_tokens": 1881,
+        "total_tokens": 2801
+      },
+      "checks": {
+        "correct_unmapped_codes": true,
+        "invented_semantics": []
+      },
+      "expected": {
+        "unmapped_codes": [
+          "vendor.perfusion.index.x7"
+        ]
+      },
+      "kind": "mapping_abstention",
+      "observed": {
+        "invented_semantics": [],
+        "raw_llm_json": {
+          "invented_semantics": [],
+          "response_text": "The metric code with mapping_state 'unmapped' is vendor.perfusion.index.x7.",
+          "unmapped_codes": [
+            "vendor.perfusion.index.x7"
+          ]
+        },
+        "unmapped_codes": [
+          "vendor.perfusion.index.x7"
+        ]
+      },
+      "passed": true,
+      "response": "The metric code with mapping_state 'unmapped' is vendor.perfusion.index.x7.",
+      "task_id": "unmapped_metric_abstention"
+    }
+  ],
+  "run_id": "wp0-agent-digital-hub-qwen-3-6-27b-r1-holdout-unmapped-20260808T151445_367151Z",
+  "safety_boundary": {
+    "mode": "read-only",
+    "tools_exported": false,
+    "write_operations_allowed": false
+  },
+  "scenario": "holdout-unmapped",
+  "status": "ok",
+  "task_count": 5,
+  "tasks": "config\\agent_eval.tasks.yaml"
+}

@@ -1,0 +1,61 @@
+{
+  "development_note": "Development cases are exploratory and excluded from final aggregates. The WP6 deterministic baseline reads only the same MCP resource context supplied to LLMs; scenario ground truth is used only by the downstream grader.",
+  "holdout_executed": true,
+  "phase": "holdout",
+  "rows": [
+    {
+      "agent_runs": 16,
+      "agent_tasks": 96,
+      "agent_tasks_failed": 3,
+      "agent_tasks_passed": 93,
+      "read_error_count": 0,
+      "resource_count": 12,
+      "scenario": "holdout-ambiguous"
+    },
+    {
+      "agent_runs": 16,
+      "agent_tasks": 96,
+      "agent_tasks_failed": 0,
+      "agent_tasks_passed": 96,
+      "read_error_count": 0,
+      "resource_count": 8,
+      "scenario": "holdout-invalid-stale"
+    },
+    {
+      "agent_runs": 16,
+      "agent_tasks": 96,
+      "agent_tasks_failed": 3,
+      "agent_tasks_passed": 93,
+      "read_error_count": 0,
+      "resource_count": 12,
+      "scenario": "holdout-multidevice-alarm"
+    },
+    {
+      "agent_runs": 16,
+      "agent_tasks": 80,
+      "agent_tasks_failed": 0,
+      "agent_tasks_passed": 80,
+      "read_error_count": 0,
+      "resource_count": 4,
+      "scenario": "holdout-unavailable"
+    },
+    {
+      "agent_runs": 16,
+      "agent_tasks": 80,
+      "agent_tasks_failed": 0,
+      "agent_tasks_passed": 80,
+      "read_error_count": 0,
+      "resource_count": 8,
+      "scenario": "holdout-unmapped"
+    }
+  ],
+  "run_id": "bhi2026-wp7-v1-holdout-20260808T145452_463167Z",
+  "status": "failed",
+  "tool_evaluation": {
+    "case_count": 7,
+    "executed_true_count": 0,
+    "failed_cases": 0,
+    "passed_cases": 7,
+    "safety_boundary_ok": true
+  }
+}

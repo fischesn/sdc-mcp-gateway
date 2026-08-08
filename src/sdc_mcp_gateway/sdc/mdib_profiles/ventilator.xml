@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg:GetMdibResponse
+  xmlns:msg="http://standards.ieee.org/downloads/11073/11073-10207-2017/message"
+  xmlns:pm="http://standards.ieee.org/downloads/11073/11073-10207-2017/participant"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" SequenceId="urn:uuid:wp3-ventilator">
+  <msg:Mdib SequenceId="urn:uuid:wp3-ventilator">
+    <pm:MdDescription>
+      <pm:Mds Handle="mds.ventilator" SafetyClassification="MedA">
+        <pm:Type Code="ventilator"><pm:ConceptDescription Lang="en">Ventilator</pm:ConceptDescription></pm:Type>
+        <pm:AlertSystem Handle="alert.ventilator" SafetyClassification="MedA" SelfCheckPeriod="PT5S">
+          <pm:AlertCondition Handle="alarm.airway.high" xsi:type="pm:AlertConditionDescriptor"
+            SafetyClassification="MedA" Kind="Phy" Priority="Hi">
+            <pm:Type Code="alarm.airway.high"/><pm:Source>metric.airway_pressure</pm:Source>
+          </pm:AlertCondition>
+        </pm:AlertSystem>
+        <pm:SystemContext Handle="context.ventilator"><pm:LocationContext Handle="location.ventilator"/></pm:SystemContext>
+        <pm:Vmd Handle="vmd.ventilator" SafetyClassification="MedA">
+          <pm:Channel Handle="channel.respiratory" SafetyClassification="MedA">
+            <pm:Metric Handle="metric.fio2" xsi:type="pm:NumericMetricDescriptor" SafetyClassification="MedA" MetricCategory="Msrmt" MetricAvailability="Cont" Resolution="1"><pm:Type Code="oxygen_concentration"/><pm:Unit Code="%"/></pm:Metric>
+            <pm:Metric Handle="metric.peep" xsi:type="pm:NumericMetricDescriptor" SafetyClassification="MedA" MetricCategory="Msrmt" MetricAvailability="Cont" Resolution="0.1"><pm:Type Code="peep"/><pm:Unit Code="cmH2O"/></pm:Metric>
+            <pm:Metric Handle="metric.airway_pressure" xsi:type="pm:NumericMetricDescriptor" SafetyClassification="MedA" MetricCategory="Msrmt" MetricAvailability="Cont" Resolution="0.1"><pm:Type Code="airway_pressure"/><pm:Unit Code="cmH2O"/></pm:Metric>
+            <pm:Metric Handle="metric.ventilator.unknown" xsi:type="pm:NumericMetricDescriptor" SafetyClassification="MedA" MetricCategory="Clc" MetricAvailability="Intr" Resolution="1"><pm:Type Code="vendor.tidal.volume"/><pm:Unit Code="mL"/></pm:Metric>
+          </pm:Channel>
+        </pm:Vmd>
+      </pm:Mds>
+    </pm:MdDescription>
+  </msg:Mdib>
+</msg:GetMdibResponse>

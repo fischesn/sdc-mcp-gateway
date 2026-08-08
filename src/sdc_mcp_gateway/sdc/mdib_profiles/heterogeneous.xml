@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg:GetMdibResponse
+  xmlns:msg="http://standards.ieee.org/downloads/11073/11073-10207-2017/message"
+  xmlns:pm="http://standards.ieee.org/downloads/11073/11073-10207-2017/participant"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" SequenceId="urn:uuid:wp3-heterogeneous">
+  <msg:Mdib SequenceId="urn:uuid:wp3-heterogeneous">
+    <pm:MdDescription>
+      <pm:Mds Handle="mds.heterogeneous" SafetyClassification="MedA">
+        <pm:Type Code="vendor.heterogeneous"><pm:ConceptDescription Lang="en">Heterogeneous device</pm:ConceptDescription></pm:Type>
+        <pm:Sco Handle="sco.heterogeneous">
+          <pm:Operation Handle="operation.vendor" xsi:type="pm:ActivateOperationDescriptor" OperationTarget="mds.heterogeneous" SafetyClassification="MedC"><pm:Type Code="vendor.operation"/></pm:Operation>
+        </pm:Sco>
+        <pm:SystemContext Handle="context.heterogeneous">
+          <pm:PatientContext Handle="patient.heterogeneous"/><pm:LocationContext Handle="location.heterogeneous"/><pm:OperatorContext Handle="operator.heterogeneous"/>
+        </pm:SystemContext>
+        <pm:Clock Handle="clock.heterogeneous"><pm:TimeProtocol Code="532225"/></pm:Clock>
+        <pm:Vmd Handle="vmd.heterogeneous" SafetyClassification="MedA">
+          <pm:Channel Handle="channel.heterogeneous" SafetyClassification="MedA">
+            <pm:Metric Handle="metric.hr" xsi:type="pm:NumericMetricDescriptor" SafetyClassification="MedA" MetricCategory="Msrmt" MetricAvailability="Cont" Resolution="1"><pm:Type Code="150456"/><pm:Unit Code="beats/min"/></pm:Metric>
+            <pm:Metric Handle="metric.unknown.numeric" xsi:type="pm:NumericMetricDescriptor" SafetyClassification="MedA" MetricCategory="Clc" MetricAvailability="Intr" Resolution="0.1"><pm:Type Code="vendor.unknown.numeric"/><pm:Unit Code="vendor.unit"/></pm:Metric>
+            <pm:Metric Handle="metric.unknown.vendor" xsi:type="pm:NumericMetricDescriptor" SafetyClassification="MedA" MetricCategory="Clc" MetricAvailability="Intr" Resolution="1"><pm:Type Code="vendor.unknown.mode"/><pm:Unit Code="1"/></pm:Metric>
+          </pm:Channel>
+        </pm:Vmd>
+      </pm:Mds>
+    </pm:MdDescription>
+  </msg:Mdib>
+</msg:GetMdibResponse>

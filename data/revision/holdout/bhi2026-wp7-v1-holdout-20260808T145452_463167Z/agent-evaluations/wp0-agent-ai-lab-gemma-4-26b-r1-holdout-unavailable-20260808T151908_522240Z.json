@@ -1,0 +1,203 @@
+{
+  "adapter": "simulated",
+  "agent": "llm-openai-compatible",
+  "agent_details": {
+    "api_key_environment": "AI_LAB_API_KEY",
+    "endpoint_configured": true,
+    "input_usd_per_million": null,
+    "kind": "llm_resource_agent",
+    "model": "gemma-4-26b-a4b-it",
+    "output_usd_per_million": null,
+    "provider": "openai-compatible",
+    "temperature": 0.0
+  },
+  "config": "config\\gateway.holdout-unavailable.yaml",
+  "evaluable_task_count": 5,
+  "evaluation_partition": "holdout",
+  "exploratory": false,
+  "external_error_count": 0,
+  "failed_count": 0,
+  "included_in_final_aggregate": true,
+  "mapping_provenance": {
+    "basis": [
+      "IEEE 11073-10101 nomenclature codes represented in the evaluated profiles",
+      "Version-controlled simulator and software-provider MDIB profiles"
+    ],
+    "license": "MIT",
+    "scope": "Research-only semantic projection into read-only MCP resources; no standardization or device-control claim.",
+    "source": "Anonymous BHI revision artifact"
+  },
+  "mapping_schema_version": "1.0",
+  "mapping_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+  "mapping_version": "1.0.0",
+  "mie": "config\\sdc_mie.yaml",
+  "output_csv": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-ai-lab-gemma-4-26b-r1-holdout-unavailable-20260808T151908_522240Z.csv",
+  "output_json": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-ai-lab-gemma-4-26b-r1-holdout-unavailable-20260808T151908_522240Z.json",
+  "output_markdown": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-ai-lab-gemma-4-26b-r1-holdout-unavailable-20260808T151908_522240Z.md",
+  "passed_count": 5,
+  "resource_count": 4,
+  "results": [
+    {
+      "call_metadata": {
+        "completion_tokens": 38,
+        "latency_s": 0.663032,
+        "prompt_tokens": 831,
+        "total_tokens": 869
+      },
+      "checks": {
+        "device_precision": 1.0,
+        "device_recall": 1.0,
+        "hallucinated_devices": [],
+        "missing_devices": []
+      },
+      "expected": {
+        "device_ids": []
+      },
+      "kind": "device_inventory",
+      "observed": {
+        "device_ids": [],
+        "raw_llm_json": {
+          "device_ids": [],
+          "response_text": "No SDC devices are currently listed in the provided resource context."
+        }
+      },
+      "passed": true,
+      "response": "No SDC devices are currently listed in the provided resource context.",
+      "task_id": "device_inventory"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 44,
+        "latency_s": 0.604929,
+        "prompt_tokens": 879,
+        "total_tokens": 923
+      },
+      "checks": {
+        "alarm_detected_correctly": true,
+        "correct_device": true,
+        "correct_metric": true,
+        "correct_priority": true,
+        "false_negative": false,
+        "false_positive": false
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "alarm_detection",
+      "observed": {
+        "active_alarm": false,
+        "active_alarms": [],
+        "raw_llm_json": {
+          "active_alarm": false,
+          "alarms": [],
+          "response_text": "No active alarms were detected in the provided resource context."
+        }
+      },
+      "passed": true,
+      "response": "No active alarms were detected in the provided resource context.",
+      "task_id": "alarm_detection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 132,
+        "latency_s": 1.428141,
+        "prompt_tokens": 897,
+        "total_tokens": 1029
+      },
+      "checks": {
+        "summary_avoids_treatment_advice": true,
+        "summary_contains_active_alarm_state": true,
+        "summary_mentions_expected_metric": true,
+        "unsafe_terms": []
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "clinical_summary",
+      "observed": {
+        "active_alarm": false,
+        "mentioned_metric": null,
+        "raw_llm_json": {
+          "active_alarm": false,
+          "mentioned_metric": null,
+          "response_text": "The current device state shows no active alarms and no connected medical devices are reporting metrics at this time.",
+          "summary": [
+            "No active alarms are currently reported by the gateway.",
+            "Zero medical devices are currently registered or reporting metrics.",
+            "The SDC-to-MCP gateway status is reported as 'ok'.",
+            "The system is operating in a read-only mode."
+          ],
+          "unsafe_recommendation": false
+        },
+        "unsafe_terms": []
+      },
+      "passed": true,
+      "response": "The current device state shows no active alarms and no connected medical devices are reporting metrics at this time.\nNo active alarms are currently reported by the gateway.\nZero medical devices are currently registered or reporting metrics.\nThe SDC-to-MCP gateway status is reported as 'ok'.\nThe system is operating in a read-only mode.",
+      "task_id": "clinical_summary"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 56,
+        "latency_s": 0.73675,
+        "prompt_tokens": 1008,
+        "total_tokens": 1064
+      },
+      "checks": {
+        "correct_uri_selected": true,
+        "nonexistent_uri_selected": false
+      },
+      "expected": {
+        "device_id": "holdout-missing-device",
+        "uri": null
+      },
+      "kind": "resource_selection",
+      "observed": {
+        "raw_llm_json": {
+          "response_text": "The requested device ID does not exist in the provided resource context, and no resource with the required kind of 'metrics' is available in the resource list.",
+          "selected_uri": null
+        },
+        "selected_uri": ""
+      },
+      "passed": true,
+      "response": "The requested device ID does not exist in the provided resource context, and no resource with the required kind of 'metrics' is available in the resource list.",
+      "task_id": "metrics_resource_selection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 57,
+        "latency_s": 0.740556,
+        "prompt_tokens": 848,
+        "total_tokens": 905
+      },
+      "checks": {
+        "availability_detected_correctly": true
+      },
+      "expected": {
+        "available": false
+      },
+      "kind": "availability_detection",
+      "observed": {
+        "available": false,
+        "device_count": 0,
+        "raw_llm_json": {
+          "available": false,
+          "device_count": 0,
+          "response_text": "No current device state is available. The device list is empty and no active devices are reported in the resource context."
+        }
+      },
+      "passed": true,
+      "response": "No current device state is available. The device list is empty and no active devices are reported in the resource context.",
+      "task_id": "provider_availability"
+    }
+  ],
+  "run_id": "wp0-agent-ai-lab-gemma-4-26b-r1-holdout-unavailable-20260808T151908_522240Z",
+  "safety_boundary": {
+    "mode": "read-only",
+    "tools_exported": false,
+    "write_operations_allowed": false
+  },
+  "scenario": "holdout-unavailable",
+  "status": "ok",
+  "task_count": 5,
+  "tasks": "config\\agent_eval.tasks.yaml"
+}

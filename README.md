@@ -25,7 +25,7 @@ The current prototype provides:
 - read-only MCP resource exposure;
 - MCP client smoke tests;
 - benchmark and aggregation utilities;
-- deterministic oracle-agent evaluation;
+- deterministic resource-only baseline evaluation;
 - optional LLM-backed agent evaluation, including Gemini and OpenAI-compatible endpoints;
 - free-question agent mode for exploratory resource-based questions;
 - dry-run MCP tools with policy validation and audit logging.
@@ -50,6 +50,11 @@ The evaluated prototype uses the following safety boundary:
 - Dry-run tools write audit records.
 - Dry-run tools always return `executed=false`.
 - No SDC SetService or ActivateOperation call is executed.
+- Configurations with `allow_write_operations=true` fail validation at startup.
+- Non-dry-run tool policies and execution-capable tool results cannot be constructed.
+- An instrumented SDC adapter independently counts attempted SetService and
+  ActivateOperation calls during boundary tests.
+- An AST-based architecture check rejects device-write APIs in agent-facing code.
 
 In earlier read-only evaluations, no MCP tools were exported. Since v0.10, dry-run tools can
 be exported deliberately through the dry-run configuration, but they still do not execute
@@ -120,7 +125,16 @@ Check the dry-run tool path:
 ```powershell
 sdc-mcp-gateway tool-smoke-test `
   --config config/gateway.simulated.dryrun.example.yaml
+
+sdc-mcp-gateway verify-no-execution `
+  --config config/gateway.simulated.dryrun.high-airway-pressure.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tool-policy config/tool_policies.yaml
 ```
+
+The final command combines the independent write spy, device-state digests,
+agent-facing static analysis, and exhaustive exploration of the finite abstract
+proposal workflow. See [docs/no-execution-boundary.md](docs/no-execution-boundary.md).
 
 ## Simulated providers and resources
 
@@ -221,7 +235,7 @@ Generated benchmark outputs are written below `data/experiment_runs/` and are ig
 The agent-evaluation harness runs natural-language tasks against the exposed resource context
 and grades the responses against scenario-specific ground truth.
 
-Run all default tasks for one scenario using the deterministic oracle agent:
+Run all default tasks for one development scenario using the deterministic resource baseline:
 
 ```powershell
 sdc-mcp-gateway evaluate-agent-tasks `
@@ -229,7 +243,7 @@ sdc-mcp-gateway evaluate-agent-tasks `
   --mie config/sdc_mie.yaml `
   --tasks config/agent_eval.tasks.yaml `
   --scenario airway-pressure `
-  --agent oracle `
+  --agent deterministic-baseline `
   --output-dir data/agent_eval `
   --elapsed-s 100
 ```
@@ -243,7 +257,7 @@ sdc-mcp-gateway evaluate-agent-tasks `
   --tasks config/agent_eval.tasks.yaml `
   --scenario airway-pressure `
   --task-id clinical_summary `
-  --agent oracle `
+  --agent deterministic-baseline `
   --output-dir data/agent_eval `
   --elapsed-s 100
 ```
@@ -274,6 +288,22 @@ sdc-mcp-gateway summarize-agent-evaluations `
 ```
 
 Generated agent-evaluation outputs are written below `data/agent_eval/` and are ignored by Git.
+
+## BHI 2026 revision pipeline
+
+The revision workflow separates the original development cases from a disabled,
+not-yet-defined hold-out phase. Run the complete current development pipeline with:
+
+```powershell
+sdc-mcp-gateway run-revision-pipeline `
+  --manifest config/bhi2026_revision.yaml `
+  --phase development
+```
+
+The command writes an anonymous manifest lock and paper-ready JSON, CSV, and
+Markdown summaries below `data/revision/development/`. Hold-out execution is
+blocked until its inputs are populated, frozen, and explicitly authorized. See
+[docs/revision-evaluation.md](docs/revision-evaluation.md).
 
 ## Free-question mode
 
@@ -393,9 +423,63 @@ sdc-mcp-gateway serve `
 
 ## Real SDC networks
 
+For the hardware-free software-provider testbed used in the BHI revision, run:
+
+```powershell
+sdc-mcp-gateway evaluate-sdc-protocol `
+  --local-ip <active-local-ipv4> `
+  --repetitions 5
+```
+
+This starts monitor, ventilator, and heterogeneous `sdc11073` providers in
+separate processes and exercises ephemeral mutual TLS, HTTPS/SOAP `GetMdib`,
+XML/MDIB processing, mapping, and MCP resource reads. Same-host WS-Discovery
+delivery is measured separately and any directed-XAddr fallback is explicit in
+the JSON report. See [docs/wp3-sdc-protocol-evidence.md](docs/wp3-sdc-protocol-evidence.md).
+
 For a step-by-step first validation in a real SDC/VPN/lab network, see
 [docs/REAL_SDC_TESTING.md](docs/REAL_SDC_TESTING.md). The current MCP server mode is
 stdio-based; network-facing MCP transport is planned for a later major version.
+
+## Failure and lifecycle evaluation
+
+Run the deterministic WP4 failure, freshness, recovery, ordering, and alarm
+lifecycle suite with:
+
+```powershell
+sdc-mcp-gateway evaluate-lifecycle `
+  --suite config/wp4_lifecycle_scenarios.yaml `
+  --mie config/sdc_mie.yaml `
+  --tool-policy config/tool_policies.yaml
+```
+
+The 14 scenarios expose source and reception timestamps, age of information,
+provider status, sequence/MDIB versions, and explicit `fresh`, `stale`,
+`invalid`, `unavailable`, or `recovered` classifications. Dry-run proposals
+fail closed for non-current state and for an obsolete snapshot binding.
+Duplicate and reordered updates do not replace the latest accepted snapshot.
+This is an ordered-event simulator harness, not a production SDC subscription
+or clinical alarm implementation. See
+[docs/wp4-lifecycle-evidence.md](docs/wp4-lifecycle-evidence.md).
+
+## Formalized SDC-MIE mapping
+
+Validate the versioned mapping and generate coverage for all software SDC
+profiles with:
+
+```powershell
+sdc-mcp-gateway evaluate-mapping `
+  --mie config/sdc_mie.yaml `
+  --output data/revision/development/wp5-mapping-evidence.json
+```
+
+SDC-MIE 1.0 uses a checked-in JSON Schema plus cross-entry semantic checks for
+unique codes/handles, unit consistency, numeric bounds, access and safety
+classification, provenance, and human-approval metadata. Loaded mappings carry
+the SHA-256 of the exact source file. Observed elements are explicitly
+`mapped`, `unmapped`, `unsupported`, or `conflicting`; ambiguous mappings fail
+closed. See [docs/sdc-mie.md](docs/sdc-mie.md) and
+[docs/wp5-mapping-evidence.md](docs/wp5-mapping-evidence.md).
 
 A real SDC network can be configured through a local, untracked configuration file such as:
 

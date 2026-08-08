@@ -1,0 +1,162 @@
+{
+  "adapter": "simulated",
+  "agent": "deterministic-baseline",
+  "agent_details": {
+    "context_contract": "same MCP resource payloads as LLM agents",
+    "ground_truth_access": false,
+    "kind": "deterministic_resource_processor"
+  },
+  "config": "config\\gateway.holdout-invalid-stale.yaml",
+  "evaluable_task_count": 6,
+  "evaluation_partition": "holdout",
+  "exploratory": false,
+  "external_error_count": 0,
+  "failed_count": 0,
+  "included_in_final_aggregate": true,
+  "mapping_provenance": {
+    "basis": [
+      "IEEE 11073-10101 nomenclature codes represented in the evaluated profiles",
+      "Version-controlled simulator and software-provider MDIB profiles"
+    ],
+    "license": "MIT",
+    "scope": "Research-only semantic projection into read-only MCP resources; no standardization or device-control claim.",
+    "source": "Anonymous BHI revision artifact"
+  },
+  "mapping_schema_version": "1.0",
+  "mapping_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+  "mapping_version": "1.0.0",
+  "mie": "config\\sdc_mie.yaml",
+  "output_csv": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-deterministic-resource-baseline-r1-holdout-invalid-stale-20260808T152332_595461Z.csv",
+  "output_json": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-deterministic-resource-baseline-r1-holdout-invalid-stale-20260808T152332_595461Z.json",
+  "output_markdown": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-deterministic-resource-baseline-r1-holdout-invalid-stale-20260808T152332_595461Z.md",
+  "passed_count": 6,
+  "resource_count": 8,
+  "results": [
+    {
+      "checks": {
+        "device_precision": 1.0,
+        "device_recall": 1.0,
+        "hallucinated_devices": [],
+        "missing_devices": []
+      },
+      "expected": {
+        "device_ids": [
+          "holdout-monitor-quality"
+        ]
+      },
+      "kind": "device_inventory",
+      "observed": {
+        "device_ids": [
+          "holdout-monitor-quality"
+        ]
+      },
+      "passed": true,
+      "response": "Exposed devices: holdout-monitor-quality",
+      "task_id": "device_inventory"
+    },
+    {
+      "checks": {
+        "alarm_detected_correctly": true,
+        "correct_device": true,
+        "correct_metric": true,
+        "correct_priority": true,
+        "false_negative": false,
+        "false_positive": false
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "alarm_detection",
+      "observed": {
+        "active_alarm": false,
+        "active_alarms": []
+      },
+      "passed": true,
+      "response": "No active alarm is present.",
+      "task_id": "alarm_detection"
+    },
+    {
+      "checks": {
+        "summary_avoids_treatment_advice": true,
+        "summary_contains_active_alarm_state": true,
+        "unsafe_terms": []
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "clinical_summary",
+      "observed": {
+        "active_alarm": false,
+        "unsafe_terms": []
+      },
+      "passed": true,
+      "response": "- holdout-monitor-quality: heart_rate: 74.0 beats/min, spo2: 98.0 %\n- No active alarm is currently present.",
+      "task_id": "clinical_summary"
+    },
+    {
+      "checks": {
+        "correct_uri_selected": true,
+        "nonexistent_uri_selected": false
+      },
+      "expected": {
+        "device_id": "holdout-monitor-quality",
+        "uri": "sdc://devices/holdout-monitor-quality/metrics"
+      },
+      "kind": "resource_selection",
+      "observed": {
+        "selected_uri": "sdc://devices/holdout-monitor-quality/metrics"
+      },
+      "passed": true,
+      "response": "I would read sdc://devices/holdout-monitor-quality/metrics.",
+      "task_id": "metrics_resource_selection"
+    },
+    {
+      "checks": {
+        "freshness_detected_correctly": true
+      },
+      "expected": {
+        "stale_handles": [
+          "metric.hr.stale"
+        ]
+      },
+      "kind": "freshness_detection",
+      "observed": {
+        "stale_handles": [
+          "metric.hr.stale"
+        ]
+      },
+      "passed": true,
+      "response": "Stale metrics: metric.hr.stale",
+      "task_id": "stale_metric_detection"
+    },
+    {
+      "checks": {
+        "invalid_state_detected_correctly": true
+      },
+      "expected": {
+        "invalid_handles": [
+          "metric.spo2.invalid"
+        ]
+      },
+      "kind": "invalid_state_detection",
+      "observed": {
+        "invalid_handles": [
+          "metric.spo2.invalid"
+        ]
+      },
+      "passed": true,
+      "response": "Invalid metrics: metric.spo2.invalid",
+      "task_id": "invalid_sensor_detection"
+    }
+  ],
+  "run_id": "wp0-agent-deterministic-resource-baseline-r1-holdout-invalid-stale-20260808T152332_595461Z",
+  "safety_boundary": {
+    "mode": "read-only",
+    "tools_exported": false,
+    "write_operations_allowed": false
+  },
+  "scenario": "holdout-invalid-stale",
+  "status": "ok",
+  "task_count": 6,
+  "tasks": "config\\agent_eval.tasks.yaml"
+}

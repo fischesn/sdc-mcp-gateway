@@ -1,0 +1,5 @@
+version: "1.0"
+description: "Frozen hold-out case: provider returns no available device snapshot."
+random_seed: 6204
+devices: []
+

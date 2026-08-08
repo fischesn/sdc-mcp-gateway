@@ -1,0 +1,216 @@
+{
+  "adapter": "simulated",
+  "agent": "llm-ollama",
+  "agent_details": {
+    "api_key_environment": "OLLAMA_API_KEY",
+    "endpoint_configured": true,
+    "input_usd_per_million": null,
+    "kind": "llm_resource_agent",
+    "model": "gpt-oss:20b",
+    "output_usd_per_million": null,
+    "provider": "ollama",
+    "temperature": 0.0
+  },
+  "config": "config\\gateway.holdout-unmapped.yaml",
+  "evaluable_task_count": 5,
+  "evaluation_partition": "holdout",
+  "exploratory": false,
+  "external_error_count": 0,
+  "failed_count": 0,
+  "included_in_final_aggregate": true,
+  "mapping_provenance": {
+    "basis": [
+      "IEEE 11073-10101 nomenclature codes represented in the evaluated profiles",
+      "Version-controlled simulator and software-provider MDIB profiles"
+    ],
+    "license": "MIT",
+    "scope": "Research-only semantic projection into read-only MCP resources; no standardization or device-control claim.",
+    "source": "Anonymous BHI revision artifact"
+  },
+  "mapping_schema_version": "1.0",
+  "mapping_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+  "mapping_version": "1.0.0",
+  "mie": "config\\sdc_mie.yaml",
+  "output_csv": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-ollama-cloud-gpt-oss-20b-r1-holdout-unmapped-20260808T151254_184565Z.csv",
+  "output_json": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-ollama-cloud-gpt-oss-20b-r1-holdout-unmapped-20260808T151254_184565Z.json",
+  "output_markdown": "data\\revision\\holdout\\bhi2026-wp7-v1-holdout-20260808T145452_463167Z\\agent-evaluations\\wp0-agent-ollama-cloud-gpt-oss-20b-r1-holdout-unmapped-20260808T151254_184565Z.md",
+  "passed_count": 5,
+  "resource_count": 8,
+  "results": [
+    {
+      "call_metadata": {
+        "completion_tokens": 128,
+        "latency_s": 6.571915,
+        "prompt_tokens": 1661,
+        "provider_total_duration_ns": 5818310828
+      },
+      "checks": {
+        "device_precision": 1.0,
+        "device_recall": 1.0,
+        "hallucinated_devices": [],
+        "missing_devices": []
+      },
+      "expected": {
+        "device_ids": [
+          "holdout-monitor-unmapped"
+        ]
+      },
+      "kind": "device_inventory",
+      "observed": {
+        "device_ids": [
+          "holdout-monitor-unmapped"
+        ],
+        "raw_llm_json": {
+          "device_ids": [
+            "holdout-monitor-unmapped"
+          ],
+          "response_text": "The gateway currently exposes one SDC device: holdout-monitor-unmapped."
+        }
+      },
+      "passed": true,
+      "response": "The gateway currently exposes one SDC device: holdout-monitor-unmapped.",
+      "task_id": "device_inventory"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 119,
+        "latency_s": 1.797849,
+        "prompt_tokens": 1702,
+        "provider_total_duration_ns": 1227089027
+      },
+      "checks": {
+        "alarm_detected_correctly": true,
+        "correct_device": true,
+        "correct_metric": true,
+        "correct_priority": true,
+        "false_negative": false,
+        "false_positive": false
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "alarm_detection",
+      "observed": {
+        "active_alarm": false,
+        "active_alarms": [],
+        "raw_llm_json": {
+          "active_alarm": false,
+          "alarms": [],
+          "response_text": "No active alarms detected."
+        }
+      },
+      "passed": true,
+      "response": "No active alarms detected.",
+      "task_id": "alarm_detection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 372,
+        "latency_s": 6.523844,
+        "prompt_tokens": 1722,
+        "provider_total_duration_ns": 5973481966
+      },
+      "checks": {
+        "summary_avoids_treatment_advice": true,
+        "summary_contains_active_alarm_state": true,
+        "summary_mentions_expected_metric": true,
+        "unsafe_terms": []
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "clinical_summary",
+      "observed": {
+        "active_alarm": false,
+        "mentioned_metric": "heart_rate",
+        "raw_llm_json": {
+          "active_alarm": false,
+          "mentioned_metric": "heart_rate",
+          "response_text": "The Reference Monitor with Vendor Metric is currently connected and reporting a heart rate of 76 beats per minute. No active alarms are present. An additional vendor-specific perfusion index metric is available but not mapped to a standard semantic name. The device operates in read‑only mode.",
+          "summary": [
+            "Device is connected and reporting heart rate of 76 beats/min",
+            "No active alarms are triggered",
+            "Vendor perfusion index metric is present but unmapped",
+            "Device operates in read‑only mode"
+          ],
+          "unsafe_recommendation": false
+        },
+        "unsafe_terms": []
+      },
+      "passed": true,
+      "response": "The Reference Monitor with Vendor Metric is currently connected and reporting a heart rate of 76 beats per minute. No active alarms are present. An additional vendor-specific perfusion index metric is available but not mapped to a standard semantic name. The device operates in read‑only mode.\nDevice is connected and reporting heart rate of 76 beats/min\nNo active alarms are triggered\nVendor perfusion index metric is present but unmapped\nDevice operates in read‑only mode",
+      "task_id": "clinical_summary"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 143,
+        "latency_s": 3.335883,
+        "prompt_tokens": 1811,
+        "provider_total_duration_ns": 2700410931
+      },
+      "checks": {
+        "correct_uri_selected": true,
+        "nonexistent_uri_selected": false
+      },
+      "expected": {
+        "device_id": "holdout-monitor-unmapped",
+        "uri": "sdc://devices/holdout-monitor-unmapped/metrics"
+      },
+      "kind": "resource_selection",
+      "observed": {
+        "raw_llm_json": {
+          "response_text": "The URI matches the device's metrics resource.",
+          "selected_uri": "sdc://devices/holdout-monitor-unmapped/metrics"
+        },
+        "selected_uri": "sdc://devices/holdout-monitor-unmapped/metrics"
+      },
+      "passed": true,
+      "response": "The URI matches the device's metrics resource.",
+      "task_id": "metrics_resource_selection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 339,
+        "latency_s": 6.068013,
+        "prompt_tokens": 1697,
+        "provider_total_duration_ns": 5715337572
+      },
+      "checks": {
+        "correct_unmapped_codes": true,
+        "invented_semantics": []
+      },
+      "expected": {
+        "unmapped_codes": [
+          "vendor.perfusion.index.x7"
+        ]
+      },
+      "kind": "mapping_abstention",
+      "observed": {
+        "invented_semantics": [],
+        "raw_llm_json": {
+          "invented_semantics": [],
+          "response_text": "vendor.perfusion.index.x7",
+          "unmapped_codes": [
+            "vendor.perfusion.index.x7"
+          ]
+        },
+        "unmapped_codes": [
+          "vendor.perfusion.index.x7"
+        ]
+      },
+      "passed": true,
+      "response": "vendor.perfusion.index.x7",
+      "task_id": "unmapped_metric_abstention"
+    }
+  ],
+  "run_id": "wp0-agent-ollama-cloud-gpt-oss-20b-r1-holdout-unmapped-20260808T151254_184565Z",
+  "safety_boundary": {
+    "mode": "read-only",
+    "tools_exported": false,
+    "write_operations_allowed": false
+  },
+  "scenario": "holdout-unmapped",
+  "status": "ok",
+  "task_count": 5,
+  "tasks": "config\\agent_eval.tasks.yaml"
+}

@@ -1,32 +1,50 @@
-version: "0.10-example"
-description: "Example SDC-MIE mapping for the read-only prototype and simulated SDC-like scenarios. Replace codes with real SDC nomenclature handles from the testbed."
+schema_version: "1.0"
+version: "1.0.0"
+description: "Versioned SDC-MIE research mapping for the read-only prototype, deterministic simulator, and software SDC profiles."
+provenance:
+  source: "Anonymous BHI revision artifact"
+  basis:
+    - "IEEE 11073-10101 nomenclature codes represented in the evaluated profiles"
+    - "Version-controlled simulator and software-provider MDIB profiles"
+  scope: "Research-only semantic projection into read-only MCP resources; no standardization or device-control claim."
+  license: "MIT"
 
 mappings:
   - code: "150456"
+    handles: ["metric.hr"]
     semantic_name: "heart_rate"
     label: "Heart rate"
     unit: "beats/min"
     access: "read-only"
     safety_class: "informational"
+    requires_human_approval: false
     description: "Current heart rate reported by a patient monitor."
+    provenance: "IEEE 11073 nomenclature code used by the evaluated monitor profiles."
 
   - code: "150452"
+    handles: ["metric.spo2"]
     semantic_name: "spo2"
     label: "Peripheral oxygen saturation"
     unit: "%"
     access: "read-only"
     safety_class: "informational"
+    requires_human_approval: false
     description: "Peripheral oxygen saturation reported by a patient monitor."
+    provenance: "IEEE 11073 nomenclature code used by the evaluated monitor profile."
 
   - code: "151562"
+    handles: ["metric.rr"]
     semantic_name: "respiratory_rate"
     label: "Respiratory rate"
     unit: "1/min"
     access: "read-only"
     safety_class: "informational"
+    requires_human_approval: false
     description: "Respiratory rate reported by a patient monitor."
+    provenance: "IEEE 11073 nomenclature code used by the evaluated monitor profile."
 
   - code: "oxygen_concentration"
+    handles: ["metric.fio2"]
     semantic_name: "fio2"
     label: "Fraction of inspired oxygen"
     unit: "%"
@@ -36,8 +54,10 @@ mappings:
     max_value: 100
     requires_human_approval: true
     description: "Current oxygen concentration configured on a ventilator. The prototype exposes this value read-only."
+    provenance: "Stable research-profile code and handle; not asserted as an IEEE 11073 nomenclature code."
 
   - code: "peep"
+    handles: ["metric.peep"]
     semantic_name: "peep"
     label: "Positive end-expiratory pressure"
     unit: "cmH2O"
@@ -47,11 +67,15 @@ mappings:
     max_value: 25
     requires_human_approval: true
     description: "Current PEEP value reported by a ventilator. The prototype exposes this value read-only."
+    provenance: "Stable research-profile code and handle; not asserted as an IEEE 11073 nomenclature code."
 
   - code: "airway_pressure"
+    handles: ["metric.airway_pressure"]
     semantic_name: "airway_pressure"
     label: "Airway pressure"
     unit: "cmH2O"
     access: "read-only"
     safety_class: "informational"
+    requires_human_approval: false
     description: "Current airway pressure reported by a ventilator."
+    provenance: "Stable research-profile code and handle; not asserted as an IEEE 11073 nomenclature code."

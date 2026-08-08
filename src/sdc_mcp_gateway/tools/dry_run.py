@@ -1,15 +1,16 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
 from sdc_mcp_gateway.mcp.resources import ResourceRegistry
-from sdc_mcp_gateway.models import AuditRecord, utc_now_iso
+from sdc_mcp_gateway.models import AuditRecord, DeviceSnapshot, utc_now_iso
 
 
 class ToolParameter(BaseModel):
@@ -41,6 +42,19 @@ class ToolPolicyDocument(BaseModel):
     def by_name(self) -> dict[str, ToolPolicy]:
         return {tool.name: tool for tool in self.tools}
 
+    @model_validator(mode="after")
+    def enforce_dry_run_only_policies(self) -> "ToolPolicyDocument":
+        names = [tool.name for tool in self.tools]
+        if len(names) != len(set(names)):
+            raise ValueError("Tool policy names must be unique")
+        non_dry_run = [tool.name for tool in self.tools if not tool.dry_run_only]
+        if non_dry_run:
+            raise ValueError(
+                "Fail-closed no-execution boundary: every tool policy must set "
+                f"dry_run_only=true; invalid tools: {', '.join(non_dry_run)}"
+            )
+        return self
+
 
 class ToolDescriptor(BaseModel):
     name: str
@@ -69,6 +83,15 @@ class ToolCallResult(BaseModel):
     policy_version: str | None = None
     timestamp: str = Field(default_factory=utc_now_iso)
     details: dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def enforce_no_execution_result(self) -> "ToolCallResult":
+        if self.executed or self.write_operations_allowed or not self.dry_run:
+            raise ValueError(
+                "Tool results are fail-closed: dry_run=true, executed=false, and "
+                "write_operations_allowed=false are mandatory"
+            )
+        return self
 
 
 def load_tool_policies(path: str | Path) -> ToolPolicyDocument:
@@ -121,7 +144,7 @@ class DryRunToolRegistry:
             for policy in self.policies.tools
         ]
 
-    def call_tool(self, name: str, arguments: dict[str, Any]) -> ToolCallResult:
+    def call_tool(self, name: str, arguments: Any) -> ToolCallResult:
         if not self.tools_enabled:
             result = ToolCallResult(
                 tool=name,
@@ -129,6 +152,16 @@ class DryRunToolRegistry:
                 reason="tools_disabled",
                 policy_version=self.policies.version,
                 details={"message": "Dry-run MCP tools are not enabled in this gateway configuration."},
+            )
+            self._audit(result, arguments)
+            return result
+
+        if not isinstance(arguments, dict):
+            result = ToolCallResult(
+                tool=name,
+                status="rejected",
+                reason="arguments_not_object",
+                policy_version=self.policies.version,
             )
             self._audit(result, arguments)
             return result
@@ -155,6 +188,19 @@ class DryRunToolRegistry:
             self._audit(result, arguments)
             return result
 
+
+        argument_error = self._validate_argument_shape(policy, arguments)
+        if argument_error is not None:
+            result = self._base_result(policy, name).model_copy(
+                update={
+                    "status": "rejected",
+                    "reason": argument_error[0],
+                    "details": argument_error[1],
+                }
+            )
+            self._audit(result, arguments)
+            return result
+
         if name in {"prepare_set_fio2", "prepare_set_peep"}:
             result = self._call_numeric_setpoint(policy, name, arguments)
         elif name == "prepare_acknowledge_alarm":
@@ -170,6 +216,33 @@ class DryRunToolRegistry:
         self._audit(result, arguments)
         return result
 
+    def _validate_argument_shape(
+        self,
+        policy: ToolPolicy,
+        arguments: dict[str, Any],
+    ) -> tuple[str, dict[str, Any]] | None:
+        parameters = {parameter.name: parameter for parameter in policy.parameters}
+        unexpected = sorted(set(arguments) - set(parameters))
+        if unexpected:
+            return "unexpected_arguments", {"unexpected": unexpected}
+        missing = sorted(
+            name
+            for name, parameter in parameters.items()
+            if parameter.required and name not in arguments
+        )
+        if missing:
+            return "missing_required_arguments", {"missing": missing}
+        for name, value in arguments.items():
+            expected = parameters[name].type
+            if expected == "string" and not isinstance(value, str):
+                return "invalid_argument_type", {"argument": name, "expected": expected}
+            if expected == "number":
+                if isinstance(value, bool) or not isinstance(value, (int, float)):
+                    return "invalid_argument_type", {"argument": name, "expected": expected}
+                if not math.isfinite(float(value)):
+                    return "invalid_value", {"argument": name, "message": "value must be finite"}
+        return None
+
     def _call_numeric_setpoint(self, policy: ToolPolicy, name: str, arguments: dict[str, Any]) -> ToolCallResult:
         device_id = str(arguments.get("device_id", ""))
         raw_value = arguments.get("value")
@@ -179,6 +252,9 @@ class DryRunToolRegistry:
         device = self.resource_registry.devices.get(device_id)
         if device is None:
             return base.model_copy(update={"status": "rejected", "reason": "unknown_device"})
+        state_error = self._validate_device_state(base, device, arguments)
+        if state_error is not None:
+            return state_error
         actual_type = infer_device_type(device_id, device.display_name, device.model)
         if policy.target_device_type and actual_type != policy.target_device_type:
             return base.model_copy(
@@ -188,10 +264,9 @@ class DryRunToolRegistry:
                     "details": {"expected_device_type": policy.target_device_type, "actual_device_type": actual_type},
                 }
             )
-        try:
-            value = float(raw_value)
-        except (TypeError, ValueError):
+        if isinstance(raw_value, bool) or not isinstance(raw_value, (int, float)):
             return base.model_copy(update={"status": "rejected", "reason": "invalid_value"})
+        value = float(raw_value)
         allowed_range = [policy.min_value, policy.max_value]
         if policy.min_value is not None and value < policy.min_value:
             return base.model_copy(
@@ -230,6 +305,9 @@ class DryRunToolRegistry:
         device = self.resource_registry.devices.get(device_id)
         if device is None:
             return base.model_copy(update={"status": "rejected", "reason": "unknown_device"})
+        state_error = self._validate_device_state(base, device, arguments)
+        if state_error is not None:
+            return state_error
         if not alarm_handle:
             return base.model_copy(update={"status": "rejected", "reason": "missing_alarm_handle"})
         active_alarm_handles = {alarm.handle for alarm in device.alarms if alarm.presence is True}
@@ -249,6 +327,70 @@ class DryRunToolRegistry:
             }
         )
 
+    def _validate_device_state(
+        self,
+        base: ToolCallResult,
+        device: DeviceSnapshot,
+        arguments: dict[str, Any],
+    ) -> ToolCallResult | None:
+        state_details = {
+            "provider_status": device.provider_status,
+            "freshness": device.freshness,
+            "freshness_reason": device.freshness_reason,
+            "mdib_version": device.mdib_version,
+            "update_sequence": device.update_sequence,
+            "age_of_information_ms": device.age_of_information_ms,
+        }
+        if device.provider_status != "connected" or device.freshness == "unavailable":
+            return base.model_copy(
+                update={
+                    "status": "rejected",
+                    "reason": "provider_unavailable",
+                    "details": state_details,
+                }
+            )
+        if device.freshness == "stale":
+            return base.model_copy(
+                update={"status": "rejected", "reason": "stale_snapshot", "details": state_details}
+            )
+        if device.freshness == "invalid":
+            return base.model_copy(
+                update={"status": "rejected", "reason": "invalid_snapshot", "details": state_details}
+            )
+
+        proposed_version = arguments.get("snapshot_version")
+        if proposed_version is None:
+            return None
+        if isinstance(proposed_version, bool) or not isinstance(proposed_version, (int, float)):
+            return base.model_copy(
+                update={
+                    "status": "rejected",
+                    "reason": "invalid_snapshot_version",
+                    "details": state_details,
+                }
+            )
+        if not float(proposed_version).is_integer():
+            return base.model_copy(
+                update={
+                    "status": "rejected",
+                    "reason": "invalid_snapshot_version",
+                    "details": state_details,
+                }
+            )
+        version = int(proposed_version)
+        if version != device.mdib_version:
+            state_details["proposed_snapshot_version"] = version
+            return base.model_copy(
+                update={
+                    "status": "rejected",
+                    "reason": "obsolete_snapshot"
+                    if version < device.mdib_version
+                    else "snapshot_version_mismatch",
+                    "details": state_details,
+                }
+            )
+        return None
+
     def _base_result(self, policy: ToolPolicy, name: str, device_id: str | None = None) -> ToolCallResult:
         return ToolCallResult(
             tool=name,
@@ -264,7 +406,7 @@ class DryRunToolRegistry:
             policy_version=self.policies.version,
         )
 
-    def _audit(self, result: ToolCallResult, arguments: dict[str, Any]) -> None:
+    def _audit(self, result: ToolCallResult, arguments: Any) -> None:
         if self.recorder is None:
             return
         self.recorder.write(
@@ -272,6 +414,7 @@ class DryRunToolRegistry:
                 event_type="tool_dry_run",
                 status=result.status,
                 mapping_version=self.resource_registry.mapping.version,
+                mapping_sha256=self.resource_registry.mapping.source_sha256,
                 details={"tool": result.tool, "arguments": _redact(arguments), "result": result.model_dump()},
             )
         )
@@ -286,9 +429,11 @@ def infer_device_type(device_id: str, display_name: str | None, model: str | Non
     return "unknown"
 
 
-def _redact(arguments: dict[str, Any]) -> dict[str, Any]:
+def _redact(arguments: Any) -> dict[str, Any]:
     # No patient identifiers should be passed to dry-run tools. Keep hook for future hardening.
-    return dict(arguments)
+    if isinstance(arguments, dict):
+        return dict(arguments)
+    return {"invalid_argument_container": type(arguments).__name__}
 
 
 def tool_result_json(result: ToolCallResult) -> str:

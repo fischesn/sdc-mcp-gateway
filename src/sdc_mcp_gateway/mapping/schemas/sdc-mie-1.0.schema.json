@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sdc-mcp-gateway:sdc-mie:schema:1.0",
+  "title": "SDC-MIE 1.0 mapping document",
+  "description": "Research-artifact schema for deterministic SDC-to-MCP semantic mappings; not an IEEE 11073 standard or a TogoMCP-compatible format.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "version", "description", "provenance", "mappings"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$"
+    },
+    "description": {"type": "string", "minLength": 1},
+    "provenance": {"$ref": "#/$defs/provenance"},
+    "mappings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/mappingEntry"}
+    }
+  },
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "basis", "scope"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "basis": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "scope": {"type": "string", "minLength": 1},
+        "license": {"type": "string", "minLength": 1}
+      }
+    },
+    "mappingEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "semantic_name",
+        "label",
+        "unit",
+        "access",
+        "safety_class",
+        "requires_human_approval",
+        "description"
+      ],
+      "properties": {
+        "code": {"type": "string", "minLength": 1},
+        "handles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "semantic_name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "label": {"type": "string", "minLength": 1},
+        "unit": {"type": "string", "minLength": 1},
+        "access": {"enum": ["read-only", "read-write"]},
+        "safety_class": {"enum": ["informational", "controlled", "critical"]},
+        "min_value": {"type": "number"},
+        "max_value": {"type": "number"},
+        "requires_human_approval": {"type": "boolean"},
+        "description": {"type": "string", "minLength": 1},
+        "provenance": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"required": ["min_value"]},
+          "then": {"required": ["max_value"]}
+        },
+        {
+          "if": {"required": ["max_value"]},
+          "then": {"required": ["min_value"]}
+        },
+        {
+          "if": {
+            "properties": {"safety_class": {"enum": ["controlled", "critical"]}},
+            "required": ["safety_class"]
+          },
+          "then": {
+            "properties": {"requires_human_approval": {"const": true}}
+          }
+        }
+      ]
+    }
+  }
+}

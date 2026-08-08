@@ -12,6 +12,7 @@ from sdc_mcp_gateway.agent_eval.harness import AgentEvalConfig, AskAgentConfig, 
 from sdc_mcp_gateway.agent_eval.summarize import AgentEvalSummaryConfig, summarize_agent_evaluations
 from sdc_mcp_gateway.experiments.recorder import JsonlRecorder
 from sdc_mcp_gateway.mapping.mie_loader import load_mapping
+from sdc_mcp_gateway.mapping.evidence import run_mapping_evidence
 from sdc_mcp_gateway.mcp.client_smoke import (
     McpClientSmokeTestConfig,
     MissingMcpClientDependency,
@@ -21,6 +22,8 @@ from sdc_mcp_gateway.mcp.resources import ResourceRegistry
 from sdc_mcp_gateway.mcp.server import MissingMcpDependency, create_mcp_server
 from sdc_mcp_gateway.tools.dry_run import DryRunToolRegistry, load_tool_policies
 from sdc_mcp_gateway.tools.evaluate import DryRunToolEvaluationConfig, run_dry_run_tool_evaluation
+from sdc_mcp_gateway.revision.pipeline import build_revision_lock, run_revision_pipeline
+from sdc_mcp_gateway.safety.evidence import run_no_execution_evidence
 from sdc_mcp_gateway.sdc.consumer import (
     DummySdcConsumer,
     MissingSdc11073Dependency,
@@ -28,6 +31,8 @@ from sdc_mcp_gateway.sdc.consumer import (
     SdcConsumer,
     SimulatedSdcConsumer,
 )
+from sdc_mcp_gateway.sdc.protocol_testbed import ProtocolTestbedConfig, run_protocol_testbed
+from sdc_mcp_gateway.simulation.lifecycle import run_lifecycle_evaluation
 
 app = typer.Typer(help="SDC-to-MCP Gateway research prototype")
 
@@ -101,7 +106,8 @@ def discover(
     try:
         providers = consumer.discover()
     except MissingSdc11073Dependency as exc:
-        raise typer.Exit(str(exc)) from exc
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
     typer.echo(json.dumps({"providers": providers}, ensure_ascii=False, indent=2, sort_keys=True))
 
 
@@ -115,7 +121,8 @@ def snapshot(
     try:
         registry = _make_registry(config, mie)
     except MissingSdc11073Dependency as exc:
-        raise typer.Exit(str(exc)) from exc
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
     payloads = {uri: registry.read(uri).model_dump() for uri in registry.list_resource_uris()}
     typer.echo(json.dumps(payloads, ensure_ascii=False, indent=2, sort_keys=True))
 
@@ -148,7 +155,8 @@ def list_resources(
     try:
         registry = _make_registry(config, mie)
     except MissingSdc11073Dependency as exc:
-        raise typer.Exit(str(exc)) from exc
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
     descriptors = [descriptor.model_dump() for descriptor in registry.list_resource_descriptors()]
     typer.echo(json.dumps({"resources": descriptors}, ensure_ascii=False, indent=2, sort_keys=True))
 
@@ -165,7 +173,8 @@ def read_resource(
         registry = _make_registry(config, mie)
         payload = registry.read(uri)
     except MissingSdc11073Dependency as exc:
-        raise typer.Exit(str(exc)) from exc
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
     except KeyError as exc:
         raise typer.BadParameter(str(exc)) from exc
     typer.echo(json.dumps(payload.model_dump(), ensure_ascii=False, indent=2, sort_keys=True))
@@ -316,7 +325,8 @@ def mcp_client_smoke_test(
             )
         )
     except MissingMcpClientDependency as exc:
-        raise typer.Exit(str(exc)) from exc
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
     except Exception as exc:  # pragma: no cover - defensive user-facing command
         typer.echo(
             json.dumps(
@@ -549,7 +559,7 @@ def evaluate_agent_tasks(
     mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
     tasks: Path = typer.Option(Path("config/agent_eval.tasks.yaml"), help="Agent task YAML file."),
     scenario: str = typer.Option("baseline", help="Scenario key used for ground-truth expectations."),
-    agent: str = typer.Option("oracle", help="Agent backend: oracle, llm-mock, llm-ollama, llm-openai-compatible, or llm-gemini."),
+    agent: str = typer.Option("deterministic-baseline", help="Agent backend: deterministic-baseline, llm-mock, llm-ollama, llm-openai-compatible, or llm-gemini."),
     output_dir: Path = typer.Option(Path("data/agent_eval"), help="Directory for JSON, CSV, and Markdown outputs."),
     label: str = typer.Option("agent-eval", help="Prefix for generated output files."),
     elapsed_s: float | None = typer.Option(100.0, help="Simulated scenario time in seconds, if using the simulated adapter."),
@@ -563,7 +573,7 @@ def evaluate_agent_tasks(
 ) -> None:
     """Evaluate agent-facing read-only tasks against scenario ground truth.
 
-    v0.9 supports the deterministic oracle agent and optional LLM-backed agents.
+    WP6 supports a resource-only deterministic baseline and optional LLM-backed agents.
     LLM backends are read-only and receive only MCP resource context; no tools or
     write operations are exposed by the gateway.
     """
@@ -727,6 +737,56 @@ def summarize_benchmark_results(
         raise typer.Exit(code=1)
 
 
+@app.command("revision-manifest")
+def revision_manifest(
+    manifest: Path = typer.Option(
+        Path("config/bhi2026_revision.yaml"), help="BHI revision experiment manifest."
+    ),
+    phase: str = typer.Option("development", help="Manifest phase to inspect."),
+) -> None:
+    """Validate the anonymous revision manifest and print its content lock."""
+
+    try:
+        lock = build_revision_lock(manifest, phase)  # type: ignore[arg-type]
+    except Exception as exc:  # pragma: no cover - defensive user-facing command
+        typer.echo(
+            json.dumps(
+                {"status": "failed", "error": str(exc)},
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps(lock, ensure_ascii=False, indent=2, sort_keys=True))
+
+
+@app.command("run-revision-pipeline")
+def run_revision_evaluation_pipeline(
+    manifest: Path = typer.Option(
+        Path("config/bhi2026_revision.yaml"), help="BHI revision experiment manifest."
+    ),
+    phase: str = typer.Option("development", help="Phase to run: development or holdout."),
+) -> None:
+    """Run the reproducible BHI revision pipeline with hold-out execution guards."""
+
+    try:
+        report = run_revision_pipeline(manifest, phase)  # type: ignore[arg-type]
+    except Exception as exc:  # pragma: no cover - defensive user-facing command
+        typer.echo(
+            json.dumps(
+                {"status": "failed", "error": str(exc), "phase": phase},
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if report.get("status") != "ok":
+        raise typer.Exit(code=1)
+
+
 @app.command()
 def serve(
     config: Path = typer.Option(Path("config/gateway.yaml"), help="Gateway YAML configuration."),
@@ -739,15 +799,132 @@ def serve(
     try:
         registry = _make_registry(config, mie)
     except MissingSdc11073Dependency as exc:
-        raise typer.Exit(str(exc)) from exc
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
     try:
         tool_registry = None
         if gateway_config.gateway.allow_tools:
             tool_registry = _make_tool_registry(config, mie, tool_policy)
         mcp = create_mcp_server(registry, server_name=gateway_config.mcp.server_name, tool_registry=tool_registry)
     except MissingMcpDependency as exc:
-        raise typer.Exit(str(exc)) from exc
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
     mcp.run()
+
+
+@app.command("verify-no-execution")
+def verify_no_execution(
+    config: Path = typer.Option(
+        Path("config/gateway.simulated.dryrun.example.yaml"),
+        help="Fail-closed gateway YAML configuration.",
+    ),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    tool_policy: Path = typer.Option(
+        Path("config/tool_policies.yaml"),
+        help="Dry-run tool policy YAML file.",
+    ),
+) -> None:
+    """Generate static, dynamic, and transition-system no-execution evidence."""
+
+    try:
+        gateway_config = GatewayConfig.from_file(config)
+        mapping = load_mapping(mie)
+        recorder = _make_recorder(gateway_config)
+        consumer = _make_consumer(gateway_config, recorder=recorder)
+        policies = load_tool_policies(tool_policy) if gateway_config.gateway.allow_tools else None
+        report = run_no_execution_evidence(
+            config=gateway_config,
+            mapping=mapping,
+            consumer=consumer,
+            policies=policies,
+            package_root=Path(__file__).resolve().parent,
+        )
+    except Exception as exc:  # pragma: no cover - defensive user-facing command
+        typer.echo(json.dumps({"status": "failed", "error": str(exc)}, indent=2, sort_keys=True))
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if report["status"] != "ok":
+        raise typer.Exit(code=1)
+
+
+@app.command("evaluate-sdc-protocol")
+def evaluate_sdc_protocol(
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    output: Path = typer.Option(
+        Path("data/revision/development/wp3-protocol-testbed.json"),
+        help="JSON evidence output.",
+    ),
+    local_ip: str = typer.Option(..., help="Local IPv4 interface used by both software processes."),
+    profile: list[str] | None = typer.Option(
+        None,
+        "--profile",
+        help="Provider profile to run; repeat for multiple profiles. Defaults to all three.",
+    ),
+    repetitions: int = typer.Option(5, min=1, help="Repeated discovery and read-path attempts per profile."),
+    discovery_timeout_s: float = typer.Option(0.6, min=0.1, help="WS-Discovery observation window."),
+) -> None:
+    """Run the hardware-free WP3 SDC protocol testbed in separate processes."""
+
+    try:
+        report = run_protocol_testbed(
+            ProtocolTestbedConfig(
+                mapping_path=mie,
+                output_path=output,
+                local_ip=local_ip,
+                profiles=tuple(profile) if profile else ("monitor", "ventilator", "heterogeneous"),
+                repetitions=repetitions,
+                discovery_timeout_s=discovery_timeout_s,
+            )
+        )
+    except Exception as exc:  # pragma: no cover - user-facing integration command
+        typer.echo(json.dumps({"status": "failed", "error": str(exc)}, indent=2, sort_keys=True))
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+
+
+@app.command("evaluate-lifecycle")
+def evaluate_lifecycle(
+    suite: Path = typer.Option(
+        Path("config/wp4_lifecycle_scenarios.yaml"),
+        help="Deterministic failure, freshness, recovery, and alarm lifecycle suite.",
+    ),
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    tool_policy: Path = typer.Option(
+        Path("config/tool_policies.yaml"), help="Dry-run tool policy YAML file."
+    ),
+    output: Path = typer.Option(
+        Path("data/revision/development/wp4-lifecycle-evidence.json"),
+        help="Anonymous JSON evidence output.",
+    ),
+) -> None:
+    """Run the deterministic WP4 ordered-update and lifecycle evaluation."""
+
+    try:
+        report = run_lifecycle_evaluation(suite, mie, tool_policy, output)
+    except Exception as exc:  # pragma: no cover - user-facing integration command
+        typer.echo(json.dumps({"status": "failed", "error": str(exc)}, indent=2, sort_keys=True))
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    if report["status"] != "ok":
+        raise typer.Exit(code=1)
+
+
+@app.command("evaluate-mapping")
+def evaluate_mapping(
+    mie: Path = typer.Option(Path("config/sdc_mie.yaml"), help="SDC-MIE YAML mapping file."),
+    output: Path = typer.Option(
+        Path("data/revision/development/wp5-mapping-evidence.json"),
+        help="Anonymous JSON validation and coverage output.",
+    ),
+) -> None:
+    """Validate SDC-MIE and measure profile/class mapping coverage."""
+
+    try:
+        report = run_mapping_evidence(mie, output)
+    except Exception as exc:  # pragma: no cover - user-facing integration command
+        typer.echo(json.dumps({"status": "failed", "error": str(exc)}, indent=2, sort_keys=True))
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
 
 
 if __name__ == "__main__":

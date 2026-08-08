@@ -21,6 +21,10 @@ tools:
         type: "number"
         required: true
         description: "Proposed FiO2 value in percent."
+      - name: "snapshot_version"
+        type: "number"
+        required: false
+        description: "Optional MDIB version binding; obsolete proposals fail closed."
 
   - name: "prepare_set_peep"
     operation: "set_peep"
@@ -41,6 +45,10 @@ tools:
         type: "number"
         required: true
         description: "Proposed PEEP value in cmH2O."
+      - name: "snapshot_version"
+        type: "number"
+        required: false
+        description: "Optional MDIB version binding; obsolete proposals fail closed."
 
   - name: "prepare_acknowledge_alarm"
     operation: "acknowledge_alarm"
@@ -58,3 +66,7 @@ tools:
         type: "string"
         required: true
         description: "Alarm handle to acknowledge in dry-run mode."
+      - name: "snapshot_version"
+        type: "number"
+        required: false
+        description: "Optional MDIB version binding; obsolete proposals fail closed."

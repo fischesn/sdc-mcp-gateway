@@ -23,6 +23,13 @@ data/tool_eval/*
 data/logs/*
 !data/logs/.gitkeep
 
+data/revision/development/*
+!data/revision/development/.gitkeep
+
+data/revision/holdout/*
+!data/revision/holdout/.gitkeep
+data/revision/*.log
+
 # Python artifacts
 __pycache__/
 *.py[cod]

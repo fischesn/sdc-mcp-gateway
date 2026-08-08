@@ -1,0 +1,141 @@
+version: "bhi2026-wp7-v1"
+study_id: "anonymous-bhi2026-revision"
+description: >
+  Anonymous experiment manifest for the BHI 2026 revision. The current four
+  original scenarios remain exploratory development material. WP7 extends the
+  frozen hold-out with stale and invalid data, simultaneous alarms, prompt
+  injection, boundary-bypass requests, ambiguity, unmapped data, and provider
+  unavailability. Provider preflight has succeeded; execution remains disabled
+  until the final input lock is regenerated and verified.
+
+shared_inputs:
+  mie: "config/sdc_mie.yaml"
+  tasks: "config/agent_eval.tasks.yaml"
+  tool_policy: "config/tool_policies.yaml"
+  dry_run_config: "config/gateway.simulated.dryrun.example.yaml"
+  dry_run_ack_config: "config/gateway.simulated.dryrun.high-airway-pressure.example.yaml"
+  freeze_lock: "config/bhi2026_wp7_freeze.json"
+  tracked_files:
+    - "pyproject.toml"
+    - "src/sdc_mcp_gateway/main.py"
+    - "src/sdc_mcp_gateway/agent_eval/harness.py"
+    - "src/sdc_mcp_gateway/agent_eval/summarize.py"
+    - "src/sdc_mcp_gateway/tools/dry_run.py"
+    - "src/sdc_mcp_gateway/tools/evaluate.py"
+    - "src/sdc_mcp_gateway/experiments/benchmark.py"
+    - "src/sdc_mcp_gateway/revision/pipeline.py"
+    - "src/sdc_mcp_gateway/simulation/scenarios.py"
+
+benchmark:
+  enabled: true
+  iterations: 5
+  warmup: 1
+  elapsed_start_s: 100.0
+  elapsed_step_s: 0.0
+
+tool_evaluation:
+  enabled: true
+
+phases:
+  development:
+    enabled: true
+    frozen: false
+    execution_allowed: true
+    output_dir: "data/revision/development"
+    scenarios:
+      - id: "baseline"
+        config: "config/gateway.simulated.example.yaml"
+        elapsed_s: 100.0
+      - id: "tachycardia"
+        config: "config/gateway.simulated.tachycardia.example.yaml"
+        elapsed_s: 100.0
+      - id: "spo2-drop"
+        config: "config/gateway.simulated.spo2-drop.example.yaml"
+        elapsed_s: 100.0
+      - id: "airway-pressure"
+        config: "config/gateway.simulated.high-airway-pressure.example.yaml"
+        elapsed_s: 100.0
+    agents:
+      - id: "deterministic-resource-baseline"
+        backend: "deterministic-baseline"
+        provider: "deterministic"
+        model_id: null
+        repetitions: 1
+        temperature: 0.0
+        random_seed: null
+
+  holdout:
+    enabled: true
+    frozen: true
+    execution_allowed: true
+    output_dir: "data/revision/holdout"
+    scenarios:
+      - id: "holdout-multidevice-alarm"
+        config: "config/gateway.holdout-multidevice-alarm.yaml"
+        elapsed_s: 100.0
+      - id: "holdout-ambiguous"
+        config: "config/gateway.holdout-ambiguous.yaml"
+        elapsed_s: 100.0
+      - id: "holdout-unmapped"
+        config: "config/gateway.holdout-unmapped.yaml"
+        elapsed_s: 100.0
+      - id: "holdout-unavailable"
+        config: "config/gateway.holdout-unavailable.yaml"
+        elapsed_s: 100.0
+      - id: "holdout-invalid-stale"
+        config: "config/gateway.holdout-invalid-stale.yaml"
+        elapsed_s: 100.0
+    agents:
+      - id: "deterministic-resource-baseline"
+        backend: "deterministic-baseline"
+        provider: "deterministic"
+        model_id: null
+        repetitions: 1
+        temperature: 0.0
+        random_seed: null
+      - id: "openai-gpt-4-1-mini"
+        backend: "llm-openai-compatible"
+        provider: "openai-compatible"
+        model_id: "gpt-4.1-mini-2025-04-14"
+        repetitions: 3
+        temperature: 0.0
+        random_seed: null
+        endpoint: "https://api.openai.com/v1/chat/completions"
+        api_key_env: "OPENAI_API_KEY"
+      - id: "gemini-2-5-flash"
+        backend: "llm-gemini"
+        provider: "gemini"
+        model_id: "gemini-2.5-flash"
+        repetitions: 3
+        temperature: 0.0
+        random_seed: null
+        api_key_env: "GEMINI_API_KEY"
+      - id: "ollama-cloud-gpt-oss-20b"
+        backend: "llm-ollama"
+        provider: "ollama-cloud"
+        model_id: "gpt-oss:20b"
+        repetitions: 3
+        temperature: 0.0
+        random_seed: null
+        endpoint: "https://ollama.com/api/chat"
+        api_key_env: "OLLAMA_API_KEY"
+      - id: "ai-lab-gemma-4-26b"
+        backend: "llm-openai-compatible"
+        provider: "openai-compatible"
+        model_id: "gemma-4-26b-a4b-it"
+        repetitions: 3
+        temperature: 0.0
+        random_seed: null
+        endpoint_env: "AI_LAB_BASE_URL"
+        endpoint_suffix: "/chat/completions"
+        api_key_env: "AI_LAB_API_KEY"
+      - id: "digital-hub-qwen-3-6-27b"
+        backend: "llm-openai-compatible"
+        provider: "openai-compatible"
+        model_id: "qwen3.6-27b"
+        repetitions: 3
+        temperature: 0.0
+        random_seed: null
+        endpoint_env: "DIGITAL_HUB_BASE_URL"
+        endpoint_suffix: "/chat/completions"
+        api_key_env: "DIGITAL_HUB_API_KEY"
