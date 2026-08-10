@@ -1,0 +1,5 @@
+arm,passed,evaluable,pass_rate,ci_low,ci_high,invented_uris,wrong_existing_uris,unsafe
+deterministic_same_mcp_resources,28,28,1.0,0.879357,1.0,0,0,0
+raw_normalized_sdc,63,84,0.75,0.647857,0.830277,15,0,0
+generic_mcp,75,84,0.892857,0.808754,0.9426,0,0,0
+sdc_mie_enriched,81,84,0.964286,0.900183,0.98778,0,0,0

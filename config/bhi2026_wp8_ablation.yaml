@@ -1,0 +1,62 @@
+version: "bhi2026-wp8-v1"
+study_id: "anonymous-bhi2026-representation-ablation"
+description: >
+  Frozen matched-task comparison of a raw normalized SDC snapshot, generic MCP
+  resources without SDC-MIE enrichment, and the proposed SDC-MIE-enriched MCP
+  context. The proposed arm reuses the frozen WP7 GPT-4.1-mini reports; only the
+  raw and generic arms are newly executed.
+
+tasks: "config/agent_eval.tasks.yaml"
+mie: "config/sdc_mie.yaml"
+freeze_lock: "config/bhi2026_wp8_freeze.json"
+output_dir: "data/revision/ablation"
+
+scenarios:
+  - id: "holdout-multidevice-alarm"
+    config: "config/gateway.holdout-multidevice-alarm.yaml"
+    elapsed_s: 100.0
+  - id: "holdout-ambiguous"
+    config: "config/gateway.holdout-ambiguous.yaml"
+    elapsed_s: 100.0
+  - id: "holdout-unmapped"
+    config: "config/gateway.holdout-unmapped.yaml"
+    elapsed_s: 100.0
+  - id: "holdout-unavailable"
+    config: "config/gateway.holdout-unavailable.yaml"
+    elapsed_s: 100.0
+  - id: "holdout-invalid-stale"
+    config: "config/gateway.holdout-invalid-stale.yaml"
+    elapsed_s: 100.0
+
+model:
+  id: "openai-gpt-4-1-mini"
+  provider: "openai-compatible"
+  model_id: "gpt-4.1-mini-2025-04-14"
+  endpoint: "https://api.openai.com/v1/chat/completions"
+  api_key_env: "OPENAI_API_KEY"
+  repetitions: 3
+  temperature: 0.0
+  timeout_s: 60.0
+
+execute_representations:
+  - "raw_normalized_sdc"
+  - "generic_mcp"
+
+proposed_report_glob: "data/revision/holdout/bhi2026-wp7-v1-holdout-20260808T145452_463167Z/agent-evaluations/wp0-agent-openai-gpt-4-1-mini-r*.json"
+deterministic_report_glob: "data/revision/holdout/bhi2026-wp7-v1-holdout-20260808T145452_463167Z/agent-evaluations/wp0-agent-deterministic-resource-baseline-r1-*.json"
+
+tracked_files:
+  - "src/sdc_mcp_gateway/revision/representation_ablation.py"
+  - "src/sdc_mcp_gateway/agent_eval/harness.py"
+  - "src/sdc_mcp_gateway/mcp/resources.py"
+  - "src/sdc_mcp_gateway/mapping/mapper.py"
+  - "src/sdc_mcp_gateway/mapping/mie_loader.py"
+  - "src/sdc_mcp_gateway/models.py"
+  - "src/sdc_mcp_gateway/config.py"
+  - "src/sdc_mcp_gateway/sdc/consumer.py"
+  - "src/sdc_mcp_gateway/simulation/scenarios.py"
+  - "config/sim.holdout-multidevice-alarm.yaml"
+  - "config/sim.holdout-ambiguous.yaml"
+  - "config/sim.holdout-unmapped.yaml"
+  - "config/sim.holdout-unavailable.yaml"
+  - "config/sim.holdout-invalid-stale.yaml"

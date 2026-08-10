@@ -275,7 +275,9 @@ class Sdc11073Consumer(SdcConsumer):
     def _provider_allowed(self, epr: str) -> bool:
         if not self.provider_whitelist:
             return True
-        return any(allowed == epr or allowed in epr for allowed in self.provider_whitelist)
+        # Endpoint references are provider identities, not search patterns. Substring
+        # matching would let a forged EPR such as ``trusted.epr.attacker`` pass.
+        return any(allowed == epr for allowed in self.provider_whitelist)
 
     def _service_epr(self, service: Any) -> str:
         return str(getattr(service, "epr", service))

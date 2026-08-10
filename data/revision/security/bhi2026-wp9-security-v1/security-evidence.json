@@ -1,0 +1,121 @@
+{
+  "audit": {
+    "chain_valid": true,
+    "head_sha256": "823f82036eb4477a5815c26a9fc984b4ce2ffc20239b34c6e2834ffc25ac1d41",
+    "path": "data/revision/security/bhi2026-wp9-security-v1/audit-chain.jsonl",
+    "record_count": 4,
+    "secret_redaction_passed": true,
+    "tail_truncation_requires_external_anchor": true,
+    "tamper_detected": true,
+    "tamper_detection_line": 1,
+    "tamper_detection_reason": "record_hash_mismatch"
+  },
+  "checks": {
+    "accepted_dry_run": true,
+    "audit_chain_verified": true,
+    "audit_tampering_detected": true,
+    "malformed_client_rejected": true,
+    "out_of_range_rejected": true,
+    "provider_exact_match": true,
+    "secrets_absent_from_log": true
+  },
+  "configuration_sha256": "bd5b6d44c6ee9931a3f76a920824fa2404fe05e9949b69228a2f0bbfd7e841e1",
+  "decisions": [
+    {
+      "allowed_range": [
+        21.0,
+        100.0
+      ],
+      "details": {
+        "device_type": "ventilator",
+        "semantic_name": "fio2"
+      },
+      "device_id": "sim-ventilator-1",
+      "dry_run": true,
+      "executed": false,
+      "operation": "set_fio2",
+      "policy_version": "0.10-example",
+      "reason": "policy_validated_no_execution",
+      "requested_value": 45.0,
+      "requires_human_approval": true,
+      "status": "accepted_dry_run",
+      "timestamp": "2026-08-10T05:29:29.317967Z",
+      "tool": "prepare_set_fio2",
+      "unit": "%",
+      "write_operations_allowed": false
+    },
+    {
+      "allowed_range": [
+        21.0,
+        100.0
+      ],
+      "details": {},
+      "device_id": "sim-ventilator-1",
+      "dry_run": true,
+      "executed": false,
+      "operation": "set_fio2",
+      "policy_version": "0.10-example",
+      "reason": "value_out_of_range",
+      "requested_value": 150.0,
+      "requires_human_approval": true,
+      "status": "rejected",
+      "timestamp": "2026-08-10T05:29:29.318953Z",
+      "tool": "prepare_set_fio2",
+      "unit": "%",
+      "write_operations_allowed": false
+    },
+    {
+      "allowed_range": null,
+      "details": {
+        "unexpected": [
+          "Authorization"
+        ]
+      },
+      "device_id": null,
+      "dry_run": true,
+      "executed": false,
+      "operation": "set_fio2",
+      "policy_version": "0.10-example",
+      "reason": "unexpected_arguments",
+      "requested_value": null,
+      "requires_human_approval": true,
+      "status": "rejected",
+      "timestamp": "2026-08-10T05:29:29.319836Z",
+      "tool": "prepare_set_fio2",
+      "unit": "%",
+      "write_operations_allowed": false
+    }
+  ],
+  "provenance": {
+    "mapping_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+    "model_id": "deterministic-policy-engine-v0.13.0",
+    "policy_sha256": "3b6e7b6fd173fea2d6bc0fbf2ed0b3c2b9b621d266c480a729fcd50cd8587ef2",
+    "prompt_sha256": "59d8561a4c9c5e001f09e2f67e9767dd88261b193b69535d4f7f42a926d67a96",
+    "provider_identity": "sim-ventilator-1",
+    "resource_snapshot_sha256": "a636008745538a9a271e07590489e4ba5f01853703392cbaec8aec96e0de97b7",
+    "task_sha256": "c7cf2183ccdfbf75fcd940dc99b0564049499e9733c6132fe1d443213d405d0f"
+  },
+  "provider_allowlist": {
+    "cases": {
+      "attacker.sim-ventilator-1": false,
+      "sim-ventilator-1": true,
+      "sim-ventilator-1.attacker": false,
+      "ventilator-1": false
+    },
+    "comparison": "exact endpoint-reference string equality",
+    "passed": true
+  },
+  "schema_version": "1",
+  "study_id": "anonymous-bhi2026-revision",
+  "transport": {
+    "evaluated": "stdio",
+    "future_http_requirements": [
+      "mutual endpoint authentication",
+      "least-privilege resource and tool authorization",
+      "TLS with managed certificate lifecycle",
+      "request size and rate limits",
+      "replay protection and externally anchored audit retention"
+    ],
+    "network_listener": false
+  }
+}

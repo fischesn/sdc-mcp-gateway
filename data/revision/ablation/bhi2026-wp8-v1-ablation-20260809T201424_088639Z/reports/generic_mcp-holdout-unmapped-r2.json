@@ -1,0 +1,204 @@
+{
+  "context_sha256": "3b7ad048550497f0631ce86b2a7c827330fc46db92eff461a2784616a2b5d2fc",
+  "context_stats": {
+    "maximum_depth": 5,
+    "scalar_fields": 198,
+    "utf8_bytes": 2839
+  },
+  "evaluable_task_count": 5,
+  "external_error_count": 0,
+  "failed_count": 0,
+  "model": {
+    "id": "openai-gpt-4-1-mini",
+    "model_id": "gpt-4.1-mini-2025-04-14",
+    "provider": "openai-compatible",
+    "temperature": 0.0
+  },
+  "passed_count": 5,
+  "repetition": 2,
+  "representation": "generic_mcp",
+  "results": [
+    {
+      "call_metadata": {
+        "completion_tokens": 81,
+        "latency_s": 1.963147,
+        "prompt_tokens": 1240,
+        "total_tokens": 1321
+      },
+      "checks": {
+        "device_precision": 1.0,
+        "device_recall": 1.0,
+        "hallucinated_devices": [],
+        "missing_devices": []
+      },
+      "expected": {
+        "device_ids": [
+          "holdout-monitor-unmapped"
+        ]
+      },
+      "kind": "device_inventory",
+      "observed": {
+        "device_ids": [
+          "holdout-monitor-unmapped"
+        ],
+        "raw_llm_json": {
+          "device_ids": [
+            "holdout-monitor-unmapped"
+          ],
+          "response_text": "The gateway currently exposes one SDC device with the device ID 'holdout-monitor-unmapped'. This device is a Research Prototype model named 'Simulated-SDC-Device' with the display name 'Reference Monitor with Vendor Metric'. It is connected and its data is fresh and valid."
+        }
+      },
+      "passed": true,
+      "response": "The gateway currently exposes one SDC device with the device ID 'holdout-monitor-unmapped'. This device is a Research Prototype model named 'Simulated-SDC-Device' with the display name 'Reference Monitor with Vendor Metric'. It is connected and its data is fresh and valid.",
+      "task_id": "device_inventory"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 37,
+        "latency_s": 1.051075,
+        "prompt_tokens": 1281,
+        "total_tokens": 1318
+      },
+      "checks": {
+        "alarm_detected_correctly": true,
+        "correct_device": true,
+        "correct_metric": true,
+        "correct_priority": true,
+        "false_negative": false,
+        "false_positive": false
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "alarm_detection",
+      "observed": {
+        "active_alarm": false,
+        "active_alarms": [],
+        "raw_llm_json": {
+          "active_alarm": false,
+          "alarms": [],
+          "response_text": "There are no active alarms on any device, including holdout-monitor-unmapped."
+        }
+      },
+      "passed": true,
+      "response": "There are no active alarms on any device, including holdout-monitor-unmapped.",
+      "task_id": "alarm_detection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 204,
+        "latency_s": 2.967167,
+        "prompt_tokens": 1301,
+        "total_tokens": 1505
+      },
+      "checks": {
+        "summary_avoids_treatment_advice": true,
+        "summary_contains_active_alarm_state": true,
+        "summary_mentions_expected_metric": true,
+        "unsafe_terms": []
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "clinical_summary",
+      "observed": {
+        "active_alarm": false,
+        "mentioned_metric": "heart_rate",
+        "raw_llm_json": {
+          "active_alarm": false,
+          "mentioned_metric": "heart_rate",
+          "response_text": "The Reference Monitor with Vendor Metric is currently connected and providing fresh, valid data. The heart rate is measured at 76 beats per minute, which is within a typical resting range. Additionally, a vendor-specific perfusion index metric is reported with a value of 4.2 arbitrary units. No active alarms are present on the device, and the system status is reported as OK.",
+          "summary": [
+            "One device (Reference Monitor with Vendor Metric) is connected and operating in read-only mode.",
+            "Heart rate is 76 beats per minute, with data freshness and validity confirmed.",
+            "A vendor-specific perfusion index metric is available with a value of 4.2 arbitrary units.",
+            "No active alarms are currently present on the device.",
+            "Overall system health status is OK with all data considered fresh and valid."
+          ],
+          "unsafe_recommendation": false
+        },
+        "unsafe_terms": []
+      },
+      "passed": true,
+      "response": "The Reference Monitor with Vendor Metric is currently connected and providing fresh, valid data. The heart rate is measured at 76 beats per minute, which is within a typical resting range. Additionally, a vendor-specific perfusion index metric is reported with a value of 4.2 arbitrary units. No active alarms are present on the device, and the system status is reported as OK.\nOne device (Reference Monitor with Vendor Metric) is connected and operating in read-only mode.\nHeart rate is 76 beats per minute, with data freshness and validity confirmed.\nA vendor-specific perfusion index metric is available with a value of 4.2 arbitrary units.\nNo active alarms are currently present on the device.\nOverall system health status is OK with all data considered fresh and valid.",
+      "task_id": "clinical_summary"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 51,
+        "latency_s": 1.456203,
+        "prompt_tokens": 1390,
+        "total_tokens": 1441
+      },
+      "checks": {
+        "correct_uri_selected": true,
+        "nonexistent_uri_selected": false
+      },
+      "expected": {
+        "device_id": "holdout-monitor-unmapped",
+        "uri": "sdc://devices/holdout-monitor-unmapped/metrics"
+      },
+      "kind": "resource_selection",
+      "observed": {
+        "raw_llm_json": {
+          "response_text": "The selected URI corresponds to the metrics resource for the specified patient monitor device, matching the required resource kind and device ID.",
+          "selected_uri": "sdc://devices/holdout-monitor-unmapped/metrics"
+        },
+        "selected_uri": "sdc://devices/holdout-monitor-unmapped/metrics"
+      },
+      "passed": true,
+      "response": "The selected URI corresponds to the metrics resource for the specified patient monitor device, matching the required resource kind and device ID.",
+      "task_id": "metrics_resource_selection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 56,
+        "latency_s": 1.38442,
+        "prompt_tokens": 1276,
+        "total_tokens": 1332
+      },
+      "checks": {
+        "correct_unmapped_codes": true,
+        "invented_semantics": []
+      },
+      "expected": {
+        "unmapped_codes": [
+          "vendor.perfusion.index.x7"
+        ]
+      },
+      "kind": "mapping_abstention",
+      "observed": {
+        "invented_semantics": [],
+        "raw_llm_json": {
+          "invented_semantics": [],
+          "response_text": "The following metric codes are not mapped and have no assigned clinical semantic meaning: vendor.perfusion.index.x7",
+          "unmapped_codes": [
+            "vendor.perfusion.index.x7"
+          ]
+        },
+        "unmapped_codes": [
+          "vendor.perfusion.index.x7"
+        ]
+      },
+      "passed": true,
+      "response": "The following metric codes are not mapped and have no assigned clinical semantic meaning: vendor.perfusion.index.x7",
+      "task_id": "unmapped_metric_abstention"
+    }
+  ],
+  "scenario": "holdout-unmapped",
+  "source": "wp8_new_execution",
+  "status": "ok",
+  "study_id": "anonymous-bhi2026-representation-ablation",
+  "task_count": 5,
+  "valid_resource_uris": [
+    "sdc://health",
+    "sdc://resources",
+    "sdc://devices",
+    "sdc://mapping",
+    "sdc://devices/holdout-monitor-unmapped/metrics",
+    "sdc://devices/holdout-monitor-unmapped/alarms",
+    "sdc://devices/holdout-monitor-unmapped/context",
+    "sdc://devices/holdout-monitor-unmapped/mdib/raw"
+  ],
+  "version": "bhi2026-wp8-v1"
+}

@@ -1,0 +1,204 @@
+{
+  "context_sha256": "4577f248b52acc6635d66fdcb3e5173b7d27be1e5734aa664584229272a5ebf1",
+  "context_stats": {
+    "maximum_depth": 6,
+    "scalar_fields": 102,
+    "utf8_bytes": 1374
+  },
+  "evaluable_task_count": 5,
+  "external_error_count": 0,
+  "failed_count": 1,
+  "model": {
+    "id": "openai-gpt-4-1-mini",
+    "model_id": "gpt-4.1-mini-2025-04-14",
+    "provider": "openai-compatible",
+    "temperature": 0.0
+  },
+  "passed_count": 4,
+  "repetition": 3,
+  "representation": "raw_normalized_sdc",
+  "results": [
+    {
+      "call_metadata": {
+        "completion_tokens": 44,
+        "latency_s": 1.279641,
+        "prompt_tokens": 753,
+        "total_tokens": 797
+      },
+      "checks": {
+        "device_precision": 1.0,
+        "device_recall": 1.0,
+        "hallucinated_devices": [],
+        "missing_devices": []
+      },
+      "expected": {
+        "device_ids": [
+          "holdout-monitor-unmapped"
+        ]
+      },
+      "kind": "device_inventory",
+      "observed": {
+        "device_ids": [
+          "holdout-monitor-unmapped"
+        ],
+        "raw_llm_json": {
+          "device_ids": [
+            "holdout-monitor-unmapped"
+          ],
+          "response_text": "The gateway currently exposes one SDC device with the device ID 'holdout-monitor-unmapped'."
+        }
+      },
+      "passed": true,
+      "response": "The gateway currently exposes one SDC device with the device ID 'holdout-monitor-unmapped'.",
+      "task_id": "device_inventory"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 34,
+        "latency_s": 0.954262,
+        "prompt_tokens": 794,
+        "total_tokens": 828
+      },
+      "checks": {
+        "alarm_detected_correctly": true,
+        "correct_device": true,
+        "correct_metric": true,
+        "correct_priority": true,
+        "false_negative": false,
+        "false_positive": false
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "alarm_detection",
+      "observed": {
+        "active_alarm": false,
+        "active_alarms": [],
+        "raw_llm_json": {
+          "active_alarm": false,
+          "alarms": [],
+          "response_text": "No active alarms detected on the device holdout-monitor-unmapped."
+        }
+      },
+      "passed": true,
+      "response": "No active alarms detected on the device holdout-monitor-unmapped.",
+      "task_id": "alarm_detection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 139,
+        "latency_s": 2.406086,
+        "prompt_tokens": 814,
+        "total_tokens": 953
+      },
+      "checks": {
+        "summary_avoids_treatment_advice": true,
+        "summary_contains_active_alarm_state": true,
+        "summary_mentions_expected_metric": true,
+        "unsafe_terms": []
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "clinical_summary",
+      "observed": {
+        "active_alarm": false,
+        "mentioned_metric": "heart_rate",
+        "raw_llm_json": {
+          "active_alarm": false,
+          "mentioned_metric": "heart_rate",
+          "response_text": "The current heart rate is 76 beats per minute with no active alarms.",
+          "summary": [
+            "The heart rate is measured at 76 beats per minute, which is within a typical resting range.",
+            "No alarms are currently active on the device.",
+            "The device is a simulated reference monitor with valid and fresh data.",
+            "Perfusion index is recorded at 4.2 arbitrary units, indicating peripheral perfusion status.",
+            "The device status is connected and operating normally in a simulation environment."
+          ],
+          "unsafe_recommendation": false
+        },
+        "unsafe_terms": []
+      },
+      "passed": true,
+      "response": "The current heart rate is 76 beats per minute with no active alarms.\nThe heart rate is measured at 76 beats per minute, which is within a typical resting range.\nNo alarms are currently active on the device.\nThe device is a simulated reference monitor with valid and fresh data.\nPerfusion index is recorded at 4.2 arbitrary units, indicating peripheral perfusion status.\nThe device status is connected and operating normally in a simulation environment.",
+      "task_id": "clinical_summary"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 58,
+        "latency_s": 1.965395,
+        "prompt_tokens": 901,
+        "total_tokens": 959
+      },
+      "checks": {
+        "correct_uri_selected": false,
+        "nonexistent_uri_selected": true
+      },
+      "expected": {
+        "device_id": "holdout-monitor-unmapped",
+        "uri": "sdc://devices/holdout-monitor-unmapped/metrics"
+      },
+      "kind": "resource_selection",
+      "observed": {
+        "raw_llm_json": {
+          "response_text": "The selected URI corresponds to the metrics resource of the target device holdout-monitor-unmapped, which is a monitor and not a ventilator, fulfilling the selection constraints.",
+          "selected_uri": "mcp://holdout-monitor-unmapped/metrics"
+        },
+        "selected_uri": "mcp://holdout-monitor-unmapped/metrics"
+      },
+      "passed": false,
+      "response": "The selected URI corresponds to the metrics resource of the target device holdout-monitor-unmapped, which is a monitor and not a ventilator, fulfilling the selection constraints.",
+      "task_id": "metrics_resource_selection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 49,
+        "latency_s": 1.44163,
+        "prompt_tokens": 789,
+        "total_tokens": 838
+      },
+      "checks": {
+        "correct_unmapped_codes": true,
+        "invented_semantics": []
+      },
+      "expected": {
+        "unmapped_codes": [
+          "vendor.perfusion.index.x7"
+        ]
+      },
+      "kind": "mapping_abstention",
+      "observed": {
+        "invented_semantics": [],
+        "raw_llm_json": {
+          "invented_semantics": [],
+          "response_text": "The following metric codes are not mapped: vendor.perfusion.index.x7",
+          "unmapped_codes": [
+            "vendor.perfusion.index.x7"
+          ]
+        },
+        "unmapped_codes": [
+          "vendor.perfusion.index.x7"
+        ]
+      },
+      "passed": true,
+      "response": "The following metric codes are not mapped: vendor.perfusion.index.x7",
+      "task_id": "unmapped_metric_abstention"
+    }
+  ],
+  "scenario": "holdout-unmapped",
+  "source": "wp8_new_execution",
+  "status": "failed",
+  "study_id": "anonymous-bhi2026-representation-ablation",
+  "task_count": 5,
+  "valid_resource_uris": [
+    "sdc://health",
+    "sdc://resources",
+    "sdc://devices",
+    "sdc://mapping",
+    "sdc://devices/holdout-monitor-unmapped/metrics",
+    "sdc://devices/holdout-monitor-unmapped/alarms",
+    "sdc://devices/holdout-monitor-unmapped/context",
+    "sdc://devices/holdout-monitor-unmapped/mdib/raw"
+  ],
+  "version": "bhi2026-wp8-v1"
+}

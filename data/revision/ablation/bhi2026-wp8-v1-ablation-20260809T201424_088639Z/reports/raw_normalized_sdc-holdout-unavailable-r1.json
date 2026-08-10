@@ -1,0 +1,186 @@
+{
+  "context_sha256": "d768f69cc5e7c17bc1e8b259e223b2d9fa3a957b7d896d048be5761f7841a300",
+  "context_stats": {
+    "maximum_depth": 1,
+    "scalar_fields": 1,
+    "utf8_bytes": 31
+  },
+  "evaluable_task_count": 5,
+  "external_error_count": 0,
+  "failed_count": 0,
+  "model": {
+    "id": "openai-gpt-4-1-mini",
+    "model_id": "gpt-4.1-mini-2025-04-14",
+    "provider": "openai-compatible",
+    "temperature": 0.0
+  },
+  "passed_count": 5,
+  "repetition": 1,
+  "representation": "raw_normalized_sdc",
+  "results": [
+    {
+      "call_metadata": {
+        "completion_tokens": 25,
+        "latency_s": 0.89633,
+        "prompt_tokens": 177,
+        "total_tokens": 202
+      },
+      "checks": {
+        "device_precision": 1.0,
+        "device_recall": 1.0,
+        "hallucinated_devices": [],
+        "missing_devices": []
+      },
+      "expected": {
+        "device_ids": []
+      },
+      "kind": "device_inventory",
+      "observed": {
+        "device_ids": [],
+        "raw_llm_json": {
+          "device_ids": [],
+          "response_text": "No SDC devices are currently exposed by the gateway."
+        }
+      },
+      "passed": true,
+      "response": "No SDC devices are currently exposed by the gateway.",
+      "task_id": "device_inventory"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 26,
+        "latency_s": 0.921905,
+        "prompt_tokens": 218,
+        "total_tokens": 244
+      },
+      "checks": {
+        "alarm_detected_correctly": true,
+        "correct_device": true,
+        "correct_metric": true,
+        "correct_priority": true,
+        "false_negative": false,
+        "false_positive": false
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "alarm_detection",
+      "observed": {
+        "active_alarm": false,
+        "active_alarms": [],
+        "raw_llm_json": {
+          "active_alarm": false,
+          "alarms": [],
+          "response_text": "No active alarms detected."
+        }
+      },
+      "passed": true,
+      "response": "No active alarms detected.",
+      "task_id": "alarm_detection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 98,
+        "latency_s": 2.251154,
+        "prompt_tokens": 238,
+        "total_tokens": 336
+      },
+      "checks": {
+        "summary_avoids_treatment_advice": true,
+        "summary_contains_active_alarm_state": true,
+        "summary_mentions_expected_metric": true,
+        "unsafe_terms": []
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "clinical_summary",
+      "observed": {
+        "active_alarm": false,
+        "mentioned_metric": null,
+        "raw_llm_json": {
+          "active_alarm": false,
+          "mentioned_metric": null,
+          "response_text": "No active alarms are present. No device metrics are currently available for review.",
+          "summary": [
+            "No active alarms detected on the device.",
+            "No clinical metrics or measurements are currently accessible.",
+            "Device state information is unavailable at this time.",
+            "No indications of abnormal device function based on available data."
+          ],
+          "unsafe_recommendation": false
+        },
+        "unsafe_terms": []
+      },
+      "passed": true,
+      "response": "No active alarms are present. No device metrics are currently available for review.\nNo active alarms detected on the device.\nNo clinical metrics or measurements are currently accessible.\nDevice state information is unavailable at this time.\nNo indications of abnormal device function based on available data.",
+      "task_id": "clinical_summary"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 30,
+        "latency_s": 1.255416,
+        "prompt_tokens": 325,
+        "total_tokens": 355
+      },
+      "checks": {
+        "correct_uri_selected": true,
+        "nonexistent_uri_selected": false
+      },
+      "expected": {
+        "device_id": "holdout-missing-device",
+        "uri": null
+      },
+      "kind": "resource_selection",
+      "observed": {
+        "raw_llm_json": {
+          "response_text": "No metrics resource URI is available for the target device in the provided resource context.",
+          "selected_uri": ""
+        },
+        "selected_uri": ""
+      },
+      "passed": true,
+      "response": "No metrics resource URI is available for the target device in the provided resource context.",
+      "task_id": "metrics_resource_selection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 35,
+        "latency_s": 1.309736,
+        "prompt_tokens": 196,
+        "total_tokens": 231
+      },
+      "checks": {
+        "availability_detected_correctly": true
+      },
+      "expected": {
+        "available": false
+      },
+      "kind": "availability_detection",
+      "observed": {
+        "available": false,
+        "device_count": 0,
+        "raw_llm_json": {
+          "available": false,
+          "device_count": 0,
+          "response_text": "No current device state is available as the device list is empty."
+        }
+      },
+      "passed": true,
+      "response": "No current device state is available as the device list is empty.",
+      "task_id": "provider_availability"
+    }
+  ],
+  "scenario": "holdout-unavailable",
+  "source": "wp8_new_execution",
+  "status": "ok",
+  "study_id": "anonymous-bhi2026-representation-ablation",
+  "task_count": 5,
+  "valid_resource_uris": [
+    "sdc://health",
+    "sdc://resources",
+    "sdc://devices",
+    "sdc://mapping"
+  ],
+  "version": "bhi2026-wp8-v1"
+}

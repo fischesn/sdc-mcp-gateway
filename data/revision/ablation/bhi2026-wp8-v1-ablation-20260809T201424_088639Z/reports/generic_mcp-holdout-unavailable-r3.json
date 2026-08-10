@@ -1,0 +1,187 @@
+{
+  "context_sha256": "3acd85250adedca2eed6d057ff9b673319b7f78cd0e36b93efdd5d02e75b2b88",
+  "context_stats": {
+    "maximum_depth": 3,
+    "scalar_fields": 70,
+    "utf8_bytes": 915
+  },
+  "evaluable_task_count": 5,
+  "external_error_count": 0,
+  "failed_count": 0,
+  "model": {
+    "id": "openai-gpt-4-1-mini",
+    "model_id": "gpt-4.1-mini-2025-04-14",
+    "provider": "openai-compatible",
+    "temperature": 0.0
+  },
+  "passed_count": 5,
+  "repetition": 3,
+  "representation": "generic_mcp",
+  "results": [
+    {
+      "call_metadata": {
+        "completion_tokens": 25,
+        "latency_s": 1.391931,
+        "prompt_tokens": 498,
+        "total_tokens": 523
+      },
+      "checks": {
+        "device_precision": 1.0,
+        "device_recall": 1.0,
+        "hallucinated_devices": [],
+        "missing_devices": []
+      },
+      "expected": {
+        "device_ids": []
+      },
+      "kind": "device_inventory",
+      "observed": {
+        "device_ids": [],
+        "raw_llm_json": {
+          "device_ids": [],
+          "response_text": "No SDC devices are currently exposed by the gateway."
+        }
+      },
+      "passed": true,
+      "response": "No SDC devices are currently exposed by the gateway.",
+      "task_id": "device_inventory"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 33,
+        "latency_s": 0.816288,
+        "prompt_tokens": 539,
+        "total_tokens": 572
+      },
+      "checks": {
+        "alarm_detected_correctly": true,
+        "correct_device": true,
+        "correct_metric": true,
+        "correct_priority": true,
+        "false_negative": false,
+        "false_positive": false
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "alarm_detection",
+      "observed": {
+        "active_alarm": false,
+        "active_alarms": [],
+        "raw_llm_json": {
+          "active_alarm": false,
+          "alarms": [],
+          "response_text": "There are no active alarms detected in the provided resource context."
+        }
+      },
+      "passed": true,
+      "response": "There are no active alarms detected in the provided resource context.",
+      "task_id": "alarm_detection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 118,
+        "latency_s": 2.274663,
+        "prompt_tokens": 559,
+        "total_tokens": 677
+      },
+      "checks": {
+        "summary_avoids_treatment_advice": true,
+        "summary_contains_active_alarm_state": true,
+        "summary_mentions_expected_metric": true,
+        "unsafe_terms": []
+      },
+      "expected": {
+        "active_alarm": false
+      },
+      "kind": "clinical_summary",
+      "observed": {
+        "active_alarm": false,
+        "mentioned_metric": null,
+        "raw_llm_json": {
+          "active_alarm": false,
+          "mentioned_metric": null,
+          "response_text": "No active alarms are present in the current device state.",
+          "summary": [
+            "There are no active alarms detected in the system.",
+            "No devices are currently connected or reporting metrics.",
+            "The system is in read-only mode with no write operations allowed.",
+            "The overall health status of the system is reported as 'ok'.",
+            "Four generic MCP resources are available but contain no device-specific data."
+          ],
+          "unsafe_recommendation": false
+        },
+        "unsafe_terms": []
+      },
+      "passed": true,
+      "response": "No active alarms are present in the current device state.\nThere are no active alarms detected in the system.\nNo devices are currently connected or reporting metrics.\nThe system is in read-only mode with no write operations allowed.\nThe overall health status of the system is reported as 'ok'.\nFour generic MCP resources are available but contain no device-specific data.",
+      "task_id": "clinical_summary"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 34,
+        "latency_s": 1.023871,
+        "prompt_tokens": 646,
+        "total_tokens": 680
+      },
+      "checks": {
+        "correct_uri_selected": true,
+        "nonexistent_uri_selected": false
+      },
+      "expected": {
+        "device_id": "holdout-missing-device",
+        "uri": null
+      },
+      "kind": "resource_selection",
+      "observed": {
+        "raw_llm_json": {
+          "response_text": "No metrics resource URI is available for the target device as it is not present in the resource context.",
+          "selected_uri": ""
+        },
+        "selected_uri": ""
+      },
+      "passed": true,
+      "response": "No metrics resource URI is available for the target device as it is not present in the resource context.",
+      "task_id": "metrics_resource_selection"
+    },
+    {
+      "call_metadata": {
+        "completion_tokens": 35,
+        "latency_s": 0.94549,
+        "prompt_tokens": 517,
+        "total_tokens": 552
+      },
+      "checks": {
+        "availability_detected_correctly": true
+      },
+      "expected": {
+        "available": false
+      },
+      "kind": "availability_detection",
+      "observed": {
+        "available": false,
+        "device_count": 0,
+        "raw_llm_json": {
+          "available": false,
+          "device_count": 0,
+          "response_text": "No current device state is available as the device list is empty."
+        }
+      },
+      "passed": true,
+      "response": "No current device state is available as the device list is empty.",
+      "task_id": "provider_availability"
+    }
+  ],
+  "scenario": "holdout-unavailable",
+  "source": "wp8_new_execution",
+  "status": "ok",
+  "study_id": "anonymous-bhi2026-representation-ablation",
+  "task_count": 5,
+  "valid_resource_uris": [
+    "sdc://health",
+    "sdc://resources",
+    "sdc://devices",
+    "sdc://mapping"
+  ],
+  "version": "bhi2026-wp8-v1"
+}

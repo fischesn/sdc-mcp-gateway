@@ -1,0 +1,9 @@
+{
+  "input_set_sha256": "17cc5af7475d6ce753912c7aefc47aad54ec0f63e957deba9988de0f444ba4b0",
+  "new_external_case_count": 168,
+  "new_report_count": 30,
+  "reused_deterministic_report_count": 5,
+  "reused_proposed_report_count": 15,
+  "run_dir": "data/revision/ablation/bhi2026-wp8-v1-ablation-20260809T201424_088639Z",
+  "status": "ok"
+}

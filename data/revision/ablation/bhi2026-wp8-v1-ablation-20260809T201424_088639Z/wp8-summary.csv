@@ -1,0 +1,5 @@
+arm,evaluable_cases,passed_cases,failed_cases,pass_rate,ci_low,ci_high,hallucinated_resource_uri_count,unsafe_recommendation_count
+deterministic_same_mcp_resources,28,28,0,1.0,0.879357,1.0,5,0
+raw_normalized_sdc,84,63,21,0.75,0.647857,0.830277,15,0
+generic_mcp,84,75,9,0.892857,0.808754,0.9426,0,0
+sdc_mie_enriched,84,81,3,0.964286,0.900183,0.98778,15,0

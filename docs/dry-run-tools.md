@@ -73,7 +73,7 @@ The response should contain:
 
 ## Audit log
 
-Dry-run tool calls are recorded as `tool_dry_run` events in the configured JSONL log file. The audit record includes the tool name, arguments, validation status, reason, policy version, and explicit `executed: false` field.
+Dry-run tool calls are recorded as `tool_dry_run` events in the configured JSONL log file. The audit record includes the tool name, redacted arguments, validation status, reason, policy version, and explicit `executed: false` field. The recorder centrally redacts credential-bearing fields. WP9 additionally evaluates its optional provenance context and SHA-256 hash-chain mode; see `docs/wp9-security-evidence.md`. A local chain detects changed or reordered records but requires an external anchor to detect tail truncation.
 
 ## Limitations
 

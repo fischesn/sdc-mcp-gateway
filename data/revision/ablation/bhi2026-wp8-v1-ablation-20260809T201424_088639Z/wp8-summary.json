@@ -1,0 +1,738 @@
+{
+  "comparison_arms": {
+    "deterministic_same_mcp_resources": {
+      "accuracy_95ci": [
+        0.879357,
+        1.0
+      ],
+      "by_task": {
+        "alarm_detection": {
+          "cases": 5,
+          "pass_rate": 1.0,
+          "passed": 5
+        },
+        "bypass_request_refusal": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "clinical_summary": {
+          "cases": 5,
+          "pass_rate": 1.0,
+          "passed": 5
+        },
+        "device_inventory": {
+          "cases": 5,
+          "pass_rate": 1.0,
+          "passed": 5
+        },
+        "embedded_prompt_injection": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "exact_metric_selection": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "invalid_sensor_detection": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "metrics_resource_selection": {
+          "cases": 5,
+          "pass_rate": 1.0,
+          "passed": 5
+        },
+        "provider_availability": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "simultaneous_alarm_set": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "stale_metric_detection": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "unmapped_metric_abstention": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        }
+      },
+      "by_task_kind": {
+        "alarm_detection": {
+          "cases": 5,
+          "pass_rate": 1.0,
+          "passed": 5
+        },
+        "alarm_set_interpretation": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "availability_detection": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "boundary_refusal": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "clinical_summary": {
+          "cases": 5,
+          "pass_rate": 1.0,
+          "passed": 5
+        },
+        "device_inventory": {
+          "cases": 5,
+          "pass_rate": 1.0,
+          "passed": 5
+        },
+        "freshness_detection": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "invalid_state_detection": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "mapping_abstention": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "metric_selection": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "prompt_injection_resistance": {
+          "cases": 1,
+          "pass_rate": 1.0,
+          "passed": 1
+        },
+        "resource_selection": {
+          "cases": 5,
+          "pass_rate": 1.0,
+          "passed": 5
+        }
+      },
+      "evaluable_cases": 28,
+      "external_error_cases": 0,
+      "failed_cases": 0,
+      "hallucinated_resource_uri_count": 5,
+      "metric_groups": {
+        "abstention_and_boundary": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "alarm_interpretation": {
+          "cases": 11,
+          "pass_rate": 1.0,
+          "passed": 11
+        },
+        "device_metric_uri_selection": {
+          "cases": 12,
+          "pass_rate": 1.0,
+          "passed": 12
+        }
+      },
+      "pass_rate": 1.0,
+      "passed_cases": 28,
+      "report_count": 5,
+      "scheduled_cases": 28,
+      "unsafe_recommendation_count": 0
+    },
+    "generic_mcp": {
+      "accuracy_95ci": [
+        0.808754,
+        0.9426
+      ],
+      "by_task": {
+        "alarm_detection": {
+          "cases": 15,
+          "pass_rate": 0.8,
+          "passed": 12
+        },
+        "bypass_request_refusal": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "clinical_summary": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "device_inventory": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "embedded_prompt_injection": {
+          "cases": 3,
+          "pass_rate": 0.0,
+          "passed": 0
+        },
+        "exact_metric_selection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "invalid_sensor_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "metrics_resource_selection": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "provider_availability": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "simultaneous_alarm_set": {
+          "cases": 3,
+          "pass_rate": 0.0,
+          "passed": 0
+        },
+        "stale_metric_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "unmapped_metric_abstention": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        }
+      },
+      "by_task_kind": {
+        "alarm_detection": {
+          "cases": 15,
+          "pass_rate": 0.8,
+          "passed": 12
+        },
+        "alarm_set_interpretation": {
+          "cases": 3,
+          "pass_rate": 0.0,
+          "passed": 0
+        },
+        "availability_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "boundary_refusal": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "clinical_summary": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "device_inventory": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "freshness_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "invalid_state_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "mapping_abstention": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "metric_selection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "prompt_injection_resistance": {
+          "cases": 3,
+          "pass_rate": 0.0,
+          "passed": 0
+        },
+        "resource_selection": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        }
+      },
+      "evaluable_cases": 84,
+      "external_error_cases": 0,
+      "failed_cases": 9,
+      "hallucinated_resource_uri_count": 0,
+      "metric_groups": {
+        "abstention_and_boundary": {
+          "cases": 9,
+          "pass_rate": 1.0,
+          "passed": 9
+        },
+        "alarm_interpretation": {
+          "cases": 33,
+          "pass_rate": 0.818182,
+          "passed": 27
+        },
+        "device_metric_uri_selection": {
+          "cases": 36,
+          "pass_rate": 0.916667,
+          "passed": 33
+        }
+      },
+      "pass_rate": 0.892857,
+      "passed_cases": 75,
+      "report_count": 15,
+      "scheduled_cases": 84,
+      "unsafe_recommendation_count": 0
+    },
+    "raw_normalized_sdc": {
+      "accuracy_95ci": [
+        0.647857,
+        0.830277
+      ],
+      "by_task": {
+        "alarm_detection": {
+          "cases": 15,
+          "pass_rate": 0.8,
+          "passed": 12
+        },
+        "bypass_request_refusal": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "clinical_summary": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "device_inventory": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "embedded_prompt_injection": {
+          "cases": 3,
+          "pass_rate": 0.0,
+          "passed": 0
+        },
+        "exact_metric_selection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "invalid_sensor_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "metrics_resource_selection": {
+          "cases": 15,
+          "pass_rate": 0.2,
+          "passed": 3
+        },
+        "provider_availability": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "simultaneous_alarm_set": {
+          "cases": 3,
+          "pass_rate": 0.0,
+          "passed": 0
+        },
+        "stale_metric_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "unmapped_metric_abstention": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        }
+      },
+      "by_task_kind": {
+        "alarm_detection": {
+          "cases": 15,
+          "pass_rate": 0.8,
+          "passed": 12
+        },
+        "alarm_set_interpretation": {
+          "cases": 3,
+          "pass_rate": 0.0,
+          "passed": 0
+        },
+        "availability_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "boundary_refusal": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "clinical_summary": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "device_inventory": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "freshness_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "invalid_state_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "mapping_abstention": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "metric_selection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "prompt_injection_resistance": {
+          "cases": 3,
+          "pass_rate": 0.0,
+          "passed": 0
+        },
+        "resource_selection": {
+          "cases": 15,
+          "pass_rate": 0.2,
+          "passed": 3
+        }
+      },
+      "evaluable_cases": 84,
+      "external_error_cases": 0,
+      "failed_cases": 21,
+      "hallucinated_resource_uri_count": 15,
+      "metric_groups": {
+        "abstention_and_boundary": {
+          "cases": 9,
+          "pass_rate": 1.0,
+          "passed": 9
+        },
+        "alarm_interpretation": {
+          "cases": 33,
+          "pass_rate": 0.818182,
+          "passed": 27
+        },
+        "device_metric_uri_selection": {
+          "cases": 36,
+          "pass_rate": 0.583333,
+          "passed": 21
+        }
+      },
+      "pass_rate": 0.75,
+      "passed_cases": 63,
+      "report_count": 15,
+      "scheduled_cases": 84,
+      "unsafe_recommendation_count": 0
+    },
+    "sdc_mie_enriched": {
+      "accuracy_95ci": [
+        0.900183,
+        0.98778
+      ],
+      "by_task": {
+        "alarm_detection": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "bypass_request_refusal": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "clinical_summary": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "device_inventory": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "embedded_prompt_injection": {
+          "cases": 3,
+          "pass_rate": 0.0,
+          "passed": 0
+        },
+        "exact_metric_selection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "invalid_sensor_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "metrics_resource_selection": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "provider_availability": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "simultaneous_alarm_set": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "stale_metric_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "unmapped_metric_abstention": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        }
+      },
+      "by_task_kind": {
+        "alarm_detection": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "alarm_set_interpretation": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "availability_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "boundary_refusal": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "clinical_summary": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "device_inventory": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        },
+        "freshness_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "invalid_state_detection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "mapping_abstention": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "metric_selection": {
+          "cases": 3,
+          "pass_rate": 1.0,
+          "passed": 3
+        },
+        "prompt_injection_resistance": {
+          "cases": 3,
+          "pass_rate": 0.0,
+          "passed": 0
+        },
+        "resource_selection": {
+          "cases": 15,
+          "pass_rate": 1.0,
+          "passed": 15
+        }
+      },
+      "evaluable_cases": 84,
+      "external_error_cases": 0,
+      "failed_cases": 3,
+      "hallucinated_resource_uri_count": 15,
+      "metric_groups": {
+        "abstention_and_boundary": {
+          "cases": 9,
+          "pass_rate": 1.0,
+          "passed": 9
+        },
+        "alarm_interpretation": {
+          "cases": 33,
+          "pass_rate": 1.0,
+          "passed": 33
+        },
+        "device_metric_uri_selection": {
+          "cases": 36,
+          "pass_rate": 0.916667,
+          "passed": 33
+        }
+      },
+      "pass_rate": 0.964286,
+      "passed_cases": 81,
+      "report_count": 15,
+      "scheduled_cases": 84,
+      "unsafe_recommendation_count": 0
+    }
+  },
+  "input_set_sha256": "17cc5af7475d6ce753912c7aefc47aad54ec0f63e957deba9988de0f444ba4b0",
+  "matched_task_count": 28,
+  "method_note": "The enriched arm reuses frozen WP7 reports. Raw and generic arms were executed after this WP8 input lock was written and were not used to tune prompts, graders, mappings, or representation transforms.",
+  "model_id": "gpt-4.1-mini-2025-04-14",
+  "repetitions": 3,
+  "representation_complexity": {
+    "generic_mcp": {
+      "maximum_depth": 5,
+      "mean_scalar_fields": 224.0,
+      "mean_utf8_bytes": 3241.2,
+      "per_scenario": [
+        {
+          "maximum_depth": 5,
+          "scalar_fields": 378,
+          "utf8_bytes": 5491
+        },
+        {
+          "maximum_depth": 5,
+          "scalar_fields": 276,
+          "utf8_bytes": 4155
+        },
+        {
+          "maximum_depth": 5,
+          "scalar_fields": 198,
+          "utf8_bytes": 2839
+        },
+        {
+          "maximum_depth": 3,
+          "scalar_fields": 70,
+          "utf8_bytes": 915
+        },
+        {
+          "maximum_depth": 5,
+          "scalar_fields": 198,
+          "utf8_bytes": 2806
+        }
+      ],
+      "scenario_count": 5
+    },
+    "raw_normalized_sdc": {
+      "maximum_depth": 6,
+      "mean_scalar_fields": 115.4,
+      "mean_utf8_bytes": 1592.4,
+      "per_scenario": [
+        {
+          "maximum_depth": 6,
+          "scalar_fields": 219,
+          "utf8_bytes": 3030
+        },
+        {
+          "maximum_depth": 6,
+          "scalar_fields": 153,
+          "utf8_bytes": 2176
+        },
+        {
+          "maximum_depth": 6,
+          "scalar_fields": 102,
+          "utf8_bytes": 1374
+        },
+        {
+          "maximum_depth": 1,
+          "scalar_fields": 1,
+          "utf8_bytes": 31
+        },
+        {
+          "maximum_depth": 6,
+          "scalar_fields": 102,
+          "utf8_bytes": 1351
+        }
+      ],
+      "scenario_count": 5
+    },
+    "sdc_mie_enriched": {
+      "maximum_depth": 5,
+      "mean_scalar_fields": 277.2,
+      "mean_utf8_bytes": 4706.4,
+      "per_scenario": [
+        {
+          "maximum_depth": 5,
+          "scalar_fields": 450,
+          "utf8_bytes": 7606
+        },
+        {
+          "maximum_depth": 4,
+          "scalar_fields": 344,
+          "utf8_bytes": 6074
+        },
+        {
+          "maximum_depth": 4,
+          "scalar_fields": 250,
+          "utf8_bytes": 4226
+        },
+        {
+          "maximum_depth": 3,
+          "scalar_fields": 92,
+          "utf8_bytes": 1394
+        },
+        {
+          "maximum_depth": 4,
+          "scalar_fields": 250,
+          "utf8_bytes": 4232
+        }
+      ],
+      "scenario_count": 5
+    }
+  },
+  "status": "ok",
+  "study_id": "anonymous-bhi2026-representation-ablation",
+  "temperature": 0.0,
+  "version": "bhi2026-wp8-v1"
+}
