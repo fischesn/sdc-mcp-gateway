@@ -1,0 +1,240 @@
+{
+  "claim_boundary": "This validates the same-stack read path and multicast discovery across isolated software network endpoints. It is not physical-device, clinical-network, or multi-vendor evidence.",
+  "library": {
+    "name": "sdc11073",
+    "version": "2.4.1"
+  },
+  "mapping_artifact": {
+    "schema_version": "1.0",
+    "source_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+    "version": "1.0.0"
+  },
+  "network_topology": {
+    "driver": "bridge",
+    "provider_consumer_distinct_ipv4": true,
+    "runtime": "Docker",
+    "separate_network_namespaces": true,
+    "subnet": "172.28.100.0/24"
+  },
+  "profiles": [
+    {
+      "claim_boundary": "This is a container-network software-reference test without a physical device or clinical network. No directed XAddr fallback is permitted.",
+      "consumer": {
+        "container_ip": "172.28.100.20",
+        "language": "Python",
+        "stack": "sdc11073"
+      },
+      "discovery": {
+        "attempts": 5,
+        "directed_xaddr_fallbacks": 0,
+        "latency": {
+          "max_ms": 1200.605,
+          "median_ms": 1200.416,
+          "min_ms": 1200.326,
+          "p95_ms": 1200.605
+        },
+        "success_rate": 1.0,
+        "successes": 5
+      },
+      "mapping": {
+        "mapped_metrics": 3,
+        "source_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+        "total_metrics": 4
+      },
+      "mcp_resources": {
+        "advertised_count": 8,
+        "reads_attempted": 40,
+        "reads_succeeded": 40,
+        "success_rate": 1.0
+      },
+      "profile": "monitor",
+      "provider": {
+        "container_ip": "172.28.100.10",
+        "epr": "urn:uuid:6b3c2139-4e8d-5307-a04c-2e05888a20a9",
+        "language": "Python",
+        "mdib": "monitor.xml",
+        "stack": "sdc11073"
+      },
+      "snapshot": {
+        "alarm_state_count": 2,
+        "attempts": 5,
+        "descriptor_count": 12,
+        "latency": {
+          "max_ms": 1835.491,
+          "median_ms": 1293.656,
+          "min_ms": 1255.833,
+          "p95_ms": 1835.491
+        },
+        "metric_count": 4,
+        "state_count": 10,
+        "success_rate": 1.0,
+        "successes": 5
+      },
+      "status": "ok",
+      "unsupported": {
+        "descriptor_types": {},
+        "state_types": {
+          "ChannelStateContainer": 1,
+          "MdsStateContainer": 1,
+          "VmdStateContainer": 1
+        }
+      }
+    },
+    {
+      "claim_boundary": "This is a container-network software-reference test without a physical device or clinical network. No directed XAddr fallback is permitted.",
+      "consumer": {
+        "container_ip": "172.28.100.20",
+        "language": "Python",
+        "stack": "sdc11073"
+      },
+      "discovery": {
+        "attempts": 5,
+        "directed_xaddr_fallbacks": 0,
+        "latency": {
+          "max_ms": 1200.758,
+          "median_ms": 1200.604,
+          "min_ms": 1200.288,
+          "p95_ms": 1200.758
+        },
+        "success_rate": 1.0,
+        "successes": 5
+      },
+      "mapping": {
+        "mapped_metrics": 3,
+        "source_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+        "total_metrics": 4
+      },
+      "mcp_resources": {
+        "advertised_count": 8,
+        "reads_attempted": 40,
+        "reads_succeeded": 40,
+        "success_rate": 1.0
+      },
+      "profile": "ventilator",
+      "provider": {
+        "container_ip": "172.28.100.10",
+        "epr": "urn:uuid:ece379da-877b-5bf6-b655-74f8b7913898",
+        "language": "Python",
+        "mdib": "ventilator.xml",
+        "stack": "sdc11073"
+      },
+      "snapshot": {
+        "alarm_state_count": 2,
+        "attempts": 5,
+        "descriptor_count": 11,
+        "latency": {
+          "max_ms": 1773.453,
+          "median_ms": 1296.123,
+          "min_ms": 1285.096,
+          "p95_ms": 1773.453
+        },
+        "metric_count": 4,
+        "state_count": 10,
+        "success_rate": 1.0,
+        "successes": 5
+      },
+      "status": "ok",
+      "unsupported": {
+        "descriptor_types": {},
+        "state_types": {
+          "ChannelStateContainer": 1,
+          "MdsStateContainer": 1,
+          "VmdStateContainer": 1
+        }
+      }
+    },
+    {
+      "claim_boundary": "This is a container-network software-reference test without a physical device or clinical network. No directed XAddr fallback is permitted.",
+      "consumer": {
+        "container_ip": "172.28.100.20",
+        "language": "Python",
+        "stack": "sdc11073"
+      },
+      "discovery": {
+        "attempts": 5,
+        "directed_xaddr_fallbacks": 0,
+        "latency": {
+          "max_ms": 1200.529,
+          "median_ms": 1200.413,
+          "min_ms": 1200.347,
+          "p95_ms": 1200.529
+        },
+        "success_rate": 1.0,
+        "successes": 5
+      },
+      "mapping": {
+        "mapped_metrics": 1,
+        "source_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+        "total_metrics": 3
+      },
+      "mcp_resources": {
+        "advertised_count": 8,
+        "reads_attempted": 40,
+        "reads_succeeded": 40,
+        "success_rate": 1.0
+      },
+      "profile": "heterogeneous",
+      "provider": {
+        "container_ip": "172.28.100.10",
+        "epr": "urn:uuid:a694c435-3ceb-5c3d-9eea-26724071ce0a",
+        "language": "Python",
+        "mdib": "heterogeneous.xml",
+        "stack": "sdc11073"
+      },
+      "snapshot": {
+        "alarm_state_count": 0,
+        "attempts": 5,
+        "descriptor_count": 15,
+        "latency": {
+          "max_ms": 1347.331,
+          "median_ms": 1287.72,
+          "min_ms": 1233.457,
+          "p95_ms": 1347.331
+        },
+        "metric_count": 3,
+        "state_count": 12,
+        "success_rate": 1.0,
+        "successes": 5
+      },
+      "status": "ok",
+      "unsupported": {
+        "descriptor_types": {
+          "ActivateOperationDescriptorContainer": 3,
+          "ClockDescriptorContainer": 1,
+          "ScoDescriptorContainer": 1
+        },
+        "state_types": {
+          "ActivateOperationStateContainer": 3,
+          "ChannelStateContainer": 1,
+          "ClockStateContainer": 1,
+          "MdsStateContainer": 1,
+          "ScoStateContainer": 1,
+          "VmdStateContainer": 1
+        }
+      }
+    }
+  ],
+  "protocol_elements": {
+    "directed_xaddr_fallback": false,
+    "https_soap_getmdib": true,
+    "mutual_tls": true,
+    "physical_device_or_clinical_network": false,
+    "read_only_sdc_to_mcp_resource_path": true,
+    "setservice_or_activateoperation_invocation": false,
+    "ws_discovery": true,
+    "xml_mdib_processing": true
+  },
+  "scope": "software-reference provider and consumer in separate Linux containers on an isolated bridge network; no physical medical device",
+  "status": "ok",
+  "totals": {
+    "directed_xaddr_fallbacks": 0,
+    "discovery_attempts": 15,
+    "discovery_successes": 15,
+    "mapped_metrics": 7,
+    "mcp_reads_attempted": 120,
+    "mcp_reads_succeeded": 120,
+    "snapshot_attempts": 15,
+    "snapshot_successes": 15,
+    "total_metrics": 11
+  }
+}

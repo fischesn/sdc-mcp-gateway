@@ -264,10 +264,7 @@ class Sdc11073Consumer(SdcConsumer):
             service,
             ssl_context_container=self.ssl_context_container,
         )
-        try:
-            client.start_all(not_subscribed_actions=imports["periodic_actions"])
-        except TypeError:
-            client.start_all()
+        client.start_all(not_subscribed_actions=imports["all_actions"])
         mdib = imports["ConsumerMdib"](client)
         mdib.init_mdib()
         return mdib, client
@@ -305,7 +302,7 @@ class Sdc11073Consumer(SdcConsumer):
             from sdc11073.definitions_sdc import SdcV1Definitions
             from sdc11073.mdib import ConsumerMdib
             from sdc11073.wsdiscovery import WSDiscovery
-            from sdc11073.xml_types.actions import periodic_actions
+            from sdc11073.xml_types.actions import Actions
         except Exception as exc:  # pragma: no cover - triggered only without optional dependency
             raise MissingSdc11073Dependency(
                 "The optional sdc11073 dependency is not installed. Install with: "
@@ -316,5 +313,5 @@ class Sdc11073Consumer(SdcConsumer):
             "SdcV1Definitions": SdcV1Definitions,
             "ConsumerMdib": ConsumerMdib,
             "WSDiscovery": WSDiscovery,
-            "periodic_actions": periodic_actions,
+            "all_actions": set(Actions),
         }

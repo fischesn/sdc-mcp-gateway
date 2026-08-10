@@ -1,0 +1,13 @@
+allprojects {
+    afterEvaluate { project ->
+        if (project.path == ':glue-examples' && project.tasks.findByName('writeRuntimeClasspath') == null) {
+            project.tasks.register('writeRuntimeClasspath') {
+                doLast {
+                    def classpathFile = new File(project.buildDir, 'runtime-classpath.txt')
+                    classpathFile.parentFile.mkdirs()
+                    classpathFile.text = project.sourceSets.main.runtimeClasspath.asPath
+                }
+            }
+        }
+    }
+}

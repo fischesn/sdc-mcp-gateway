@@ -42,6 +42,25 @@ This is a development-phase, hardware-free protocol experiment. It does not
 execute the LLM hold-out suite. Exact scope and known discovery limitations are
 recorded in `docs/wp3-sdc-protocol-evidence.md`.
 
+### Independent Java/Python SDC cross-stack path
+
+The supplementary SDCri experiment uses SDCri 7.0.0 as a Java provider and the
+gateway's `sdc11073` 2.4.1 adapter as a Python consumer. Preparation instructions,
+the pinned SDCri commit, and the anonymous result JSON are available in
+`experiments/2026-08-10-sdcri-cross-stack/`. The test includes separate mutual-TLS
+identities and an untrusted-client negative control, but no physical device or
+clinical network.
+
+### Consolidated release-candidate evidence
+
+`docs/consolidated-evaluation.md` describes the container-isolated Python/Python
+discovery test and the aggregate release-candidate runner. The aggregate groups
+protocol/resource, deterministic safety/failure, and frozen agent/representation
+evidence in one hash-linked JSON summary. External models are not called again
+when the original frozen input digest still verifies. The recorded container
+run completed 15/15 WS-Discovery attempts, 15/15 snapshots, and 120/120 MCP
+resource reads with zero directed-XAddr fallbacks.
+
 ### Failure, freshness, recovery, and alarm lifecycle (WP4)
 
 ```powershell

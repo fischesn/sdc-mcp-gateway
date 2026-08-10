@@ -1,0 +1,99 @@
+{
+  "claim_boundary": "This validates local software interoperability across independent Java and Python SDC stacks. It does not validate a physical device, clinical network, continuous report handling, or regulatory safety.",
+  "discovery": {
+    "advertised_xaddrs": [
+      "https://127.0.0.1:60943/5dc11073-0000-4000-8000-000000000700"
+    ],
+    "attempts": 8,
+    "directed_service_fallback": false,
+    "epr_matched_exactly": true,
+    "latency": {
+      "max_ms": 1189.684,
+      "median_ms": 1002.485,
+      "min_ms": 1000.478,
+      "p95_ms": 1189.684
+    },
+    "note": "WS-Discovery was attempted while the independent provider started. If same-host multicast was not delivered, the provider's logged HTTPS XAddr was used and the discovery miss remains visible.",
+    "success": true
+  },
+  "gateway_consumer": {
+    "language": "Python",
+    "stack": "sdc11073",
+    "version": "2.4.1"
+  },
+  "mapping": {
+    "mapped_metrics": 0,
+    "source_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+    "total_metrics": 11
+  },
+  "mcp_resources": {
+    "advertised_count": 8,
+    "reads_attempted": 40,
+    "reads_succeeded": 40,
+    "success_rate": 1.0
+  },
+  "protocol_elements": {
+    "consumer_mdib_initialization": true,
+    "directed_xaddr_fallback": false,
+    "https_soap_getmdib": true,
+    "independent_provider_and_consumer_implementations": true,
+    "physical_device_or_clinical_network": false,
+    "read_only_sdc_to_mcp_resource_path": true,
+    "setservice_or_activateoperation_invocation": false,
+    "subscriptions_and_periodic_reports": false,
+    "ws_discovery_attempted": true,
+    "ws_discovery_succeeded": true
+  },
+  "provider": {
+    "epr": "urn:uuid:5dc11073-0000-4000-8000-000000000700",
+    "git_commit": "cc46b3b8e113c80ef4977920160b858ac72f1343",
+    "language": "Java",
+    "stack": "SDCri",
+    "version": "7.0.0"
+  },
+  "scope": "local-host software cross-stack experiment; no physical medical device",
+  "snapshot": {
+    "alarm_state_count": 6,
+    "attempts": 5,
+    "context_state_count": 2,
+    "descriptor_count": 43,
+    "latency": {
+      "max_ms": 1256.362,
+      "median_ms": 1096.251,
+      "min_ms": 1083.403,
+      "p95_ms": 1256.362
+    },
+    "metric_count": 11,
+    "state_count": 41,
+    "success_rate": 1.0,
+    "successes": 5
+  },
+  "status": "ok",
+  "transport_security": {
+    "ephemeral_test_ca": true,
+    "mutual_authentication": true,
+    "separate_provider_and_consumer_identities": true,
+    "tls": true,
+    "untrusted_client_negative_control_rejected": true
+  },
+  "unsupported": {
+    "descriptor_types": {
+      "ActivateOperationDescriptorContainer": 4,
+      "ClockDescriptorContainer": 1,
+      "ScoDescriptorContainer": 3,
+      "SetContextStateOperationDescriptorContainer": 1,
+      "SetStringOperationDescriptorContainer": 5,
+      "SetValueOperationDescriptorContainer": 1
+    },
+    "state_types": {
+      "ActivateOperationStateContainer": 4,
+      "ChannelStateContainer": 4,
+      "ClockStateContainer": 1,
+      "MdsStateContainer": 1,
+      "ScoStateContainer": 3,
+      "SetStringOperationStateContainer": 5,
+      "SetValueOperationStateContainer": 1,
+      "VmdStateContainer": 3
+    }
+  }
+}

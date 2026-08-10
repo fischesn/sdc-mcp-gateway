@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import signal
 import threading
 import uuid
@@ -74,13 +75,13 @@ def run_reference_provider(
     epr = f"urn:uuid:{profile_uuid}"
     this_model = ThisModelType(
         manufacturer="Anonymous software reference provider",
-        model_name=f"WP3 {profile} profile",
+        model_name=f"SDC-MCP {profile} reference profile",
         model_number="1",
     )
     this_device = ThisDeviceType(
-        friendly_name=f"WP3 {profile} provider",
+        friendly_name=f"Software {profile} reference provider",
         firmware_version="artifact-0.11",
-        serial_number=f"wp3-{profile}",
+        serial_number=f"reference-{profile}",
     )
     stop_event = threading.Event()
     ssl_context_container = mk_ssl_contexts_from_folder(tls_dir) if tls_dir is not None else None
@@ -103,6 +104,10 @@ def run_reference_provider(
             ssl_context_container=ssl_context_container,
         )
         provider.start_all(start_rtsample_loop=False)
+        # ``start_all`` starts the hosted HTTPS/SOAP services but does not
+        # register the provider with WS-Discovery.  Publishing is a separate
+        # sdc11073 lifecycle step and is required for Probe/ProbeMatches.
+        provider.publish()  # type: ignore[no-untyped-call]  # optional dependency lacks typing
         ready = {
             "status": "ready",
             "profile": profile,
@@ -122,12 +127,17 @@ def run_reference_provider(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="WP3 software SDC reference provider")
+    parser = argparse.ArgumentParser(description="Deterministic software SDC reference provider")
     parser.add_argument("--profile", choices=sorted(PROFILE_VALUES), required=True)
     parser.add_argument("--local-ip", default="127.0.0.1")
     parser.add_argument("--ready-file", type=Path)
     parser.add_argument("--tls-dir", type=Path)
+    parser.add_argument("--log-level", choices=("DEBUG", "INFO", "WARNING"), default="WARNING")
     args = parser.parse_args()
+    logging.basicConfig(
+        level=getattr(logging, args.log_level),
+        format="%(asctime)s %(levelname)s %(name)s %(message)s",
+    )
     run_reference_provider(
         args.profile,
         local_ip=args.local_ip,

@@ -28,7 +28,10 @@ data/revision/development/*
 
 data/revision/holdout/*
 !data/revision/holdout/.gitkeep
+data/revision/consolidated/*
+!data/revision/consolidated/.gitkeep
 data/revision/*.log
+tmp/
 
 # Python artifacts
 __pycache__/

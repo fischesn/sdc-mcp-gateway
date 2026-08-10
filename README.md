@@ -452,6 +452,22 @@ XML/MDIB processing, mapping, and MCP resource reads. Same-host WS-Discovery
 delivery is measured separately and any directed-XAddr fallback is explicit in
 the JSON report. See [docs/wp3-sdc-protocol-evidence.md](docs/wp3-sdc-protocol-evidence.md).
 
+An additional cross-stack experiment runs the same read-only boundary against
+the independent Java SDCri provider implementation. It covers WS-Discovery,
+mutual TLS with separate identities, GetMdib, normalized extraction, and MCP
+resource reads; an untrusted-client negative control must be rejected. Setup,
+the pinned SDCri revision, and recorded results are in
+[experiments/2026-08-10-sdcri-cross-stack](experiments/2026-08-10-sdcri-cross-stack/README.md).
+
+For a same-stack discovery run without the Windows same-interface multicast
+collision, the repository also provides a Docker testbed with provider and
+consumer in separate Linux network namespaces. In the recorded three-profile
+run, WS-Discovery succeeded in 15/15 attempts without a directed-XAddr
+fallback; 15/15 snapshots and 120/120 MCP resource reads completed. The
+consolidated evaluation then reruns all local deterministic checks and binds
+the retained frozen-model outputs by hash. See
+[docs/consolidated-evaluation.md](docs/consolidated-evaluation.md).
+
 For a step-by-step first validation in a real SDC/VPN/lab network, see
 [docs/REAL_SDC_TESTING.md](docs/REAL_SDC_TESTING.md). The current MCP server mode is
 stdio-based; network-facing MCP transport is planned for a later major version.
