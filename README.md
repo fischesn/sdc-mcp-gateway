@@ -385,6 +385,21 @@ Example tool arguments are stored under:
 config/tool_args/
 ```
 
+### Non-executing human authorization
+
+Evaluate the state- and policy-bound proposal lifecycle on seven synthetic cases:
+
+```powershell
+python -m sdc_mcp_gateway.revision.human_authorization
+```
+
+The workflow records `proposed -> policy_validated -> pending_approval`, followed by
+`approved`, `denied`, or `expired`. Approval repeats policy, freshness, version, and snapshot
+checks and still returns `executed=false`; it never dispatches an SDC operation. The evidence
+suite covers approval, denial, expiry, duplicate approval, stale and changed state, and missing
+authorization context. See
+[docs/wp10-human-authorization.md](docs/wp10-human-authorization.md).
+
 
 ## Example MCP clients
 

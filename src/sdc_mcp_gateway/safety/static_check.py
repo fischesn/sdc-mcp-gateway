@@ -39,7 +39,7 @@ def scan_agent_facing_boundary(package_root: Path) -> dict[str, object]:
         package_root / "mcp",
         package_root / "tools",
         package_root / "agent_eval",
-        package_root / "safety" / "policy_engine.py",
+        package_root / "safety",
     ]
     files: list[Path] = []
     for target in targets:

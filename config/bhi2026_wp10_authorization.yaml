@@ -1,0 +1,156 @@
+schema_version: "bhi2026-wp10-v1"
+evaluation_id: "bhi2026-wp10-authorization-v1"
+base_time: "2026-08-10T10:00:00Z"
+description: >-
+  Synthetic, deterministic cases for the non-executing human-authorization workflow.
+  They assess workflow mechanics only and do not contain patient data.
+
+expert_review:
+  status: "not_conducted"
+  participant_count: 0
+  rationale: >-
+    No participant data were collected in WP10. Suitable expert availability and the
+    applicable consent, ethics, and institutional-governance requirements must be
+    established before any structured expert assessment.
+  interpretation: >-
+    The checked-in cases are an instrument for possible later expert feedback, not evidence
+    of clinical appropriateness, usability, or clinical validation.
+  assessment_dimensions:
+    - "clarity of target, operation, value, unit, and current state"
+    - "plausibility of the proposed workflow information"
+    - "missing information needed for a supervisory decision"
+    - "workflow-safety concerns and reasons to deny or defer"
+
+cases:
+  - case_id: "valid_approval"
+    title: "Approve a current, in-policy FiO2 proposal"
+    proposal_id: "wp10-valid-approval"
+    tool: "prepare_set_fio2"
+    parameters: {device_id: "sim-ventilator-1", value: 45.0}
+    proposer: "synthetic-agent-A"
+    expiry_seconds: 120
+    decision_offset_seconds: 10
+    action: "approve"
+    authorization:
+      identity: "synthetic-supervisor-A"
+      reference: "synthetic-authz-001"
+      role: "domain-reviewer"
+    pre_decision_mutation: "none"
+    expected_state: "approved"
+    expected_reason: "human_authorization_recorded_no_execution"
+    review_prompt: >-
+      Is the displayed device, proposed FiO2, unit, allowed range, snapshot provenance,
+      freshness, expiry, and non-executing meaning sufficiently clear?
+
+  - case_id: "explicit_denial"
+    title: "Deny a current, in-policy PEEP proposal"
+    proposal_id: "wp10-explicit-denial"
+    tool: "prepare_set_peep"
+    parameters: {device_id: "sim-ventilator-1", value: 10.0}
+    proposer: "synthetic-agent-A"
+    expiry_seconds: 120
+    decision_offset_seconds: 10
+    action: "deny"
+    authorization:
+      identity: "synthetic-supervisor-A"
+      reference: "synthetic-authz-002"
+      role: "domain-reviewer"
+    pre_decision_mutation: "none"
+    expected_state: "denied"
+    expected_reason: "human_authorization_denied"
+    review_prompt: >-
+      Does the workflow make clear that denial is final for this proposal and produces no
+      device-side effect?
+
+  - case_id: "expired_proposal"
+    title: "Reject approval after the authorization window"
+    proposal_id: "wp10-expired"
+    tool: "prepare_set_fio2"
+    parameters: {device_id: "sim-ventilator-1", value: 45.0}
+    proposer: "synthetic-agent-B"
+    expiry_seconds: 30
+    decision_offset_seconds: 31
+    action: "approve"
+    authorization:
+      identity: "synthetic-supervisor-B"
+      reference: "synthetic-authz-003"
+    pre_decision_mutation: "none"
+    expected_state: "expired"
+    expected_reason: "authorization_window_expired"
+    review_prompt: >-
+      Are proposal age and expiry visible enough to explain why a new proposal is required?
+
+  - case_id: "duplicate_approval"
+    title: "Reject a duplicate approval decision"
+    proposal_id: "wp10-duplicate"
+    tool: "prepare_set_fio2"
+    parameters: {device_id: "sim-ventilator-1", value: 45.0}
+    proposer: "synthetic-agent-C"
+    expiry_seconds: 120
+    decision_offset_seconds: 10
+    action: "approve"
+    authorization:
+      identity: "synthetic-supervisor-C"
+      reference: "synthetic-authz-004"
+    pre_decision_mutation: "none"
+    repeat_action: "approve"
+    expected_repeat_reason: "already_terminal:approved"
+    expected_state: "approved"
+    expected_reason: "human_authorization_recorded_no_execution"
+    review_prompt: >-
+      Is the terminal, idempotent outcome sufficiently explicit to prevent double handling?
+
+  - case_id: "stale_snapshot_approval"
+    title: "Fail closed when current data become stale"
+    proposal_id: "wp10-stale"
+    tool: "prepare_set_fio2"
+    parameters: {device_id: "sim-ventilator-1", value: 45.0}
+    proposer: "synthetic-agent-D"
+    expiry_seconds: 120
+    decision_offset_seconds: 10
+    action: "approve"
+    authorization:
+      identity: "synthetic-supervisor-D"
+      reference: "synthetic-authz-005"
+    pre_decision_mutation: "stale"
+    expected_state: "expired"
+    expected_reason: "revalidation_failed:stale_snapshot"
+    review_prompt: >-
+      Does the stale-state explanation clearly require a refreshed proposal rather than
+      allowing approval to override freshness?
+
+  - case_id: "changed_device_state"
+    title: "Fail closed when the bound device state changes"
+    proposal_id: "wp10-state-change"
+    tool: "prepare_set_fio2"
+    parameters: {device_id: "sim-ventilator-1", value: 45.0}
+    proposer: "synthetic-agent-E"
+    expiry_seconds: 120
+    decision_offset_seconds: 10
+    action: "approve"
+    authorization:
+      identity: "synthetic-supervisor-E"
+      reference: "synthetic-authz-006"
+    pre_decision_mutation: "device_state_changed"
+    expected_state: "expired"
+    expected_reason: "revalidation_failed:device_state_changed"
+    review_prompt: >-
+      Is the snapshot binding clear enough to explain why any changed source state requires
+      a new proposal, even if the policy remains unchanged?
+
+  - case_id: "missing_authorization_context"
+    title: "Keep the proposal pending without authorization identity"
+    proposal_id: "wp10-missing-context"
+    tool: "prepare_set_peep"
+    parameters: {device_id: "sim-ventilator-1", value: 10.0}
+    proposer: "synthetic-agent-F"
+    expiry_seconds: 120
+    decision_offset_seconds: 10
+    action: "approve"
+    authorization: null
+    pre_decision_mutation: "none"
+    expected_state: "pending_approval"
+    expected_reason: "missing_authorization_context"
+    review_prompt: >-
+      Is it clear which identity and authorization reference are missing and that no decision
+      or device effect has occurred?

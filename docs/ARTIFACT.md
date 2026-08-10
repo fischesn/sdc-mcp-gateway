@@ -12,7 +12,8 @@ The artifact includes:
 - benchmark and aggregation utilities;
 - deterministic resource-only baseline evaluation;
 - optional LLM-backed agent evaluation;
-- dry-run MCP tools with policy validation and audit logging.
+- dry-run MCP tools with policy validation and audit logging;
+- a deterministic, non-executing human-authorization lifecycle and synthetic review cases.
 
 ## Not included
 
@@ -89,6 +90,22 @@ tool interactions exercised, the independent SDC operation-attempt count,
 before/after device-state digests, static boundary violations, and the result
 of exhaustive finite-state transition exploration. It does not claim formal
 verification of the Python implementation or general clinical safety.
+
+### Non-executing human authorization (WP10)
+
+```powershell
+python -m sdc_mcp_gateway.revision.human_authorization `
+  --suite config/bhi2026_wp10_authorization.yaml `
+  --config config/gateway.simulated.dryrun.high-airway-pressure.example.yaml `
+  --mie config/sdc_mie.yaml `
+  --tool-policy config/tool_policies.yaml `
+  --output data/revision/authorization/bhi2026-wp10-authorization-v1/workflow-evidence.json
+```
+
+This exercises approval, denial, expiry, duplicate approval, stale and changed source state,
+and missing authorization context. The workflow is non-executing and the synthetic prompts are
+not expert feedback or clinical validation. See `docs/wp10-human-authorization.md`.
+
 ## Dry-run tool evaluation
 
 ```powershell

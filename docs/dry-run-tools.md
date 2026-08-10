@@ -77,4 +77,9 @@ Dry-run tool calls are recorded as `tool_dry_run` events in the configured JSONL
 
 ## Limitations
 
-v0.10 does not implement real SDC SetService, ActivateOperation, alarm acknowledgement, user authentication, or human-approval UI. Those are future work and require a controlled real SDC testbed.
+WP10 adds a deterministic, non-executing proposal/authorization lifecycle above the dry-run
+validator; see `docs/wp10-human-authorization.md`. It does not implement real SDC SetService,
+ActivateOperation, alarm acknowledgement, user authentication, role authorization, or a
+human-approval UI. An `approved` record is therefore not device-operation authority. Effective
+write-back requires a controlled real SDC testbed and a separate safety, security, and clinical
+governance process.

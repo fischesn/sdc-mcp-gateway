@@ -112,6 +112,18 @@ gateway.simulated.dryrun.high-airway-pressure.example.yaml
 
 This configuration enables dry-run tools for the high-airway-pressure scenario and is used by `evaluate-dry-run-tools` to validate acknowledgement of an active airway-pressure alarm.
 
+## WP10 authorization cases
+
+`bhi2026_wp10_authorization.yaml` defines seven synthetic proposal lifecycles and a structured
+instrument for possible later expert review. Reproduce the non-executing workflow evidence with:
+
+```powershell
+python -m sdc_mcp_gateway.revision.human_authorization
+```
+
+The checked-in review prompts are not participant data and do not establish clinical
+appropriateness.
+
 
 ## Real SDC local configuration
 

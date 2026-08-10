@@ -1,0 +1,361 @@
+{
+  "cases": [
+    {
+      "bound": {
+        "allowed_range": [
+          21.0,
+          100.0
+        ],
+        "approval_identity": "synthetic-supervisor-A",
+        "approval_reference": "synthetic-authz-001",
+        "expires_at": "2026-08-10T10:02:00+00:00",
+        "freshness_state": "fresh",
+        "operation": "set_fio2",
+        "parameters": {
+          "device_id": "sim-ventilator-1",
+          "snapshot_version": 100001,
+          "value": 45.0
+        },
+        "policy_version": "0.10-example",
+        "proposer": "synthetic-agent-A",
+        "snapshot_sha256": "a636008745538a9a271e07590489e4ba5f01853703392cbaec8aec96e0de97b7",
+        "snapshot_version": 100001,
+        "target_device_id": "sim-ventilator-1",
+        "unit": "%"
+      },
+      "case_id": "valid_approval",
+      "decision_recorded": true,
+      "device_state_unchanged_by_decision": true,
+      "device_write_count": 0,
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "human_authorization_recorded_no_execution",
+      "expected_repeat_reason": null,
+      "expected_state": "approved",
+      "observed_reason": "human_authorization_recorded_no_execution",
+      "observed_state": "approved",
+      "passed": true,
+      "repeat_reason": null,
+      "review_prompt": "Is the displayed device, proposed FiO2, unit, allowed range, snapshot provenance, freshness, expiry, and non-executing meaning sufficiently clear?",
+      "title": "Approve a current, in-policy FiO2 proposal",
+      "transition_states": [
+        "proposed",
+        "policy_validated",
+        "pending_approval",
+        "approved"
+      ],
+      "write_operations_allowed": false
+    },
+    {
+      "bound": {
+        "allowed_range": [
+          0.0,
+          25.0
+        ],
+        "approval_identity": "synthetic-supervisor-A",
+        "approval_reference": "synthetic-authz-002",
+        "expires_at": "2026-08-10T10:02:00+00:00",
+        "freshness_state": "fresh",
+        "operation": "set_peep",
+        "parameters": {
+          "device_id": "sim-ventilator-1",
+          "snapshot_version": 100001,
+          "value": 10.0
+        },
+        "policy_version": "0.10-example",
+        "proposer": "synthetic-agent-A",
+        "snapshot_sha256": "a636008745538a9a271e07590489e4ba5f01853703392cbaec8aec96e0de97b7",
+        "snapshot_version": 100001,
+        "target_device_id": "sim-ventilator-1",
+        "unit": "cmH2O"
+      },
+      "case_id": "explicit_denial",
+      "decision_recorded": true,
+      "device_state_unchanged_by_decision": true,
+      "device_write_count": 0,
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "human_authorization_denied",
+      "expected_repeat_reason": null,
+      "expected_state": "denied",
+      "observed_reason": "human_authorization_denied",
+      "observed_state": "denied",
+      "passed": true,
+      "repeat_reason": null,
+      "review_prompt": "Does the workflow make clear that denial is final for this proposal and produces no device-side effect?",
+      "title": "Deny a current, in-policy PEEP proposal",
+      "transition_states": [
+        "proposed",
+        "policy_validated",
+        "pending_approval",
+        "denied"
+      ],
+      "write_operations_allowed": false
+    },
+    {
+      "bound": {
+        "allowed_range": [
+          21.0,
+          100.0
+        ],
+        "approval_identity": "synthetic-supervisor-B",
+        "approval_reference": "synthetic-authz-003",
+        "expires_at": "2026-08-10T10:00:30+00:00",
+        "freshness_state": "fresh",
+        "operation": "set_fio2",
+        "parameters": {
+          "device_id": "sim-ventilator-1",
+          "snapshot_version": 100001,
+          "value": 45.0
+        },
+        "policy_version": "0.10-example",
+        "proposer": "synthetic-agent-B",
+        "snapshot_sha256": "a636008745538a9a271e07590489e4ba5f01853703392cbaec8aec96e0de97b7",
+        "snapshot_version": 100001,
+        "target_device_id": "sim-ventilator-1",
+        "unit": "%"
+      },
+      "case_id": "expired_proposal",
+      "decision_recorded": false,
+      "device_state_unchanged_by_decision": true,
+      "device_write_count": 0,
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "authorization_window_expired",
+      "expected_repeat_reason": null,
+      "expected_state": "expired",
+      "observed_reason": "authorization_window_expired",
+      "observed_state": "expired",
+      "passed": true,
+      "repeat_reason": null,
+      "review_prompt": "Are proposal age and expiry visible enough to explain why a new proposal is required?",
+      "title": "Reject approval after the authorization window",
+      "transition_states": [
+        "proposed",
+        "policy_validated",
+        "pending_approval",
+        "expired"
+      ],
+      "write_operations_allowed": false
+    },
+    {
+      "bound": {
+        "allowed_range": [
+          21.0,
+          100.0
+        ],
+        "approval_identity": "synthetic-supervisor-C",
+        "approval_reference": "synthetic-authz-004",
+        "expires_at": "2026-08-10T10:02:00+00:00",
+        "freshness_state": "fresh",
+        "operation": "set_fio2",
+        "parameters": {
+          "device_id": "sim-ventilator-1",
+          "snapshot_version": 100001,
+          "value": 45.0
+        },
+        "policy_version": "0.10-example",
+        "proposer": "synthetic-agent-C",
+        "snapshot_sha256": "a636008745538a9a271e07590489e4ba5f01853703392cbaec8aec96e0de97b7",
+        "snapshot_version": 100001,
+        "target_device_id": "sim-ventilator-1",
+        "unit": "%"
+      },
+      "case_id": "duplicate_approval",
+      "decision_recorded": true,
+      "device_state_unchanged_by_decision": true,
+      "device_write_count": 0,
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "human_authorization_recorded_no_execution",
+      "expected_repeat_reason": "already_terminal:approved",
+      "expected_state": "approved",
+      "observed_reason": "human_authorization_recorded_no_execution",
+      "observed_state": "approved",
+      "passed": true,
+      "repeat_reason": "already_terminal:approved",
+      "review_prompt": "Is the terminal, idempotent outcome sufficiently explicit to prevent double handling?",
+      "title": "Reject a duplicate approval decision",
+      "transition_states": [
+        "proposed",
+        "policy_validated",
+        "pending_approval",
+        "approved"
+      ],
+      "write_operations_allowed": false
+    },
+    {
+      "bound": {
+        "allowed_range": [
+          21.0,
+          100.0
+        ],
+        "approval_identity": "synthetic-supervisor-D",
+        "approval_reference": "synthetic-authz-005",
+        "expires_at": "2026-08-10T10:02:00+00:00",
+        "freshness_state": "fresh",
+        "operation": "set_fio2",
+        "parameters": {
+          "device_id": "sim-ventilator-1",
+          "snapshot_version": 100001,
+          "value": 45.0
+        },
+        "policy_version": "0.10-example",
+        "proposer": "synthetic-agent-D",
+        "snapshot_sha256": "a636008745538a9a271e07590489e4ba5f01853703392cbaec8aec96e0de97b7",
+        "snapshot_version": 100001,
+        "target_device_id": "sim-ventilator-1",
+        "unit": "%"
+      },
+      "case_id": "stale_snapshot_approval",
+      "decision_recorded": false,
+      "device_state_unchanged_by_decision": true,
+      "device_write_count": 0,
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "revalidation_failed:stale_snapshot",
+      "expected_repeat_reason": null,
+      "expected_state": "expired",
+      "observed_reason": "revalidation_failed:stale_snapshot",
+      "observed_state": "expired",
+      "passed": true,
+      "repeat_reason": null,
+      "review_prompt": "Does the stale-state explanation clearly require a refreshed proposal rather than allowing approval to override freshness?",
+      "title": "Fail closed when current data become stale",
+      "transition_states": [
+        "proposed",
+        "policy_validated",
+        "pending_approval",
+        "expired"
+      ],
+      "write_operations_allowed": false
+    },
+    {
+      "bound": {
+        "allowed_range": [
+          21.0,
+          100.0
+        ],
+        "approval_identity": "synthetic-supervisor-E",
+        "approval_reference": "synthetic-authz-006",
+        "expires_at": "2026-08-10T10:02:00+00:00",
+        "freshness_state": "fresh",
+        "operation": "set_fio2",
+        "parameters": {
+          "device_id": "sim-ventilator-1",
+          "snapshot_version": 100001,
+          "value": 45.0
+        },
+        "policy_version": "0.10-example",
+        "proposer": "synthetic-agent-E",
+        "snapshot_sha256": "a636008745538a9a271e07590489e4ba5f01853703392cbaec8aec96e0de97b7",
+        "snapshot_version": 100001,
+        "target_device_id": "sim-ventilator-1",
+        "unit": "%"
+      },
+      "case_id": "changed_device_state",
+      "decision_recorded": false,
+      "device_state_unchanged_by_decision": true,
+      "device_write_count": 0,
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "revalidation_failed:device_state_changed",
+      "expected_repeat_reason": null,
+      "expected_state": "expired",
+      "observed_reason": "revalidation_failed:device_state_changed",
+      "observed_state": "expired",
+      "passed": true,
+      "repeat_reason": null,
+      "review_prompt": "Is the snapshot binding clear enough to explain why any changed source state requires a new proposal, even if the policy remains unchanged?",
+      "title": "Fail closed when the bound device state changes",
+      "transition_states": [
+        "proposed",
+        "policy_validated",
+        "pending_approval",
+        "expired"
+      ],
+      "write_operations_allowed": false
+    },
+    {
+      "bound": {
+        "allowed_range": [
+          0.0,
+          25.0
+        ],
+        "approval_identity": null,
+        "approval_reference": null,
+        "expires_at": "2026-08-10T10:02:00+00:00",
+        "freshness_state": "fresh",
+        "operation": "set_peep",
+        "parameters": {
+          "device_id": "sim-ventilator-1",
+          "snapshot_version": 100001,
+          "value": 10.0
+        },
+        "policy_version": "0.10-example",
+        "proposer": "synthetic-agent-F",
+        "snapshot_sha256": "a636008745538a9a271e07590489e4ba5f01853703392cbaec8aec96e0de97b7",
+        "snapshot_version": 100001,
+        "target_device_id": "sim-ventilator-1",
+        "unit": "cmH2O"
+      },
+      "case_id": "missing_authorization_context",
+      "decision_recorded": false,
+      "device_state_unchanged_by_decision": true,
+      "device_write_count": 0,
+      "dry_run": true,
+      "executed": false,
+      "expected_reason": "missing_authorization_context",
+      "expected_repeat_reason": null,
+      "expected_state": "pending_approval",
+      "observed_reason": "missing_authorization_context",
+      "observed_state": "pending_approval",
+      "passed": true,
+      "repeat_reason": null,
+      "review_prompt": "Is it clear which identity and authorization reference are missing and that no decision or device effect has occurred?",
+      "title": "Keep the proposal pending without authorization identity",
+      "transition_states": [
+        "proposed",
+        "policy_validated",
+        "pending_approval"
+      ],
+      "write_operations_allowed": false
+    }
+  ],
+  "evaluation_id": "bhi2026-wp10-authorization-v1",
+  "expert_review": {
+    "assessment_dimensions": [
+      "clarity of target, operation, value, unit, and current state",
+      "plausibility of the proposed workflow information",
+      "missing information needed for a supervisory decision",
+      "workflow-safety concerns and reasons to deny or defer"
+    ],
+    "interpretation": "The checked-in cases are an instrument for possible later expert feedback, not evidence of clinical appropriateness, usability, or clinical validation.",
+    "participant_count": 0,
+    "rationale": "No participant data were collected in WP10. Suitable expert availability and the applicable consent, ethics, and institutional-governance requirements must be established before any structured expert assessment.",
+    "status": "not_conducted"
+  },
+  "input_sha256": {
+    "evidence_runner": "4c8a2a12a78e5955e2ea5ee59aa25450d22152c9ad564d89a71953f66fc7447f",
+    "gateway_config": "98371cc326ab446490968efb3cad40893f3cfc8960e6fece8dfd39f837949c08",
+    "mapping": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+    "policy": "3b6e7b6fd173fea2d6bc0fbf2ed0b3c2b9b621d266c480a729fcd50cd8587ef2",
+    "suite": "25403cfc88311028a765df5ce4227b20b420320718dd7b7b35f858a20d829d8b",
+    "workflow_implementation": "77964b59909d3ae5955b4d5f8c5205cf5bd6260c8cd6a5b1fbd129f7ac0b5817"
+  },
+  "schema_version": "bhi2026-wp10-v1",
+  "scope": "Deterministic non-executing workflow evaluation with synthetic proposals; not expert feedback, clinical validation, or device-control evidence.",
+  "status": "ok",
+  "summary": {
+    "all_decisions_preserved_device_state": true,
+    "all_results_non_executing": true,
+    "approved": 2,
+    "cases": 7,
+    "denied": 1,
+    "device_write_count": 0,
+    "expired": 3,
+    "failed": 0,
+    "passed": 7,
+    "pending_approval": 1
+  }
+}
