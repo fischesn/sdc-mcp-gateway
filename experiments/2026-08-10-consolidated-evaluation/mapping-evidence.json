@@ -1,0 +1,566 @@
+{
+  "aggregate_metric_elements": {
+    "coverage": 0.6363636363636364,
+    "states": {
+      "conflicting": 0,
+      "mapped": 7,
+      "unmapped": 4,
+      "unsupported": 0
+    },
+    "total": 11
+  },
+  "claim_boundary": "SDC-MIE is a versioned research artifact. It is not an IEEE 11073 standard, is not file-format compatible with TogoMCP, and does not establish clinical semantics.",
+  "mapping": {
+    "entry_count": 6,
+    "json_schema_valid": true,
+    "provenance": {
+      "basis": [
+        "IEEE 11073-10101 nomenclature codes represented in the evaluated profiles",
+        "Version-controlled simulator and software-provider MDIB profiles"
+      ],
+      "license": "MIT",
+      "scope": "Research-only semantic projection into read-only MCP resources; no standardization or device-control claim.",
+      "source": "Anonymous BHI revision artifact"
+    },
+    "schema_id": "urn:sdc-mcp-gateway:sdc-mie:schema:1.0",
+    "schema_version": "1.0",
+    "semantic_validation_valid": true,
+    "source_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+    "version": "1.0.0"
+  },
+  "profiles": [
+    {
+      "descriptor_classes": {
+        "ActivateOperationDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "ChannelDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "ClockDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "LocationContextDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "MdsDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "NumericMetricDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 2,
+            "unsupported": 0
+          },
+          "total": 3
+        },
+        "OperatorContextDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "PatientContextDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "ScoDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "SystemContextDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "VmdDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        }
+      },
+      "metric_elements": {
+        "coverage": 0.3333333333333333,
+        "states": {
+          "conflicting": 0,
+          "mapped": 1,
+          "unmapped": 2,
+          "unsupported": 0
+        },
+        "total": 3,
+        "unresolved": [
+          {
+            "code": "vendor.unknown.numeric",
+            "handle": "metric.unknown.numeric",
+            "reason": "no code or handle mapping entry",
+            "state": "unmapped"
+          },
+          {
+            "code": "vendor.unknown.mode",
+            "handle": "metric.unknown.vendor",
+            "reason": "no code or handle mapping entry",
+            "state": "unmapped"
+          }
+        ]
+      },
+      "profile": "heterogeneous",
+      "state_classes": {
+        "ActivateOperationStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "ChannelStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "ClockStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "MdsStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "NumericMetricStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 2,
+            "unsupported": 0
+          },
+          "total": 3
+        },
+        "ScoStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "SystemContextStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "VmdStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        }
+      }
+    },
+    {
+      "descriptor_classes": {
+        "AlertConditionDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "AlertSystemDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "ChannelDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "LocationContextDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "MdsDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "NumericMetricDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 3,
+            "unmapped": 1,
+            "unsupported": 0
+          },
+          "total": 4
+        },
+        "PatientContextDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "SystemContextDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "VmdDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        }
+      },
+      "metric_elements": {
+        "coverage": 0.75,
+        "states": {
+          "conflicting": 0,
+          "mapped": 3,
+          "unmapped": 1,
+          "unsupported": 0
+        },
+        "total": 4,
+        "unresolved": [
+          {
+            "code": "vendor.monitor.index",
+            "handle": "metric.monitor.unknown",
+            "reason": "no code or handle mapping entry",
+            "state": "unmapped"
+          }
+        ]
+      },
+      "profile": "monitor",
+      "state_classes": {
+        "AlertConditionStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "AlertSystemStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "ChannelStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "MdsStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "NumericMetricStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 3,
+            "unmapped": 1,
+            "unsupported": 0
+          },
+          "total": 4
+        },
+        "SystemContextStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "VmdStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        }
+      }
+    },
+    {
+      "descriptor_classes": {
+        "AlertConditionDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "AlertSystemDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "ChannelDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "LocationContextDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "MdsDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "NumericMetricDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 3,
+            "unmapped": 1,
+            "unsupported": 0
+          },
+          "total": 4
+        },
+        "SystemContextDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "VmdDescriptorContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        }
+      },
+      "metric_elements": {
+        "coverage": 0.75,
+        "states": {
+          "conflicting": 0,
+          "mapped": 3,
+          "unmapped": 1,
+          "unsupported": 0
+        },
+        "total": 4,
+        "unresolved": [
+          {
+            "code": "vendor.tidal.volume",
+            "handle": "metric.ventilator.unknown",
+            "reason": "no code or handle mapping entry",
+            "state": "unmapped"
+          }
+        ]
+      },
+      "profile": "ventilator",
+      "state_classes": {
+        "AlertConditionStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "AlertSystemStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "ChannelStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "MdsStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        },
+        "NumericMetricStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 3,
+            "unmapped": 1,
+            "unsupported": 0
+          },
+          "total": 4
+        },
+        "SystemContextStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 1,
+            "unmapped": 0,
+            "unsupported": 0
+          },
+          "total": 1
+        },
+        "VmdStateContainer": {
+          "states": {
+            "conflicting": 0,
+            "mapped": 0,
+            "unmapped": 0,
+            "unsupported": 1
+          },
+          "total": 1
+        }
+      }
+    }
+  ],
+  "schema_version": "wp5-mapping-evidence-1",
+  "status": "ok"
+}

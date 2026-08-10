@@ -1,0 +1,39 @@
+{
+  "failed_count": 0,
+  "passed_count": 28,
+  "reports": [
+    {
+      "failed_count": 0,
+      "passed_count": 6,
+      "scenario": "holdout-multidevice-alarm",
+      "task_count": 6
+    },
+    {
+      "failed_count": 0,
+      "passed_count": 6,
+      "scenario": "holdout-ambiguous",
+      "task_count": 6
+    },
+    {
+      "failed_count": 0,
+      "passed_count": 5,
+      "scenario": "holdout-unmapped",
+      "task_count": 5
+    },
+    {
+      "failed_count": 0,
+      "passed_count": 5,
+      "scenario": "holdout-unavailable",
+      "task_count": 5
+    },
+    {
+      "failed_count": 0,
+      "passed_count": 6,
+      "scenario": "holdout-invalid-stale",
+      "task_count": 6
+    }
+  ],
+  "scenario_count": 5,
+  "status": "ok",
+  "task_count": 28
+}

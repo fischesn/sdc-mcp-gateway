@@ -1,0 +1,50 @@
+{
+  "claim": "device_write_count == 0 and device_state_digest_before == device_state_digest_after",
+  "dynamic": {
+    "bounded_tool_results": true,
+    "device_state_digest_after": "d619e00548ac8a61aea3682193fa5043e2036137fc606cac759354abeecc58ca",
+    "device_state_digest_before": "d619e00548ac8a61aea3682193fa5043e2036137fc606cac759354abeecc58ca",
+    "device_state_unchanged": true,
+    "device_write_count": 0,
+    "resources_exercised": 12,
+    "status": "ok",
+    "tool_interactions_exercised": 7
+  },
+  "static": {
+    "files_scanned": 17,
+    "forbidden_symbols": [
+      "activate",
+      "activate_operation",
+      "execute_operation",
+      "set_alert_state",
+      "set_component_state",
+      "set_context_state",
+      "set_metric_state",
+      "set_numeric_value",
+      "set_service",
+      "set_string_value",
+      "set_value"
+    ],
+    "status": "ok",
+    "violations": []
+  },
+  "status": "ok",
+  "transition_system": {
+    "device_effect_edges": 0,
+    "execution_named_states_or_events": [],
+    "reachable_states": [
+      "approved",
+      "expired",
+      "idle",
+      "pending_approval",
+      "proposed",
+      "read_returned",
+      "rejected",
+      "returned",
+      "validated"
+    ],
+    "states": 9,
+    "status": "ok",
+    "transitions": 14
+  }
+}

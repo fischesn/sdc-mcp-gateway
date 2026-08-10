@@ -1,0 +1,814 @@
+{
+  "case_count": 14,
+  "cases": [
+    {
+      "actual": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "provider_disconnected",
+          "accepted_recovery"
+        ],
+        "final_freshness": "recovered",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "provider_unavailable",
+          "policy_validated_no_execution"
+        ],
+        "recovery_observed": true
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "A disconnected provider fails closed and a newer valid update is marked recovered.",
+      "expected": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "provider_disconnected",
+          "accepted_recovery"
+        ],
+        "final_freshness": "recovered",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "provider_unavailable",
+          "policy_validated_no_execution"
+        ],
+        "recovery_observed": true
+      },
+      "last_exposed_state": {
+        "age_of_information_ms": 0.0,
+        "device_id": "wp4-ventilator",
+        "display_name": "WP4 Simulated Ventilator",
+        "freshness": "recovered",
+        "freshness_reason": "newer_valid_update_after_fault",
+        "gateway_received_at": "2026-01-01T00:00:03Z",
+        "manufacturer": "Anonymous Research Prototype",
+        "mdib_version": 2,
+        "model": "Deterministic Lifecycle Simulator",
+        "observed_at": "2026-01-01T00:00:03Z",
+        "provider_status": "connected",
+        "sequence_id": "wp4-sequence",
+        "source_timestamp": "2026-01-01T00:00:03Z",
+        "update_sequence": 2
+      },
+      "name": "provider_disconnect_reconnect",
+      "proposal_statuses": [
+        "rejected",
+        "accepted_dry_run"
+      ],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "provider_unavailable"
+        ],
+        "final_freshness": "unavailable",
+        "final_provider_status": "unavailable",
+        "proposal_reasons": [
+          "provider_unavailable"
+        ],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "An unavailable provider remains explicit and rejects a proposal.",
+      "expected": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "provider_unavailable"
+        ],
+        "final_freshness": "unavailable",
+        "final_provider_status": "unavailable",
+        "proposal_reasons": [
+          "provider_unavailable"
+        ],
+        "recovery_observed": false
+      },
+      "last_exposed_state": {
+        "age_of_information_ms": 1000.0,
+        "device_id": "wp4-ventilator",
+        "display_name": "WP4 Simulated Ventilator",
+        "freshness": "unavailable",
+        "freshness_reason": "provider_unavailable",
+        "gateway_received_at": "2026-01-01T00:00:01Z",
+        "manufacturer": "Anonymous Research Prototype",
+        "mdib_version": 1,
+        "model": "Deterministic Lifecycle Simulator",
+        "observed_at": "2026-01-01T00:00:01Z",
+        "provider_status": "unavailable",
+        "sequence_id": "wp4-sequence",
+        "source_timestamp": "2026-01-01T00:00:00Z",
+        "update_sequence": 1
+      },
+      "name": "unavailable_provider",
+      "proposal_statuses": [
+        "rejected"
+      ],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "invalid",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "invalid_snapshot"
+        ],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "A sensor validity fault is exposed as invalid and fails closed.",
+      "expected": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "invalid",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "invalid_snapshot"
+        ],
+        "recovery_observed": false
+      },
+      "last_exposed_state": {
+        "age_of_information_ms": 0.0,
+        "device_id": "wp4-ventilator",
+        "display_name": "WP4 Simulated Ventilator",
+        "freshness": "invalid",
+        "freshness_reason": "metric_validity_questionable",
+        "gateway_received_at": "2026-01-01T00:00:01Z",
+        "manufacturer": "Anonymous Research Prototype",
+        "mdib_version": 2,
+        "model": "Deterministic Lifecycle Simulator",
+        "observed_at": "2026-01-01T00:00:01Z",
+        "provider_status": "connected",
+        "sequence_id": "wp4-sequence",
+        "source_timestamp": "2026-01-01T00:00:01Z",
+        "update_sequence": 2
+      },
+      "name": "sensor_validity_fault",
+      "proposal_statuses": [
+        "rejected"
+      ],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "invalid",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "invalid_snapshot"
+        ],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "A missing required metric is explicit rather than silently current.",
+      "expected": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "invalid",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "invalid_snapshot"
+        ],
+        "recovery_observed": false
+      },
+      "last_exposed_state": {
+        "age_of_information_ms": 0.0,
+        "device_id": "wp4-ventilator",
+        "display_name": "WP4 Simulated Ventilator",
+        "freshness": "invalid",
+        "freshness_reason": "required_metric_missing",
+        "gateway_received_at": "2026-01-01T00:00:01Z",
+        "manufacturer": "Anonymous Research Prototype",
+        "mdib_version": 2,
+        "model": "Deterministic Lifecycle Simulator",
+        "observed_at": "2026-01-01T00:00:01Z",
+        "provider_status": "connected",
+        "sequence_id": "wp4-sequence",
+        "source_timestamp": "2026-01-01T00:00:01Z",
+        "update_sequence": 2
+      },
+      "name": "missing_metric",
+      "proposal_statuses": [
+        "rejected"
+      ],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "clock_advanced"
+        ],
+        "final_freshness": "stale",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "stale_snapshot"
+        ],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "A cached update crossing the age threshold becomes stale.",
+      "expected": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "clock_advanced"
+        ],
+        "final_freshness": "stale",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "stale_snapshot"
+        ],
+        "recovery_observed": false
+      },
+      "last_exposed_state": {
+        "age_of_information_ms": 6000.0,
+        "device_id": "wp4-ventilator",
+        "display_name": "WP4 Simulated Ventilator",
+        "freshness": "stale",
+        "freshness_reason": "age_threshold_exceeded",
+        "gateway_received_at": "2026-01-01T00:00:06Z",
+        "manufacturer": "Anonymous Research Prototype",
+        "mdib_version": 1,
+        "model": "Deterministic Lifecycle Simulator",
+        "observed_at": "2026-01-01T00:00:06Z",
+        "provider_status": "connected",
+        "sequence_id": "wp4-sequence",
+        "source_timestamp": "2026-01-01T00:00:00Z",
+        "update_sequence": 1
+      },
+      "name": "stale_data",
+      "proposal_statuses": [
+        "rejected"
+      ],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update"
+        ],
+        "final_freshness": "stale",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "stale_snapshot"
+        ],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "A newly delivered but old source sample is classified as stale.",
+      "expected": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update"
+        ],
+        "final_freshness": "stale",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "stale_snapshot"
+        ],
+        "recovery_observed": false
+      },
+      "last_exposed_state": {
+        "age_of_information_ms": 10000.0,
+        "device_id": "wp4-ventilator",
+        "display_name": "WP4 Simulated Ventilator",
+        "freshness": "stale",
+        "freshness_reason": "age_threshold_exceeded",
+        "gateway_received_at": "2026-01-01T00:00:10Z",
+        "manufacturer": "Anonymous Research Prototype",
+        "mdib_version": 1,
+        "model": "Deterministic Lifecycle Simulator",
+        "observed_at": "2026-01-01T00:00:10Z",
+        "provider_status": "connected",
+        "sequence_id": "wp4-sequence",
+        "source_timestamp": "2026-01-01T00:00:00Z",
+        "update_sequence": 1
+      },
+      "name": "delayed_update",
+      "proposal_statuses": [
+        "rejected"
+      ],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "duplicate_ignored"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "policy_validated_no_execution"
+        ],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "A duplicate version and sequence is ignored monotonically.",
+      "expected": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "duplicate_ignored"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "policy_validated_no_execution"
+        ],
+        "recovery_observed": false
+      },
+      "last_exposed_state": {
+        "age_of_information_ms": 1000.0,
+        "device_id": "wp4-ventilator",
+        "display_name": "WP4 Simulated Ventilator",
+        "freshness": "fresh",
+        "freshness_reason": "current_valid_state",
+        "gateway_received_at": "2026-01-01T00:00:01Z",
+        "manufacturer": "Anonymous Research Prototype",
+        "mdib_version": 1,
+        "model": "Deterministic Lifecycle Simulator",
+        "observed_at": "2026-01-01T00:00:01Z",
+        "provider_status": "connected",
+        "sequence_id": "wp4-sequence",
+        "source_timestamp": "2026-01-01T00:00:00Z",
+        "update_sequence": 1
+      },
+      "name": "duplicate_update",
+      "proposal_statuses": [
+        "accepted_dry_run"
+      ],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "out_of_order_ignored"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "obsolete_snapshot"
+        ],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "An older version is ignored and an obsolete bound proposal is rejected.",
+      "expected": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "out_of_order_ignored"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "obsolete_snapshot"
+        ],
+        "recovery_observed": false
+      },
+      "last_exposed_state": {
+        "age_of_information_ms": 1000.0,
+        "device_id": "wp4-ventilator",
+        "display_name": "WP4 Simulated Ventilator",
+        "freshness": "fresh",
+        "freshness_reason": "current_valid_state",
+        "gateway_received_at": "2026-01-01T00:00:03Z",
+        "manufacturer": "Anonymous Research Prototype",
+        "mdib_version": 2,
+        "model": "Deterministic Lifecycle Simulator",
+        "observed_at": "2026-01-01T00:00:03Z",
+        "provider_status": "connected",
+        "sequence_id": "wp4-sequence",
+        "source_timestamp": "2026-01-01T00:00:02Z",
+        "update_sequence": 2
+      },
+      "name": "out_of_order_update",
+      "proposal_statuses": [
+        "rejected"
+      ],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "accepted_update",
+          "accepted_recovery"
+        ],
+        "final_freshness": "recovered",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "invalid_snapshot",
+          "policy_validated_no_execution"
+        ],
+        "recovery_observed": true
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "A newer valid update after invalid state is marked recovered.",
+      "expected": {
+        "alarm_states": {},
+        "dispositions": [
+          "accepted_update",
+          "accepted_update",
+          "accepted_recovery"
+        ],
+        "final_freshness": "recovered",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "invalid_snapshot",
+          "policy_validated_no_execution"
+        ],
+        "recovery_observed": true
+      },
+      "last_exposed_state": {
+        "age_of_information_ms": 0.0,
+        "device_id": "wp4-ventilator",
+        "display_name": "WP4 Simulated Ventilator",
+        "freshness": "recovered",
+        "freshness_reason": "newer_valid_update_after_fault",
+        "gateway_received_at": "2026-01-01T00:00:02Z",
+        "manufacturer": "Anonymous Research Prototype",
+        "mdib_version": 3,
+        "model": "Deterministic Lifecycle Simulator",
+        "observed_at": "2026-01-01T00:00:02Z",
+        "provider_status": "connected",
+        "sequence_id": "wp4-sequence",
+        "source_timestamp": "2026-01-01T00:00:02Z",
+        "update_sequence": 3
+      },
+      "name": "recovery_after_fault",
+      "proposal_statuses": [
+        "rejected",
+        "accepted_dry_run"
+      ],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {
+          "alarm.oxygen": "active",
+          "alarm.pressure": "active"
+        },
+        "dispositions": [
+          "accepted_update"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "policy_validated_no_execution"
+        ],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "Two simultaneous alarms remain separately visible without inferred precedence.",
+      "expected": {
+        "alarm_states": {
+          "alarm.oxygen": "active",
+          "alarm.pressure": "active"
+        },
+        "dispositions": [
+          "accepted_update"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "policy_validated_no_execution"
+        ],
+        "recovery_observed": false
+      },
+      "last_exposed_state": {
+        "age_of_information_ms": 0.0,
+        "device_id": "wp4-ventilator",
+        "display_name": "WP4 Simulated Ventilator",
+        "freshness": "fresh",
+        "freshness_reason": "current_valid_state",
+        "gateway_received_at": "2026-01-01T00:00:00Z",
+        "manufacturer": "Anonymous Research Prototype",
+        "mdib_version": 1,
+        "model": "Deterministic Lifecycle Simulator",
+        "observed_at": "2026-01-01T00:00:00Z",
+        "provider_status": "connected",
+        "sequence_id": "wp4-sequence",
+        "source_timestamp": "2026-01-01T00:00:00Z",
+        "update_sequence": 1
+      },
+      "name": "simultaneous_ambiguous_alarms",
+      "proposal_statuses": [
+        "accepted_dry_run"
+      ],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {
+          "alarm.pressure": "active"
+        },
+        "dispositions": [
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "An active alarm can escalate while retaining its identity.",
+      "expected": {
+        "alarm_states": {
+          "alarm.pressure": "active"
+        },
+        "dispositions": [
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [],
+        "recovery_observed": false
+      },
+      "last_exposed_state": null,
+      "name": "alarm_escalation",
+      "proposal_statuses": [],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {
+          "alarm.pressure": "latched"
+        },
+        "dispositions": [
+          "accepted_update",
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "A cleared latched alarm remains visible until acknowledgement.",
+      "expected": {
+        "alarm_states": {
+          "alarm.pressure": "latched"
+        },
+        "dispositions": [
+          "accepted_update",
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [],
+        "recovery_observed": false
+      },
+      "last_exposed_state": null,
+      "name": "alarm_latching",
+      "proposal_statuses": [],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {
+          "alarm.pressure": "acknowledged"
+        },
+        "dispositions": [
+          "accepted_update",
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "Acknowledgement is represented as an alarm lifecycle state without device execution.",
+      "expected": {
+        "alarm_states": {
+          "alarm.pressure": "acknowledged"
+        },
+        "dispositions": [
+          "accepted_update",
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [],
+        "recovery_observed": false
+      },
+      "last_exposed_state": null,
+      "name": "alarm_acknowledgement",
+      "proposal_statuses": [],
+      "status": "passed"
+    },
+    {
+      "actual": {
+        "alarm_states": {
+          "alarm.pressure": "active"
+        },
+        "dispositions": [
+          "accepted_update",
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "policy_validated_no_execution"
+        ],
+        "recovery_observed": false
+      },
+      "checks": {
+        "alarm_states": true,
+        "dispositions": true,
+        "final_freshness": true,
+        "final_provider_status": true,
+        "proposal_reasons": true,
+        "recovery_observed": true
+      },
+      "description": "Suppression and later reactivation remain explicit ordered transitions.",
+      "expected": {
+        "alarm_states": {
+          "alarm.pressure": "active"
+        },
+        "dispositions": [
+          "accepted_update",
+          "accepted_update",
+          "accepted_update"
+        ],
+        "final_freshness": "fresh",
+        "final_provider_status": "connected",
+        "proposal_reasons": [
+          "policy_validated_no_execution"
+        ],
+        "recovery_observed": false
+      },
+      "last_exposed_state": {
+        "age_of_information_ms": 0.0,
+        "device_id": "wp4-ventilator",
+        "display_name": "WP4 Simulated Ventilator",
+        "freshness": "fresh",
+        "freshness_reason": "current_valid_state",
+        "gateway_received_at": "2026-01-01T00:00:02Z",
+        "manufacturer": "Anonymous Research Prototype",
+        "mdib_version": 3,
+        "model": "Deterministic Lifecycle Simulator",
+        "observed_at": "2026-01-01T00:00:02Z",
+        "provider_status": "connected",
+        "sequence_id": "wp4-sequence",
+        "source_timestamp": "2026-01-01T00:00:02Z",
+        "update_sequence": 3
+      },
+      "name": "alarm_suppression_reactivation",
+      "proposal_statuses": [
+        "accepted_dry_run"
+      ],
+      "status": "passed"
+    }
+  ],
+  "failed_cases": 0,
+  "mapping_artifact": {
+    "provenance": {
+      "basis": [
+        "IEEE 11073-10101 nomenclature codes represented in the evaluated profiles",
+        "Version-controlled simulator and software-provider MDIB profiles"
+      ],
+      "license": "MIT",
+      "scope": "Research-only semantic projection into read-only MCP resources; no standardization or device-control claim.",
+      "source": "Anonymous BHI revision artifact"
+    },
+    "schema_version": "1.0",
+    "source_sha256": "d1fb7f8a0de14b822ed01ad319051dfa8acac96bca35cb778a3efd5df6602834",
+    "version": "1.0.0"
+  },
+  "passed_cases": 14,
+  "schema_version": "wp4-lifecycle-evidence-1",
+  "scope": {
+    "ordered_updates": true,
+    "physical_device": false,
+    "production_subscription_transport": false,
+    "provider": "deterministic in-process SDC-like simulator"
+  },
+  "stale_after_s": 5.0,
+  "status": "ok",
+  "suite_version": "1.0"
+}
