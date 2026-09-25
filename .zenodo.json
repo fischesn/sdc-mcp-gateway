@@ -1,0 +1,17 @@
+{
+  "title": "SDC-MCP Gateway: Software and Evaluation Artifacts",
+  "upload_type": "software",
+  "description": "<p>Source code and frozen evaluation artifacts for the research prototype described in A Safety-Bounded SDC-to-MCP Gateway for Medical AI Agents, by Bennet Gerlach and Stefan Fischer.</p><p>The gateway exposes simulated and software-reference IEEE 11073 SDC device state through read-only Model Context Protocol resources and policy-checked, non-executing tools. The archive contains the unchanged source tree of tag v2.0.0-rc1 (commit 4cf508eee7c70b8fa7873f6ce457e6407e99f0e7), scenarios, prompts, graders, recorded model responses, representation comparisons, and protocol and deterministic safety evidence, with corrected citation metadata and checksum verification instructions.</p><p>The frozen five-model evaluation records 414/420 passed cases. Protocol evidence covers Python/Python and independent Java SDCri/Python software-reference configurations. The consolidation reuses the frozen external-model outputs rather than rerunning them. This is simulation and software-reference evidence, not physical-device validation, clinical validation, a certified medical device, or support for autonomous therapy.</p><p>The archival version is 2.0.0-rc1; the evaluated source retains internal Python package version 0.13.0. Historical files are preserved, including older citation metadata; the top-level citation file supplies the corrected author order and release reference. No arXiv or journal publication is claimed by this deposit.</p>",
+  "creators": [
+    {"name": "Gerlach, Bennet", "affiliation": "University of Lübeck"},
+    {"name": "Fischer, Stefan", "affiliation": "University of Lübeck"}
+  ],
+  "version": "2.0.0-rc1",
+  "publication_date": "2026-09-25",
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": ["IEEE 11073 SDC", "Model Context Protocol", "medical device interoperability", "AI agents", "safety boundary", "reproducibility"],
+  "related_identifiers": [
+    {"identifier": "https://github.com/fischesn/sdc-mcp-gateway/tree/v2.0.0-rc1", "relation": "isSupplementTo", "scheme": "url"}
+  ]
+}

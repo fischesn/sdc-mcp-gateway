@@ -1,0 +1,23 @@
+{
+  "checked_on": "2026-09-25",
+  "record_id": "22960634",
+  "draft_url": "https://zenodo.org/uploads/22960634",
+  "version_doi": "10.5281/zenodo.22960634",
+  "concept_doi": "10.5281/zenodo.22960633",
+  "record_url": "https://zenodo.org/records/22960634",
+  "publication_date": "2026-09-25",
+  "published": true,
+  "public_record_verified_without_login": true,
+  "doi_resolution_verified": false,
+  "doi_resolver_http_status": 404,
+  "public_download_sha256_verified_without_login": true,
+  "file_uploaded": true,
+  "remote_md5_verified": true,
+  "metadata_saved": true,
+  "version": "2.0.0-rc1",
+  "archive_path": "dist/zenodo-v2.0.0-rc1/sdc-mcp-gateway-v2.0.0-rc1-zenodo.zip",
+  "archive_bytes": 1227527,
+  "archive_sha256": "4313f55d053846b616319a3fa3d3aa21778b2bf4e12a14a5a45d902be746b5f6",
+  "archive_md5": "9a4f560f57cf559114d4d681f223482e",
+  "next_action": "Recheck DOI resolver activation before arXiv submission; later add the actual arXiv identifier to the record metadata."
+}

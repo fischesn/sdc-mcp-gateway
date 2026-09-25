@@ -13,6 +13,5 @@ version: "2.0.0-rc1"
 date-released: "2026-08-10"
 commit: "4cf508eee7c70b8fa7873f6ce457e6407e99f0e7"
 license: MIT
-doi: "10.5281/zenodo.22960634"
 repository-code: "https://github.com/fischesn/sdc-mcp-gateway"
 abstract: "Research prototype exposing simulated and software-reference IEEE 11073 SDC device state through read-only MCP resources and policy-checked, non-executing MCP tools. The artifact includes frozen agent evaluations and protocol, safety-boundary, lifecycle, mapping, audit, and authorization evidence. It is not validated for clinical use."

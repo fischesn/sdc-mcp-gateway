@@ -84,7 +84,8 @@ tests/
   Pytest-based test suite.
 
 data/
-  Runtime outputs. Generated files under data/ are ignored by Git except .gitkeep files.
+  Runtime outputs and explicitly archived frozen evaluation results.
+  Routine generated outputs are ignored; selected evidence is versioned.
 ```
 
 ## Installation
@@ -566,12 +567,27 @@ Run linting if `ruff` is installed:
 ruff check .
 ```
 
-Generated outputs under `data/` should not be committed.
+Do not commit routine generated outputs under `data/`. The explicitly archived
+hold-out, ablation, and security evidence is intentionally versioned.
 
 ## Citation
 
-If you use this software, cite the associated paper or the software artifact. A
-`CITATION.cff` file is provided for citation metadata.
+If you use this software or its archived evaluation results, cite the software
+artifact by Bennet Gerlach and Stefan Fischer. `CITATION.cff` describes the
+archival release `v2.0.0-rc1` at commit
+`4cf508eee7c70b8fa7873f6ce457e6407e99f0e7` (10 August 2026).
+
+The source and frozen evaluation materials are permanently archived on Zenodo:
+[doi:10.5281/zenodo.22960634](https://doi.org/10.5281/zenodo.22960634)
+([record and download](https://zenodo.org/records/22960634)). Use this version DOI
+when citing the evaluated artifact; the all-versions DOI is
+[10.5281/zenodo.22960633](https://doi.org/10.5281/zenodo.22960633).
+
+The evaluated Python package still reports its historical internal version
+`0.13.0`; this differs from the archival release tag and is not a new experiment
+version. Existing tags and frozen results are not rewritten. See
+[the Zenodo publication notes](docs/zenodo-publication.md) for archive contents,
+provenance, metadata corrections, and publication status.
 
 ## License
 
